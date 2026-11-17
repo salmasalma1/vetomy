@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261118f';
-import { translateEs } from './translate-es.js?v=20261118f';
+import { buildPlaceholder } from './placeholder.js?v=20261118g';
+import { translateEs } from './translate-es.js?v=20261118g';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261118f';
+const ASSET_V = '20261118g';
 
 // ------------------------------------------------------------------
 // Config
@@ -18,14 +18,14 @@ const SPECIES = [
 ];
 
 const REGIONS = [
-  { id: 'head',     en: 'Head',           color: '#ff6b3d' },
-  { id: 'trunk',    en: 'Spine & thorax', color: '#3355ff' },
-  { id: 'forelimb', en: 'Forelimb',       color: '#a8d94a' },
-  { id: 'hindlimb', en: 'Hindlimb',       color: '#b49cff' },
-  { id: 'other',    en: 'Other',          color: '#8fa39a' },
+  { id: 'head',     en: 'Head',           color: '#c8a96b' },
+  { id: 'trunk',    en: 'Spine & thorax', color: '#7fa7a0' },
+  { id: 'forelimb', en: 'Forelimb',       color: '#c08f86' },
+  { id: 'hindlimb', en: 'Hindlimb',       color: '#8e9cc4' },
+  { id: 'other',    en: 'Other',          color: '#8f9c94' },
 ];
 
-const COLORS = { bone: 0xeee6d6, selected: 0xff6b3d, hover: 0x3355ff };
+const COLORS = { bone: 0xe9dfcc, selected: 0xc8a96b, hover: 0x7fa7a0 };
 
 // ------------------------------------------------------------------
 // State
@@ -72,13 +72,17 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.autoRotateSpeed = 1.2;
 
-scene.add(new THREE.HemisphereLight(0xffffff, 0xb7c9bf, 1.4));
-const keyLight = new THREE.DirectionalLight(0xffffff, 1.7);
-keyLight.position.set(3, 6, 4);
+// Gallery lighting: warm key "spotlight" from above, cool fill, soft rim from behind
+scene.add(new THREE.HemisphereLight(0xfff4e0, 0x22302a, 1.0));
+const keyLight = new THREE.DirectionalLight(0xfff0d6, 2.2);
+keyLight.position.set(2.5, 7, 4);
 scene.add(keyLight);
-const fillLight = new THREE.DirectionalLight(0xbcd2ff, 0.6);
-fillLight.position.set(-4, 2, -3);
+const fillLight = new THREE.DirectionalLight(0xa9c4d8, 0.5);
+fillLight.position.set(-4, 2, 3);
 scene.add(fillLight);
+const rimLight = new THREE.DirectionalLight(0xffe2b0, 0.9);
+rimLight.position.set(-2, 3, -5);
+scene.add(rimLight);
 
 function resize() {
   const w = window.innerWidth;
@@ -90,18 +94,24 @@ function resize() {
 window.addEventListener('resize', resize);
 resize();
 
-// Soft round "floor" shadow under the animal
-function makeGround() {
+// Soft pool of light (dark theme) or shadow (light theme) under the animal
+function groundTexture() {
+  const dark = document.documentElement.dataset.theme !== 'light';
+  const rgb = dark ? '233, 214, 170' : '30, 40, 35';
+  const a = dark ? [0.16, 0.05] : [0.16, 0.05];
   const c = document.createElement('canvas');
   c.width = c.height = 256;
   const g = c.getContext('2d');
   const grad = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-  grad.addColorStop(0, 'rgba(18, 32, 27, 0.20)');
-  grad.addColorStop(0.6, 'rgba(18, 32, 27, 0.07)');
-  grad.addColorStop(1, 'rgba(18, 32, 27, 0)');
+  grad.addColorStop(0, `rgba(${rgb}, ${a[0]})`);
+  grad.addColorStop(0.55, `rgba(${rgb}, ${a[1]})`);
+  grad.addColorStop(1, `rgba(${rgb}, 0)`);
   g.fillStyle = grad;
   g.fillRect(0, 0, 256, 256);
-  const tex = new THREE.CanvasTexture(c);
+  return new THREE.CanvasTexture(c);
+}
+function makeGround() {
+  const tex = groundTexture();
   const mesh = new THREE.Mesh(
     new THREE.PlaneGeometry(1, 1),
     new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }),
@@ -580,6 +590,7 @@ function closeResults() {
 
 function renderInfo() {
   const b = state.selected;
+  document.body.classList.toggle('sheet-open', !!b);
   if (!b) {
     infoPanel.classList.add('hidden');
     return;
@@ -667,7 +678,7 @@ function ensureSpecViewer() {
   spec.renderer.outputColorSpace = THREE.SRGBColorSpace;
   wrap.appendChild(spec.renderer.domElement);
   spec.scene = new THREE.Scene();
-  spec.scene.add(new THREE.HemisphereLight(0xffffff, 0xb7c9bf, 1.5));
+  spec.scene.add(new THREE.HemisphereLight(0xfff4e0, 0x22302a, 1.3));
   const key = new THREE.DirectionalLight(0xffffff, 1.6);
   key.position.set(2, 3, 2);
   spec.scene.add(key);
@@ -944,13 +955,21 @@ $('reset-btn').addEventListener('click', () => {
 
 // Theme
 try {
-  const saved = localStorage.getItem('vetomy-theme');
-  if (saved) document.documentElement.dataset.theme = saved;
+  const saved = localStorage.getItem('vetomy-theme-v2');
+  if (saved) {
+    document.documentElement.dataset.theme = saved;
+    state.ground.material.map = groundTexture();
+  }
 } catch {}
 $('theme-btn').addEventListener('click', () => {
   const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
   document.documentElement.dataset.theme = next;
-  try { localStorage.setItem('vetomy-theme', next); } catch {}
+  try { localStorage.setItem('vetomy-theme-v2', next); } catch {}
+  const old = state.ground.material.map;
+  state.ground.material.map = groundTexture();
+  state.ground.material.needsUpdate = true;
+  old?.dispose();
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'dark' ? '#0c1411' : '#e9e6df');
 });
 
 // Keyboard
