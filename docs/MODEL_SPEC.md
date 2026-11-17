@@ -35,11 +35,12 @@ Requirements for skeleton models used by Vetomy. Following them lets a new model
 
 | Object name | Structure |
 |---|---|
-| `vertebrae_cervical` | Vertebrae cervicales (or split `atlas`, `axis` and the rest grouped) |
-| `vertebrae_thoracic` | Vertebrae thoracicae |
-| `vertebrae_lumbar` | Vertebrae lumbales |
+| `atlas`, `axis` | First and second cervical vertebrae |
+| `vertebra_c3` … `vertebra_c7` | Other cervical vertebrae (or one `vertebrae_cervical` object) |
+| `vertebra_t1` … | Thoracic vertebrae (or one `vertebrae_thoracic` object) |
+| `vertebra_l1` … | Lumbar vertebrae (or one `vertebrae_lumbar` object) |
 | `sacrum` | Os sacrum |
-| `vertebrae_caudal` | Vertebrae caudales |
+| `vertebra_cd1` … | Caudal vertebrae (or one `vertebrae_caudal` object) |
 | `ribs` | Costae |
 | `sternum` | Sternum |
 
@@ -54,8 +55,11 @@ Requirements for skeleton models used by Vetomy. Following them lets a new model
 | `ulna` | Ulna (if fused and inseparable, leave it as part of `radius`) |
 | `carpus` | Ossa carpi |
 | `metacarpus` | Ossa metacarpalia |
-| `phalanges_fore` | Phalanges of the forelimb |
-| `sesamoids_fore` | Ossa sesamoidea *(optional)* |
+| `phalanx_proximal_fore` | Proximal phalanx (long pastern) |
+| `phalanx_middle_fore` | Middle phalanx (short pastern) |
+| `phalanx_distal_fore` | Distal phalanx (coffin bone) |
+| `sesamoids_fore` | Proximal sesamoid bones *(optional)* |
+| `navicular_fore` | Distal sesamoid (navicular) bone *(optional)* |
 
 ### Hindlimb — `hindlimb` (add `_L` / `_R`)
 
@@ -68,7 +72,9 @@ Requirements for skeleton models used by Vetomy. Following them lets a new model
 | `fibula` | Fibula (if separate) |
 | `tarsus` | Ossa tarsi |
 | `metatarsus` | Ossa metatarsalia |
-| `phalanges_hind` | Phalanges of the hindlimb |
+| `phalanx_proximal_hind` | Proximal phalanx |
+| `phalanx_middle_hind` | Middle phalanx |
+| `phalanx_distal_hind` | Distal phalanx |
 
 ## Preparing a model in Blender
 

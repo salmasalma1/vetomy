@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261118j';
-import { translateEs } from './translate-es.js?v=20261118j';
+import { buildPlaceholder } from './placeholder.js?v=20261118k';
+import { translateEs } from './translate-es.js?v=20261118k';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261118j';
+const ASSET_V = '20261118k';
 
 // ------------------------------------------------------------------
 // Config
@@ -173,11 +173,16 @@ function vertebra(key) {
   const m = /^vertebra_(c|t|l|cd)(\d+)$/.exec(key || '');
   return m ? { group: VERTEBRA_GROUPS[m[1]], n: +m[2] } : null;
 }
+// Bones that exist in both limbs (phalanx_proximal_fore / _hind) share one entry
+const LIMB = { fore: { region: 'forelimb', label: 'forelimb' }, hind: { region: 'hindlimb', label: 'hindlimb' } };
+const limbOf = (key) => LIMB[/_(fore|hind)$/.exec(key || '')?.[1]] || null;
+const baseKey = (key) => String(key || '').replace(/_(fore|hind)$/, '');
 const groupKey = (key) => vertebra(key)?.group.key || key;
 const info = (key) => {
   if (!key || key === '_meta') return null;
-  return state.data[key] || state.data[groupKey(key)] || null;
+  return state.data[key] || state.data[groupKey(key)] || (limbOf(key) && state.data[baseKey(key)]) || null;
 };
+const regionFor = (key) => limbOf(key)?.region || info(key)?.region || 'other';
 const species = () => SPECIES.find((s) => s.id === state.species);
 const regionOf = (id) => REGIONS.find((r) => r.id === id) || REGIONS.at(-1);
 
@@ -185,6 +190,8 @@ function displayName(key) {
   if (state.data[key]?.names?.en) return state.data[key].names.en;
   const v = vertebra(key);
   if (v) return `${v.group.label} ${v.group.letter}${v.n}`;
+  const limb = limbOf(key);
+  if (limb && state.data[baseKey(key)]?.names?.en) return `${state.data[baseKey(key)].names.en} (${limb.label})`;
   return info(key)?.names?.en || key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
@@ -335,7 +342,7 @@ function prepareModel(root) {
       name: String(rawName).replace(/\.?\d{3}$/, ''),
       key,
       side: boneSide(rawName),
-      region: info(key)?.region || 'other',
+      region: regionFor(key),
       origPos: mesh.position.clone(),
       offset: p2.sub(p1),
     });

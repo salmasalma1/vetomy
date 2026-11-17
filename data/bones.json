@@ -709,5 +709,82 @@
       "dog": "A long, blade-like spinous process overhangs the atlas cranially; the dens is peg-shaped.",
       "cat": "Similar to the dog."
     }
+  },
+  "phalanx_proximal": {
+    "region": "forelimb",
+    "names": {
+      "en": "Proximal phalanx",
+      "nav": "Phalanx proximalis"
+    },
+    "type": "Long bone",
+    "description": "First bone of the digit. It articulates with the metacarpal or metatarsal bone at the fetlock (metacarpophalangeal or metatarsophalangeal) joint and with the middle phalanx at the pastern (proximal interphalangeal) joint.",
+    "landmarks": [
+      "Base",
+      "Body",
+      "Head",
+      "Proximal tubercles"
+    ],
+    "articulations": [
+      "Metacarpal or metatarsal bone (fetlock joint)",
+      "Proximal sesamoid bones",
+      "Middle phalanx (pastern joint)"
+    ],
+    "species": {
+      "horse": "Long pastern bone. Its palmar or plantar surface has a roughened triangular area for the distal sesamoidean ligaments.",
+      "cattle": "Each of the two weight-bearing digits (III and IV) has its own proximal phalanx.",
+      "dog": "Present in every digit; digit I has only a proximal and a distal phalanx.",
+      "cat": "As in the dog."
+    }
+  },
+  "phalanx_middle": {
+    "region": "forelimb",
+    "names": {
+      "en": "Middle phalanx",
+      "nav": "Phalanx media"
+    },
+    "type": "Long bone (short)",
+    "description": "Second bone of the digit, between the proximal and distal phalanges.",
+    "landmarks": [
+      "Base",
+      "Body",
+      "Head",
+      "Flexor tuberosity"
+    ],
+    "articulations": [
+      "Proximal phalanx (pastern joint)",
+      "Distal phalanx and distal sesamoid bone (coffin joint)"
+    ],
+    "species": {
+      "horse": "Short pastern bone, short and roughly cube-shaped. It articulates distally with the distal phalanx and the navicular bone.",
+      "cattle": "One in each main digit.",
+      "dog": "Absent in digit I.",
+      "cat": "Absent in digit I."
+    }
+  },
+  "phalanx_distal": {
+    "region": "forelimb",
+    "names": {
+      "en": "Distal phalanx",
+      "nav": "Phalanx distalis"
+    },
+    "type": "Irregular bone",
+    "description": "Last bone of the digit, enclosed in the hoof or claw. In the horse it is the coffin (pedal) bone.",
+    "landmarks": [
+      "Extensor process",
+      "Articular surface",
+      "Flexor surface",
+      "Solar surface",
+      "Palmar processes"
+    ],
+    "articulations": [
+      "Middle phalanx (coffin joint)",
+      "Distal sesamoid (navicular) bone"
+    ],
+    "species": {
+      "horse": "Coffin bone, shaped like a small hoof. The deep digital flexor tendon inserts on its flexor surface, and the navicular bone lies behind the coffin joint.",
+      "cattle": "Each main digit's distal phalanx is enclosed in a claw.",
+      "dog": "Carries the claw on its ungual process, framed by an ungual crest.",
+      "cat": "Elastic dorsal ligaments hold the ungual process retracted, which makes the claws retractile."
+    }
   }
 }

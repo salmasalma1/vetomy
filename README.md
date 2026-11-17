@@ -1,143 +1,63 @@
 # Vetomy
 
-**Interactive 3D comparative anatomy for veterinary students.**
+Interactive 3D comparative anatomy for veterinary students.
 
-Vetomy is a browser-based anatomy atlas for domestic animals. Students can explore 3D models, select any structure, and read its details: its English name and Latin name from the *Nomina Anatomica Veterinaria* (NAV), key landmarks, articulations, and how the structure differs across species.
+Explore the skeletons of the **horse**, **cattle**, **dog** and **cat** in the browser. Select any bone to see its English and NAV Latin names, landmarks, articulations and how it differs across the four species.
 
-The first release covers the **skeletal system** of four species. Muscles, nerves, vessels and viscera are planned for later releases.
-
-| Species | Scientific name |
-|---|---|
-| Horse | *Equus caballus* |
-| Cattle | *Bos taurus* |
-| Dog | *Canis familiaris* |
-| Cat | *Felis catus* |
-
----
+**Live:** https://salmasalma1.github.io/vetomy/
 
 ## Features
 
-- **Interactive 3D viewer**: rotate, zoom and pan around each skeleton.
-- **Click to explore**: selecting a bone highlights it and opens its details.
-- **Standard terminology**: English and NAV Latin names for every structure.
-- **Comparative anatomy**: each bone's details include notes for all four species, and one click opens the same bone in another species.
-- **Real specimens**: for many bones, open a high-resolution 3D scan of a real specimen inside the app.
-- **Landmarks on the bone**: numbered points mark named parts of a bone (for example the greater tubercle); click one to read what it is.
-- **Ghost mode**: fades the surrounding bones so the selected one stands out.
-- **Exploded view**: separates the bones to show how they fit together.
-- **Region toggles**: show or hide the head, vertebral column and thorax, forelimb and hindlimb.
-- **Anatomical camera views**: three-quarter, right and left lateral, cranial and dorsal, plus auto-rotate.
-- **Search**: by English or Latin name, with keyboard navigation (press `/` to focus).
-- **Light and dark themes**.
-- **Responsive**: works on desktop and mobile browsers.
+- 3D skeletons with every bone selectable, down to individual vertebrae and phalanges
+- Comparative notes for all four species on every bone
+- Numbered landmark points on bones, each with a description
+- High-resolution scans of real specimens for many bones
+- Exploded view, ghost mode, region toggles and anatomical camera views
+- Search by English or Latin name
+- Dark and light themes, desktop and mobile
 
----
+## Run locally
 
-## Getting started
-
-Vetomy is a static site with no build step and no dependencies to install. Three.js is loaded from a CDN, so an internet connection is required.
-
-Browsers block local file loading when `index.html` is opened directly, so serve the folder with any local web server:
+No build step. Serve the folder with any static server:
 
 ```bash
-# Option 1: Python
 python -m http.server 8000
-
-# Option 2: Node.js
-npx serve .
 ```
 
-Then open `http://localhost:8000`.
-
-In VS Code, you can also use the **Live Server** extension: right-click `index.html` and choose **Open with Live Server**.
-
----
+Then open http://localhost:8000.
 
 ## Project structure
 
 ```
 vetomy/
-├── index.html                 # Page layout
-├── site.webmanifest           # Install metadata for phones and desktops
+├── index.html
 ├── assets/
-│   ├── css/style.css          # Styles (dark and light themes)
-│   ├── js/app.js              # Viewer, selection, search, landmarks, specimens
-│   ├── js/placeholder.js      # Stand-in skeleton shown until a real model exists
-│   ├── js/translate-es.js     # Spanish → English osteology terms for scan labels
-│   └── icons/                 # Favicon and app icons
+│   ├── css/            Styles
+│   ├── js/             Application code
+│   └── icons/          Favicon and app icons
 ├── data/
-│   ├── bones.json             # Anatomical content for every structure
-│   ├── specimens.json         # Links from bones to real specimen scans
-│   └── landmarks.json         # Named points on bones and their descriptions
+│   ├── bones.json      Anatomical content
+│   ├── specimens.json  Links from bones to real specimen scans
+│   └── landmarks.json  Landmark points and descriptions
 ├── models/
-│   ├── skeletons/             # One skeleton per species: horse.glb, cattle.glb, dog.glb, cat.glb
-│   └── specimens/             # High-resolution scans of individual bones
+│   ├── skeletons/      One skeleton per species (horse.glb, …)
+│   └── specimens/      Scans of individual bones
 └── docs/
-    └── MODEL_SPEC.md          # Naming and export requirements for 3D models
+    └── MODEL_SPEC.md   Requirements for 3D models
 ```
 
----
+## Adding a skeleton
 
-## Adding 3D models
-
-Place a binary glTF file named after the species in `models/skeletons/` (for example `models/skeletons/horse.glb`) and reload the page. The app loads it automatically in place of the placeholder skeleton.
-
-Each bone must be a separate, named object so it can be selected. Bilateral bones use `_L` / `_R` suffixes (`femur_L`, `femur_R`). The full naming convention, orientation, scale and export settings are in [`docs/MODEL_SPEC.md`](docs/MODEL_SPEC.md).
-
----
-
-## Content format
-
-All anatomical content lives in `data/bones.json`. Each key matches a bone name from the model, without its side suffix:
-
-```json
-"femur": {
-  "region": "hindlimb",
-  "names": { "en": "Femur", "nav": "Os femoris" },
-  "type": "Long bone",
-  "description": "The bone of the thigh, between the hip and the stifle.",
-  "landmarks": ["Head", "Neck", "Greater trochanter"],
-  "articulations": ["Os coxae (hip joint)", "Tibia and patella (stifle joint)"],
-  "species": {
-    "horse": "Third trochanter present.",
-    "cattle": "No third trochanter.",
-    "dog": "Fabellae behind the condyles.",
-    "cat": "Straight, slender shaft."
-  }
-}
-```
-
-`region` is one of `head`, `trunk`, `forelimb` or `hindlimb`. A bone in the model with no matching entry still works: the panel shows a notice that its content is missing.
-
----
+Export a binary glTF named after the species (for example `cattle.glb`) into `models/skeletons/`. Each bone must be a separate object named as described in [`docs/MODEL_SPEC.md`](docs/MODEL_SPEC.md).
 
 ## Placing landmarks
 
-Add `?edit` to the address (for example `https://…/vetomy/?edit`) to open the landmark editor:
+Open the site with `?edit` at the end of the address. Select a bone, click on its surface and name the point. Points on left bones are mirrored to the right automatically. Click **Export JSON** and replace `data/landmarks.json` with the downloaded file.
 
-1. Select a bone, then click on its surface where the landmark is.
-2. Type the landmark's name (suggestions come from the bone's landmark list) and save.
-3. Points placed on a left bone (`_L`) appear on the right bone automatically.
-4. Click **Export JSON** and replace `data/landmarks.json` with the downloaded file.
+## Content
 
-Drafts are kept in the browser until exported. Descriptions for each landmark live in the `definitions` section of `data/landmarks.json`.
+Anatomical content is a draft under review. Confirm details against standard veterinary anatomy textbooks and the NAV.
 
-## Roadmap
+## Credits
 
-- [ ] Final 3D skeleton models for all four species
-- [ ] Complete osteology content, reviewed against standard veterinary anatomy references
-- [ ] Side-by-side comparison view of the same bone across species
-- [ ] Clinical notes: common fractures and pathologies for each bone
-- [ ] Muscular, nervous, circulatory and visceral systems
-- [ ] Additional species: sheep, goat, camel, pig
-- [ ] Quiz mode modelled on practical identification exams
-
----
-
-## Content accuracy
-
-Vetomy is an educational tool under active development. Anatomical content is being reviewed and may contain errors. Always confirm details against standard veterinary anatomy textbooks and the NAV.
-
-## Third-party assets
-
-3D models and scans from external sources are used under their respective terms. See [`CREDITS.md`](CREDITS.md).
+3D models and scans are used under their respective licenses. See [`CREDITS.md`](CREDITS.md).
