@@ -22,6 +22,7 @@ The first release covers the **skeletal system** of four species. Muscles, nerve
 - **Standard terminology**: English and NAV Latin names for every structure.
 - **Comparative anatomy**: each bone's details include notes for all four species, and one click opens the same bone in another species.
 - **Real specimens**: for many bones, open a high-resolution 3D scan of a real specimen inside the app.
+- **Landmarks on the bone**: numbered points mark named parts of a bone (for example the greater tubercle); click one to read what it is.
 - **Ghost mode**: fades the surrounding bones so the selected one stands out.
 - **Exploded view**: separates the bones to show how they fit together.
 - **Region toggles**: show or hide the head, vertebral column and thorax, forelimb and hindlimb.
@@ -62,7 +63,8 @@ vetomy/
 ├── placeholder.js      # Simple stand-in skeleton, shown until a real model is added
 ├── data/
 │   ├── bones.json      # Anatomical content for every structure
-│   └── specimens.json  # Links from bones to real specimen scans
+│   ├── specimens.json  # Links from bones to real specimen scans
+│   └── landmarks.json  # Named points on bones and their descriptions
 ├── models/             # Skeleton models: horse.glb, cattle.glb, dog.glb, cat.glb
 ├── specimens/          # High-resolution scans of individual bones
 └── docs/
@@ -103,6 +105,17 @@ All anatomical content lives in `data/bones.json`. Each key matches a bone name 
 `region` is one of `head`, `trunk`, `forelimb` or `hindlimb`. A bone in the model with no matching entry still works: the panel shows a notice that its content is missing.
 
 ---
+
+## Placing landmarks
+
+Add `?edit` to the address (for example `https://…/vetomy/?edit`) to open the landmark editor:
+
+1. Select a bone, then click on its surface where the landmark is.
+2. Type the landmark's name (suggestions come from the bone's landmark list) and save.
+3. Points placed on a left bone (`_L`) appear on the right bone automatically.
+4. Click **Export JSON** and replace `data/landmarks.json` with the downloaded file.
+
+Drafts are kept in the browser until exported. Descriptions for each landmark live in the `definitions` section of `data/landmarks.json`.
 
 ## Roadmap
 

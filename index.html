@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261118h">
+  <link rel="stylesheet" href="style.css?v=20261118i">
   <script type="importmap">
   {
     "imports": {
@@ -54,6 +54,26 @@
     <div id="region-chips" class="chips"></div>
     <p id="visible-count" class="visible-count"></p>
   </div>
+
+  <!-- Landmark points on the selected bone -->
+  <div id="lm-layer" class="lm-layer" aria-live="polite"></div>
+  <div id="lm-pop" class="lm-pop hidden" role="dialog"></div>
+
+  <!-- Landmark editor (open the site with ?edit) -->
+  <div id="lm-editbar" class="lm-editbar hidden">
+    <span><strong>Landmark editor</strong> Select a bone, then click on it to add a point.</span>
+    <button id="lm-export" class="pill">Export JSON</button>
+    <button id="lm-discard" class="pill">Discard drafts</button>
+  </div>
+  <form id="lm-editor" class="lm-editor hidden" autocomplete="off">
+    <label for="lm-name">Name this point</label>
+    <input id="lm-name" list="lm-suggest" placeholder="e.g. Greater tubercle" required>
+    <datalist id="lm-suggest"></datalist>
+    <div class="lm-editor-actions">
+      <button type="button" id="lm-cancel" class="pill">Cancel</button>
+      <button type="submit" class="pill on">Save point</button>
+    </div>
+  </form>
 
   <!-- Info sheet -->
   <aside id="info-panel" class="sheet hidden" aria-live="polite"></aside>
@@ -137,6 +157,6 @@
       setTimeout(function () { if (!window.__vetomyReady) show('The app did not finish loading within 15 seconds.'); }, 15000);
     })();
   </script>
-  <script type="module" src="app.js?v=20261118h"></script>
+  <script type="module" src="app.js?v=20261118i"></script>
 </body>
 </html>

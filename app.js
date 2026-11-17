@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261118h';
-import { translateEs } from './translate-es.js?v=20261118h';
+import { buildPlaceholder } from './placeholder.js?v=20261118i';
+import { translateEs } from './translate-es.js?v=20261118i';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261118h';
+const ASSET_V = '20261118i';
 
 // ------------------------------------------------------------------
 // Config
@@ -43,6 +43,7 @@ const state = {
   species: 'horse',
   data: {},
   specimens: {},
+  landmarks: {},
   model: null,
   ground: null,
   bones: [],               // [{ mesh, key, side, region, origPos, offset }]
@@ -217,9 +218,10 @@ async function loadJSON(path) {
 }
 
 async function loadData() {
-  [state.data, state.specimens] = await Promise.all([
+  [state.data, state.specimens, state.landmarks] = await Promise.all([
     loadJSON(`data/bones.json?v=${ASSET_V}`),
     loadJSON(`data/specimens.json?v=${ASSET_V}`),
+    loadJSON(`data/landmarks.json?v=${ASSET_V}`),
   ]);
 }
 
@@ -330,6 +332,7 @@ function prepareModel(root) {
 
     state.bones.push({
       mesh,
+      name: String(rawName).replace(/\.?\d{3}$/, ''),
       key,
       side: boneSide(rawName),
       region: info(key)?.region || 'other',
@@ -416,6 +419,10 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 
 function pick(ev) {
+  return pickHit(ev)?.bone || null;
+}
+
+function pickHit(ev) {
   const r = renderer.domElement.getBoundingClientRect();
   pointer.x = ((ev.clientX - r.left) / r.width) * 2 - 1;
   pointer.y = -((ev.clientY - r.top) / r.height) * 2 + 1;
@@ -424,7 +431,8 @@ function pick(ev) {
   const hits = raycaster.intersectObjects(meshes, false);
   if (!hits.length) return null;
   const hit = hits.find((h) => !h.object.material.transparent) || hits[0];
-  return state.bones.find((b) => b.mesh === hit.object) || null;
+  const bone = state.bones.find((b) => b.mesh === hit.object) || null;
+  return bone ? { bone, hit } : null;
 }
 
 let downPos = null;
@@ -434,6 +442,10 @@ renderer.domElement.addEventListener('pointerup', (e) => {
   const moved = Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y);
   downPos = null;
   if (moved > 5) return; // that was a drag
+  if (EDIT && state.selected) {
+    const ph = pickHit(e);
+    if (ph && ph.bone === state.selected) return openLmEditor(ph.hit, e);
+  }
   select(pick(e), false);
 });
 
@@ -468,11 +480,13 @@ renderer.domElement.addEventListener('pointerleave', () => {
 
 function select(b, focus) {
   closeSpecimen();
+  closeLmEditor();
   state.selected = b;
   if (b && state.hiddenRegions.has(b.region)) state.hiddenRegions.delete(b.region);
   applyMaterials();
   renderInfo();
   renderRegions();
+  renderLandmarks();
   if (b && focus) focusOn(b.mesh);
 }
 
@@ -480,6 +494,7 @@ function select(b, focus) {
 // UI
 // ------------------------------------------------------------------
 function renderAll() {
+  renderLandmarks();
   renderTabs();
   renderRegions();
   renderResults();
@@ -634,13 +649,17 @@ function renderInfo() {
       <h3>Description</h3>
       <p>${esc(d.description || '—')}</p>
       <h3>Landmarks</h3>
-      ${list(d.landmarks)}
+      ${landmarkList(b, d.landmarks)}
       <h3>Articulates with</h3>
       ${list(d.articulations)}
       ${specimenSection(b.key)}
       <h3>Across species</h3>
       <div class="compare">${compare}</div>
       <p class="disclaimer">${esc(state.data._meta?.disclaimer || '')}</p>`;
+
+    infoPanel.querySelectorAll('[data-lm]').forEach((li) => {
+      li.onclick = () => openLm(+li.dataset.lm);
+    });
 
     infoPanel.querySelectorAll('.specimen-btn').forEach((btn) => {
       btn.onclick = () => openSpecimen(specimensFor(b.key)[+btn.dataset.index], +btn.dataset.index);
@@ -797,6 +816,7 @@ function openSpecimen(sp, index) {
   }
   $('specimen-view').classList.remove('hidden');
   document.body.classList.add('specimen-mode');
+  closeLm();
   controls.enabled = false;
   tooltip.classList.add('hidden');
   infoPanel.querySelectorAll('.specimen-btn').forEach((b) => b.classList.toggle('active', +b.dataset.index === index));
@@ -894,6 +914,7 @@ function closeSpecimen() {
   $('specimen-frame').src = 'about:blank';
   document.body.classList.remove('specimen-mode');
   controls.enabled = true;
+  renderLandmarks();
   infoPanel.querySelectorAll('.specimen-btn').forEach((b) => b.classList.remove('active'));
 }
 
@@ -992,10 +1013,224 @@ window.addEventListener('keydown', (e) => {
     searchEl.focus();
   } else if (e.key === 'Escape') {
     if (activeSpecimen) return closeSpecimen();
+    if (lm.pending) return closeLmEditor();
+    if (lm.open >= 0) return closeLm();
     if (typing) document.activeElement.blur();
     select(null);
   }
 });
+
+
+// ------------------------------------------------------------------
+// Landmarks: numbered points on the selected bone
+// ------------------------------------------------------------------
+const EDIT = new URLSearchParams(location.search).has('edit');
+const LM_DRAFT_KEY = 'vetomy-landmark-drafts';
+const lm = { items: [], open: -1, pending: null };
+const v3 = (a) => new THREE.Vector3(a[0], a[1], a[2]);
+const mirrorName = (n) => (/_L$/.test(n) ? n.replace(/_L$/, '_R') : /_R$/.test(n) ? n.replace(/_R$/, '_L') : null);
+
+function lmDrafts() {
+  try { return JSON.parse(localStorage.getItem(LM_DRAFT_KEY)) || {}; } catch { return {}; }
+}
+function saveLmDrafts(d) {
+  try { localStorage.setItem(LM_DRAFT_KEY, JSON.stringify(d)); } catch {}
+}
+function lmSpeciesData(id = state.species) {
+  const base = state.landmarks?.[id] || {};
+  return EDIT ? { ...base, ...(lmDrafts()[id] || {}) } : base;
+}
+
+function lmDefinition(b, name) {
+  const defs = state.landmarks?.definitions || {};
+  const n = String(name).toLowerCase();
+  return defs[b.key]?.[n] || defs[groupKey(b.key)]?.[n] || null;
+}
+
+// Points for a bone; if only the opposite side has points, mirror them across the midline
+function landmarksFor(b) {
+  const data = lmSpeciesData();
+  const own = data[b.name];
+  if (own?.length) return own.map((e) => ({ ...e, local: v3(e.p), normal: v3(e.n), mirrored: false }));
+  const otherName = mirrorName(b.name);
+  const other = otherName && data[otherName];
+  const otherBone = other && state.bones.find((x) => x.name === otherName);
+  if (!other?.length || !otherBone) return [];
+  b.mesh.updateMatrixWorld(true);
+  otherBone.mesh.updateMatrixWorld(true);
+  const inv = new THREE.Matrix4().copy(b.mesh.matrixWorld).invert();
+  return other.map((e) => {
+    const w = otherBone.mesh.localToWorld(v3(e.p));
+    w.z = -w.z;
+    const nw = v3(e.n).transformDirection(otherBone.mesh.matrixWorld);
+    nw.z = -nw.z;
+    return { ...e, local: b.mesh.worldToLocal(w), normal: nw.transformDirection(inv), mirrored: true };
+  });
+}
+
+function landmarkList(b, names) {
+  const placed = landmarksFor(b);
+  const items = (names || []).map((n) => {
+    const i = placed.findIndex((p) => p.name.toLowerCase() === String(n).toLowerCase());
+    return i >= 0
+      ? `<li class="has-point" data-lm="${i}" tabindex="0"><span class="lm-num">${i + 1}</span>${esc(n)}</li>`
+      : `<li>${esc(n)}</li>`;
+  });
+  // points that are not in the written list
+  placed.forEach((p, i) => {
+    if (!(names || []).some((n) => String(n).toLowerCase() === p.name.toLowerCase())) {
+      items.push(`<li class="has-point" data-lm="${i}" tabindex="0"><span class="lm-num">${i + 1}</span>${esc(p.name)}</li>`);
+    }
+  });
+  return items.length ? `<ul class="lm-list">${items.join('')}</ul>` : '<p>—</p>';
+}
+
+function renderLandmarks() {
+  const layer = $('lm-layer');
+  layer.innerHTML = '';
+  lm.items = [];
+  closeLm();
+  const b = state.selected;
+  if (!b || activeSpecimen) return;
+  landmarksFor(b).forEach((e, i) => {
+    const el = document.createElement('button');
+    el.className = 'lm-dot';
+    el.textContent = i + 1;
+    el.setAttribute('aria-label', e.name);
+    el.onclick = (ev) => { ev.stopPropagation(); lm.open === i ? closeLm() : openLm(i); };
+    layer.appendChild(el);
+    lm.items.push({ el, entry: e, bone: b });
+  });
+}
+
+function updateLandmarks() {
+  if (!lm.items.length) return;
+  const w = window.innerWidth, h = window.innerHeight;
+  const camPos = camera.position;
+  lm.items.forEach((it, i) => {
+    const world = it.bone.mesh.localToWorld(it.entry.local.clone());
+    const nWorld = it.entry.normal.clone().transformDirection(it.bone.mesh.matrixWorld);
+    const facing = nWorld.dot(camPos.clone().sub(world).normalize()) > -0.1;
+    const p = world.clone().project(camera);
+    const x = (p.x + 1) / 2 * w, y = (1 - p.y) / 2 * h;
+    it.el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    it.el.classList.toggle('behind', !facing || p.z > 1);
+    it.el.classList.toggle('active', i === lm.open);
+    if (i === lm.open) placeLmPop(x, y);
+  });
+}
+
+function placeLmPop(x, y) {
+  const pop = $('lm-pop');
+  const pw = pop.offsetWidth || 280, ph = pop.offsetHeight || 120;
+  let left = x + 18, top = y - ph / 2;
+  if (left + pw > window.innerWidth - 16) left = x - pw - 18;
+  top = Math.max(16, Math.min(top, window.innerHeight - ph - 16));
+  pop.style.transform = `translate(${left}px, ${top}px)`;
+}
+
+function openLm(i) {
+  const it = lm.items[i];
+  if (!it) return;
+  lm.open = i;
+  const def = lmDefinition(it.bone, it.entry.name);
+  const pop = $('lm-pop');
+  pop.innerHTML = `
+    <p class="lm-pop-num">Point ${i + 1}</p>
+    <h4>${esc(it.entry.name)}</h4>
+    ${def?.nav ? `<p class="lm-pop-nav">${esc(def.nav)}</p>` : ''}
+    <p class="lm-pop-text">${esc(def?.description || 'No description yet.')}</p>
+    ${EDIT ? `<button class="pill lm-del">${it.entry.mirrored ? 'Mirrored from the other side' : 'Delete point'}</button>` : ''}`;
+  if (EDIT && !it.entry.mirrored) pop.querySelector('.lm-del').onclick = () => deleteLm(it);
+  pop.classList.remove('hidden');
+  infoPanel.querySelectorAll('[data-lm]').forEach((li) => li.classList.toggle('active', +li.dataset.lm === i));
+  updateLandmarks();
+}
+
+function closeLm() {
+  lm.open = -1;
+  $('lm-pop').classList.add('hidden');
+  infoPanel.querySelectorAll('[data-lm].active').forEach((li) => li.classList.remove('active'));
+}
+
+// ---- Editor (only with ?edit in the address) ----
+function openLmEditor(hit, ev) {
+  const b = state.selected;
+  lm.pending = {
+    bone: b,
+    p: b.mesh.worldToLocal(hit.point.clone()),
+    n: hit.face.normal.clone(),
+  };
+  const sug = $('lm-suggest');
+  sug.innerHTML = (info(b.key)?.landmarks || []).map((n) => `<option value="${esc(n)}">`).join('');
+  const form = $('lm-editor');
+  form.classList.remove('hidden');
+  const fw = 280;
+  form.style.left = `${Math.min(ev.clientX + 12, window.innerWidth - fw - 16)}px`;
+  form.style.top = `${Math.min(ev.clientY + 12, window.innerHeight - 170)}px`;
+  $('lm-name').value = '';
+  $('lm-name').focus();
+}
+
+function closeLmEditor() {
+  lm.pending = null;
+  $('lm-editor').classList.add('hidden');
+}
+
+function deleteLm(it) {
+  const d = lmDrafts();
+  const sp = (d[state.species] ||= {});
+  const list = (sp[it.bone.name] ||= [...(state.landmarks?.[state.species]?.[it.bone.name] || [])]);
+  const idx = list.findIndex((e) => e.name === it.entry.name && e.p.join() === it.entry.p.join());
+  if (idx >= 0) list.splice(idx, 1);
+  saveLmDrafts(d);
+  renderInfo();
+  renderLandmarks();
+}
+
+if (EDIT) {
+  $('lm-editbar').classList.remove('hidden');
+  document.body.classList.add('lm-editing');
+
+  $('lm-editor').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = $('lm-name').value.trim();
+    const pend = lm.pending;
+    if (!name || !pend) return;
+    const r = (v) => [v.x, v.y, v.z].map((n) => Math.round(n * 1e5) / 1e5);
+    const d = lmDrafts();
+    const sp = (d[state.species] ||= {});
+    const list = (sp[pend.bone.name] ||= [...(state.landmarks?.[state.species]?.[pend.bone.name] || [])]);
+    list.push({ name, p: r(pend.p), n: r(pend.n.normalize()) });
+    saveLmDrafts(d);
+    closeLmEditor();
+    renderInfo();
+    renderLandmarks();
+    toast(`Saved "${name}"`);
+  });
+  $('lm-cancel').addEventListener('click', closeLmEditor);
+
+  $('lm-export').addEventListener('click', () => {
+    const out = { ...state.landmarks };
+    for (const s of SPECIES) {
+      const merged = lmSpeciesData(s.id);
+      if (Object.keys(merged).length) out[s.id] = merged;
+    }
+    const blob = new Blob([JSON.stringify(out, null, 2) + '\n'], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'landmarks.json';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+
+  $('lm-discard').addEventListener('click', () => {
+    saveLmDrafts({});
+    renderInfo();
+    renderLandmarks();
+    toast('Drafts discarded');
+  });
+}
 
 // ------------------------------------------------------------------
 // Loop
@@ -1011,6 +1246,7 @@ function tick(now) {
   }
   controls.update();
   renderer.render(scene, camera);
+  updateLandmarks();
   requestAnimationFrame(tick);
 }
 
