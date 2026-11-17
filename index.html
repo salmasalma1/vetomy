@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vetomy — Comparative Veterinary Anatomy</title>
+  <title>Vetomy — Interactive Veterinary Anatomy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,800&family=Readex+Pro:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script type="importmap">
   {
@@ -15,35 +18,80 @@
   </script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo">🦴</span>
-      <span class="brand-name">Vetomy</span>
-      <small>Comparative Veterinary Anatomy</small>
-    </div>
-    <nav id="species-tabs" class="species-tabs"></nav>
+  <div id="stage"></div>
+
+  <!-- Brand -->
+  <header class="brand">
+    <p class="kicker"><span class="dot"></span>interactive vet anatomy</p>
+    <h1>Vetomy <span class="chip-3d">3D</span></h1>
+    <p id="model-meta" class="meta">Loading…</p>
   </header>
 
-  <aside class="sidebar left">
-    <input id="search" type="search" placeholder="Search bones… / ابحث عن عظمة">
-    <div class="filters" id="region-filters"></div>
-    <ul id="bone-list" class="bone-list"></ul>
-  </aside>
+  <!-- Species switcher -->
+  <nav id="species-tabs" class="species" aria-label="Species"></nav>
 
-  <main id="viewer">
-    <div id="tooltip" class="tooltip hidden"></div>
-    <div id="loading" class="loading hidden">Loading model…</div>
-    <div id="placeholder-badge" class="badge hidden">Placeholder model — waiting for the real GLB file</div>
-    <div class="toolbar">
-      <label class="explode">Explode
-        <input id="explode" type="range" min="0" max="1" step="0.01" value="0">
-      </label>
-      <button id="ghost-btn" class="toggle on" title="Make other bones transparent when one is selected">Ghost others</button>
-      <button id="reset-btn">Reset view</button>
+  <!-- Search + theme -->
+  <div class="top-right">
+    <label class="search" for="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="Find a bone" autocomplete="off">
+      <kbd>/</kbd>
+    </label>
+    <button id="theme-btn" class="icon-btn" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+  </div>
+
+  <!-- Regions / bones card -->
+  <section class="card panel" aria-label="Regions and bones">
+    <div class="panel-head">
+      <h2>Explore</h2>
+      <span id="bone-count" class="pill-count">0</span>
     </div>
-  </main>
+    <div class="seg" id="panel-tabs" role="tablist">
+      <button role="tab" data-tab="regions" class="active">Regions</button>
+      <button role="tab" data-tab="bones">Bones</button>
+    </div>
+    <ul id="region-list" class="toggle-list"></ul>
+    <ul id="bone-list" class="bone-list hidden"></ul>
+    <div class="panel-foot">
+      <span id="visible-count"></span>
+      <button id="toggle-all" class="link-btn">Hide all</button>
+    </div>
+  </section>
 
-  <aside class="sidebar right" id="info-panel"></aside>
+  <!-- Info panel -->
+  <aside id="info-panel" class="card info hidden" aria-live="polite"></aside>
+
+  <!-- View rail -->
+  <div class="card rail" aria-label="Camera views">
+    <button data-view="three" class="active" title="Three-quarter view">¾</button>
+    <button data-view="right" title="Right lateral">R</button>
+    <button data-view="left" title="Left lateral">L</button>
+    <button data-view="cranial" title="Cranial view">Cr</button>
+    <button data-view="dorsal" title="Dorsal view">D</button>
+    <hr>
+    <button id="spin-btn" title="Auto-rotate">⟳</button>
+    <button id="reset-btn" title="Reset everything">↺</button>
+  </div>
+
+  <!-- Explode -->
+  <div class="card explode">
+    <div class="explode-head">
+      <span>Explode</span>
+      <output id="explode-val">0%</output>
+    </div>
+    <input id="explode" type="range" min="0" max="100" step="1" value="0" aria-label="Explode amount">
+    <div class="explode-labels"><span>Assembled</span><span>Every bone</span></div>
+    <div class="explode-actions">
+      <button id="ghost-btn" class="toggle on" aria-pressed="true">👻 Ghost mode</button>
+    </div>
+  </div>
+
+  <p class="hints">Drag to orbit <span>·</span> Scroll to zoom <span>·</span> Tap to inspect</p>
+  <p class="credits">Vetomy · v0.1</p>
+
+  <div id="tooltip" class="tooltip hidden"></div>
+  <div id="toast" class="toast"></div>
+  <div id="placeholder-badge" class="badge hidden">Placeholder skeleton · real model dropping soon</div>
 
   <script type="module" src="app.js"></script>
 </body>

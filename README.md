@@ -23,7 +23,10 @@ The first release covers the **skeletal system** of four species. Muscles, nerve
 - **Comparative anatomy**: each bone's details include notes for all four species side by side.
 - **Ghost mode**: fades the surrounding bones so the selected one stands out.
 - **Exploded view**: separates the bones to show how they fit together.
-- **Search and regional filters**: head, vertebral column and thorax, forelimb, hindlimb.
+- **Region toggles**: show or hide the head, vertebral column and thorax, forelimb and hindlimb.
+- **Anatomical camera views**: three-quarter, right and left lateral, cranial and dorsal, plus auto-rotate.
+- **Search**: by English, Latin or Arabic name (press `/` to focus).
+- **Light and dark themes**.
 - **Responsive**: works on desktop and mobile browsers.
 
 ---
