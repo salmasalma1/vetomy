@@ -869,10 +869,10 @@ async function showSketchfab(uid) {
           if (session !== sketchfabSession) return;
           $('specimen-loading').classList.add('hidden');
           api.getAnnotationList((err, list) => {
-            if (!err && list?.length && session === sketchfabSession) renderLandmarks(api, list);
+            if (!err && list?.length && session === sketchfabSession) renderScanLandmarks(api, list);
           });
         });
-        api.addEventListener('annotationSelect', (i) => markLandmark(i));
+        api.addEventListener('annotationSelect', (i) => markScanLandmark(i));
       },
       error: fallback,
     });
@@ -881,7 +881,7 @@ async function showSketchfab(uid) {
   }
 }
 
-function renderLandmarks(api, list) {
+function renderScanLandmarks(api, list) {
   const ol = $('lm-list');
   ol.innerHTML = '';
   list.forEach((a, i) => {
@@ -890,14 +890,14 @@ function renderLandmarks(api, list) {
     li.innerHTML = `<button data-i="${i}"><span class="n">${i + 1}</span><span>${esc(name)}</span></button>`;
     li.querySelector('button').onclick = () => {
       api.gotoAnnotation(i, { preventCameraAnimation: false });
-      markLandmark(i);
+      markScanLandmark(i);
     };
     ol.appendChild(li);
   });
   $('specimen-landmarks').classList.remove('hidden');
 }
 
-function markLandmark(i) {
+function markScanLandmark(i) {
   $('lm-list').querySelectorAll('button').forEach((b) => b.classList.toggle('active', +b.dataset.i === i));
 }
 
