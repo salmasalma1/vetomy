@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js';
+import { buildPlaceholder } from './placeholder.js?v=20261118';
 
 // ------------------------------------------------------------------
 // Config
@@ -165,7 +165,7 @@ const loader = new GLTFLoader();
 
 async function loadData() {
   try {
-    state.data = await (await fetch('data/bones.json')).json();
+    state.data = await (await fetch('data/bones.json', { cache: 'no-cache' })).json();
   } catch (e) {
     console.error('Could not load data/bones.json', e);
     state.data = {};
