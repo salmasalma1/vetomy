@@ -1,0 +1,262 @@
+{
+  "_meta": {
+    "version": "0.1-draft",
+    "disclaimer": "Draft content written as a starting point. Verify every entry against Sisson & Grossman (Getty), Dyce/Sack/Wensing and NAV before submission.",
+    "species": ["horse", "cattle", "dog", "cat"]
+  },
+
+  "skull": {
+    "region": "head",
+    "names": { "en": "Skull", "nav": "Cranium", "ar": "الجمجمة" },
+    "type": "Compound (flat & irregular bones)",
+    "description": "Formed by the cranial bones, which enclose the brain, and the facial bones, which form the face and the nasal and oral cavities. Most skull bones are joined by immovable sutures.",
+    "landmarks": ["Orbit", "Zygomatic arch", "Nuchal crest", "Occipital condyles", "Foramen magnum", "Paranasal sinuses"],
+    "articulations": ["Mandible (temporomandibular joint)", "Atlas (atlanto-occipital joint)", "Hyoid apparatus"],
+    "species": {
+      "horse": "Long face. The orbit is completely closed by bone (zygomatic process of the frontal bone). Prominent facial crest on the maxilla; large paranasal sinuses.",
+      "cattle": "The frontal bone forms most of the dorsal surface and the poll (intercornual protuberance). Cornual processes in horned breeds, with the frontal sinus extending into them. Complete bony orbit.",
+      "dog": "Shape varies with breed: dolichocephalic, mesaticephalic or brachycephalic. The orbit is incomplete and closed laterally by the orbital ligament. The sagittal crest is often prominent.",
+      "cat": "Short, rounded skull with very large orbits. The orbit is almost complete; the frontal and zygomatic processes nearly meet and are joined by a ligament."
+    }
+  },
+
+  "mandible": {
+    "region": "head",
+    "names": { "en": "Mandible", "nav": "Mandibula", "ar": "الفك السفلي" },
+    "type": "Irregular bone",
+    "description": "The only movable bone of the skull; it carries the lower teeth. Each half has a horizontal body and a vertical ramus.",
+    "landmarks": ["Body", "Ramus", "Coronoid process", "Condylar process", "Mandibular foramen", "Mental foramen", "Mandibular symphysis"],
+    "articulations": ["Temporal bone (temporomandibular joint)"],
+    "species": {
+      "horse": "The two halves fuse early at the symphysis. Very wide ramus. Vascular notch on the ventral border, where the facial artery pulse is taken.",
+      "cattle": "The two halves stay joined by a symphysis that does not fully ossify. There are no upper incisors; the lower incisors meet the dental pad.",
+      "dog": "Fibrous symphysis. Large coronoid process and deep masseteric fossa.",
+      "cat": "Fibrous symphysis. Short, strong body adapted for a powerful bite."
+    }
+  },
+
+  "vertebrae_cervical": {
+    "region": "trunk",
+    "names": { "en": "Cervical vertebrae", "nav": "Vertebrae cervicales", "ar": "الفقرات العنقية" },
+    "type": "Irregular bones",
+    "description": "Seven cervical vertebrae in all domestic mammals. The first (atlas) and second (axis) are specialised for movements of the head.",
+    "landmarks": ["Atlas – wings (alae)", "Axis – dens", "Transverse processes", "Transverse foramina", "Spinous processes"],
+    "articulations": ["Skull (atlanto-occipital joint)", "Each other (atlanto-axial and intervertebral joints)", "First thoracic vertebra"],
+    "species": {
+      "horse": "7. Long vertebral bodies give the long neck; spinous processes are low.",
+      "cattle": "7. Shorter than in the horse.",
+      "dog": "7. The axis has a long, blade-like spinous process.",
+      "cat": "7. Similar to the dog; a very flexible neck."
+    }
+  },
+
+  "vertebrae_thoracic": {
+    "region": "trunk",
+    "names": { "en": "Thoracic vertebrae", "nav": "Vertebrae thoracicae", "ar": "الفقرات الصدرية" },
+    "type": "Irregular bones",
+    "description": "They articulate with the ribs. In large animals their tall cranial spinous processes form the withers.",
+    "landmarks": ["Spinous processes", "Costal fovea", "Transverse processes", "Mamillary processes"],
+    "articulations": ["Ribs (costovertebral joints)", "Adjacent vertebrae"],
+    "species": {
+      "horse": "18 (sometimes 17–19). Tall spinous processes of the cranial thoracic vertebrae form the withers.",
+      "cattle": "13.",
+      "dog": "13. The anticlinal vertebra is usually T11.",
+      "cat": "13."
+    }
+  },
+
+  "vertebrae_lumbar": {
+    "region": "trunk",
+    "names": { "en": "Lumbar vertebrae", "nav": "Vertebrae lumbales", "ar": "الفقرات القطنية" },
+    "type": "Irregular bones",
+    "description": "Vertebrae of the loin, with long, flat transverse processes.",
+    "landmarks": ["Transverse processes", "Spinous processes", "Mamillary processes"],
+    "articulations": ["Adjacent vertebrae", "Sacrum (lumbosacral joint)"],
+    "species": {
+      "horse": "6 (sometimes 5). The last transverse processes articulate with each other and with the sacrum.",
+      "cattle": "6. Long, horizontal transverse processes that can be felt in the paralumbar fossa.",
+      "dog": "7.",
+      "cat": "7."
+    }
+  },
+
+  "sacrum": {
+    "region": "trunk",
+    "names": { "en": "Sacrum", "nav": "Os sacrum", "ar": "عظم العجز" },
+    "type": "Fused vertebrae",
+    "description": "Fused sacral vertebrae. It articulates with the ilium at the sacroiliac joint and transmits the hindlimb's thrust to the spine.",
+    "landmarks": ["Wings (alae)", "Promontory", "Median sacral crest", "Dorsal and ventral sacral foramina"],
+    "articulations": ["Ilium (sacroiliac joint)", "Last lumbar vertebra", "First caudal vertebra"],
+    "species": {
+      "horse": "5 fused vertebrae.",
+      "cattle": "5 fused vertebrae; the spinous processes fuse into a continuous median sacral crest.",
+      "dog": "3 fused vertebrae.",
+      "cat": "3 fused vertebrae."
+    }
+  },
+
+  "vertebrae_caudal": {
+    "region": "trunk",
+    "names": { "en": "Caudal vertebrae", "nav": "Vertebrae caudales", "ar": "الفقرات الذيلية" },
+    "type": "Irregular bones",
+    "description": "Tail vertebrae. Distally they become simple rods as the processes disappear.",
+    "landmarks": ["Haemal arches (in some species)", "Transverse processes"],
+    "articulations": ["Sacrum", "Each other"],
+    "species": {
+      "horse": "About 15–21.",
+      "cattle": "About 18–20. The coccygeal vein on the ventral surface is a common site for blood sampling.",
+      "dog": "About 20–23.",
+      "cat": "About 20–24."
+    }
+  },
+
+  "ribs": {
+    "region": "trunk",
+    "names": { "en": "Ribs", "nav": "Costae", "ar": "الضلوع" },
+    "type": "Flat, curved bones",
+    "description": "Paired bones forming the lateral walls of the thorax. Sternal ribs reach the sternum directly; asternal ribs join the costal arch.",
+    "landmarks": ["Head", "Neck", "Tubercle", "Body", "Costal cartilage"],
+    "articulations": ["Thoracic vertebrae", "Sternum (sternal ribs)"],
+    "species": {
+      "horse": "18 pairs: 8 sternal, 10 asternal.",
+      "cattle": "13 pairs: 8 sternal, 5 asternal.",
+      "dog": "13 pairs: 9 sternal, 4 asternal. The last pair is usually floating.",
+      "cat": "13 pairs: 9 sternal, 4 asternal. The last pair is often floating."
+    }
+  },
+
+  "scapula": {
+    "region": "forelimb",
+    "names": { "en": "Scapula", "nav": "Scapula", "ar": "لوح الكتف" },
+    "type": "Flat bone",
+    "description": "Flat bone of the shoulder. It is attached to the trunk by muscles only (synsarcosis); the clavicle is absent or vestigial in domestic mammals.",
+    "landmarks": ["Spine of scapula", "Supraspinous fossa", "Infraspinous fossa", "Glenoid cavity", "Supraglenoid tubercle", "Scapular cartilage"],
+    "articulations": ["Humerus (shoulder joint)"],
+    "species": {
+      "horse": "No acromion; the spine fades out distally and has a tuber at its middle. Large scapular cartilage.",
+      "cattle": "The spine ends in a small acromion. The spine lies nearer the cranial border, so the supraspinous fossa is narrow.",
+      "dog": "Acromion present. The spine divides the bone into two nearly equal fossae.",
+      "cat": "The acromion has a hamate and a suprahamate process. A small vestigial clavicle is present."
+    }
+  },
+
+  "humerus": {
+    "region": "forelimb",
+    "names": { "en": "Humerus", "nav": "Humerus", "ar": "عظمة العضد" },
+    "type": "Long bone",
+    "description": "Long bone of the arm, between the shoulder and the elbow.",
+    "landmarks": ["Head", "Greater tubercle", "Lesser tubercle", "Intertubercular groove", "Deltoid tuberosity", "Condyle", "Olecranon fossa"],
+    "articulations": ["Scapula (shoulder joint)", "Radius and ulna (elbow joint)"],
+    "species": {
+      "horse": "An intermediate tubercle divides the intertubercular groove in two. Prominent deltoid tuberosity.",
+      "cattle": "Very large greater tubercle that overhangs the intertubercular groove.",
+      "dog": "A supratrochlear foramen above the trochlea connects the olecranon and radial fossae.",
+      "cat": "A supracondylar foramen on the medial side carries the median nerve and brachial artery. There is no supratrochlear foramen."
+    }
+  },
+
+  "radius": {
+    "region": "forelimb",
+    "names": { "en": "Radius", "nav": "Radius", "ar": "الكعبرة" },
+    "type": "Long bone",
+    "description": "The main weight-bearing bone of the forearm.",
+    "landmarks": ["Head", "Radial tuberosity", "Body", "Trochlea", "Styloid process"],
+    "articulations": ["Humerus (elbow joint)", "Ulna", "Carpal bones (antebrachiocarpal joint)"],
+    "species": {
+      "horse": "Large. The ulna is reduced and fused to it, leaving a single interosseous space.",
+      "cattle": "The ulna is complete and fused to it, with proximal and distal interosseous spaces.",
+      "dog": "Separate from the ulna, which allows limited pronation and supination.",
+      "cat": "Separate from the ulna; it rotates more than in the dog."
+    }
+  },
+
+  "ulna": {
+    "region": "forelimb",
+    "names": { "en": "Ulna", "nav": "Ulna", "ar": "الزند" },
+    "type": "Long bone",
+    "description": "Provides the olecranon (point of the elbow), which is the lever for the triceps.",
+    "landmarks": ["Olecranon", "Anconeal process", "Trochlear notch", "Styloid process"],
+    "articulations": ["Humerus (elbow joint)", "Radius"],
+    "species": {
+      "horse": "Reduced: the proximal part carries the olecranon, and the shaft tapers and fuses with the radius.",
+      "cattle": "Complete shaft, fused with the radius.",
+      "dog": "Complete and separate. Carries the anconeal process (ununited anconeal process is a clinical condition).",
+      "cat": "Complete and separate."
+    }
+  },
+
+  "metacarpus": {
+    "region": "forelimb",
+    "names": { "en": "Metacarpal bones", "nav": "Ossa metacarpalia", "ar": "عظام المشط الأمامي" },
+    "type": "Long bones",
+    "description": "Bones between the carpus and the digits. Their number depends on how many digits the species has.",
+    "landmarks": ["Base", "Body", "Head"],
+    "articulations": ["Carpal bones", "Proximal phalanges"],
+    "species": {
+      "horse": "Mc III (the cannon bone) carries the weight. Mc II and IV are splint bones. There is no Mc I or V.",
+      "cattle": "Mc III and IV are fused into one cannon bone with a dorsal longitudinal groove. There is a small Mc V.",
+      "dog": "Five metacarpals. Mc I (dewclaw) is small; III and IV are the longest.",
+      "cat": "Five metacarpals; Mc I is small."
+    }
+  },
+
+  "os_coxae": {
+    "region": "hindlimb",
+    "names": { "en": "Hip bone", "nav": "Os coxae", "ar": "عظم الحوض (الورك)" },
+    "type": "Flat / irregular bone",
+    "description": "Formed by the fusion of the ilium, ischium and pubis, which meet at the acetabulum. The two hip bones, the sacrum and the first caudal vertebrae form the pelvis.",
+    "landmarks": ["Tuber coxae", "Tuber sacrale", "Iliac wing", "Acetabulum", "Obturator foramen", "Ischial tuberosity", "Pelvic symphysis"],
+    "articulations": ["Sacrum (sacroiliac joint)", "Femur (hip joint)", "Opposite hip bone (pelvic symphysis)"],
+    "species": {
+      "horse": "Large tuber coxae (point of the hip). Oval pelvic inlet.",
+      "cattle": "Prominent tuber coxae (hook bones) and a three-pointed ischial tuberosity (pin bones), both used in body condition scoring.",
+      "dog": "The iliac wing is almost vertical (sagittal).",
+      "cat": "Similar to the dog; relatively long, narrow pelvis."
+    }
+  },
+
+  "femur": {
+    "region": "hindlimb",
+    "names": { "en": "Femur", "nav": "Os femoris", "ar": "عظمة الفخذ" },
+    "type": "Long bone",
+    "description": "The bone of the thigh, between the hip and the stifle.",
+    "landmarks": ["Head", "Fovea capitis", "Neck", "Greater trochanter", "Lesser trochanter", "Trochlea", "Medial and lateral condyles", "Supracondylar fossa"],
+    "articulations": ["Os coxae (hip joint)", "Tibia and patella (stifle joint)"],
+    "species": {
+      "horse": "Third trochanter present. Large supracondylar fossa. The medial ridge of the trochlea is much larger and is part of the stay apparatus.",
+      "cattle": "No third trochanter. Large greater trochanter.",
+      "dog": "No third trochanter; slender shaft. Sesamoid bones (fabellae) lie behind the condyles.",
+      "cat": "Straight, slender shaft; no third trochanter."
+    }
+  },
+
+  "tibia": {
+    "region": "hindlimb",
+    "names": { "en": "Tibia", "nav": "Tibia", "ar": "القصبة" },
+    "type": "Long bone",
+    "description": "The main bone of the leg (crus), between the stifle and the hock.",
+    "landmarks": ["Medial and lateral condyles", "Tibial tuberosity", "Cochlea", "Medial malleolus"],
+    "articulations": ["Femur (stifle joint)", "Fibula", "Talus (tarsocrural joint)"],
+    "species": {
+      "horse": "The fibula is reduced to a proximal part; its distal end is fused to the tibia as the lateral malleolus.",
+      "cattle": "The fibula is reduced to a proximal process and a separate malleolar bone.",
+      "dog": "The fibula is complete, slender and separate.",
+      "cat": "The fibula is complete and separate."
+    }
+  },
+
+  "metatarsus": {
+    "region": "hindlimb",
+    "names": { "en": "Metatarsal bones", "nav": "Ossa metatarsalia", "ar": "عظام المشط الخلفي" },
+    "type": "Long bones",
+    "description": "Bones between the tarsus and the digits of the hindlimb.",
+    "landmarks": ["Base", "Body", "Head"],
+    "articulations": ["Tarsal bones", "Proximal phalanges"],
+    "species": {
+      "horse": "Mt III is the cannon bone and is longer than Mc III. Mt II and IV are splint bones.",
+      "cattle": "Mt III and IV are fused into a cannon bone that is longer than the metacarpal one.",
+      "dog": "Usually four (Mt II–V). Mt I is often absent or vestigial (the hind dewclaw varies).",
+      "cat": "Four main metatarsals; Mt I is vestigial."
+    }
+  }
+}
