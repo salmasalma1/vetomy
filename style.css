@@ -348,6 +348,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
   font-size: 14px;
   font-weight: 600;
   color: var(--muted);
+  white-space: nowrap;
 }
 .views button:hover { color: var(--ink); background: var(--surface-2); }
 .views button.active { background: var(--ink); color: var(--bg); }
@@ -442,3 +443,21 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
   .badge { top: 128px; left: 16px; }
   .sheet { top: auto; left: 0; right: 0; bottom: 0; width: 100%; max-height: 62vh; border-radius: 28px 28px 0 0; }
 }
+
+/* ============ Error box ============ */
+.error-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 520px;
+  padding: 20px 22px;
+  background: var(--surface);
+  border: 1.5px solid var(--tangerine);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  line-height: 1.55;
+  z-index: 100;
+}
+.error-box strong { display: block; margin-bottom: 6px; font-size: 17px; }
+.error-box code { display: block; margin-top: 10px; font-size: 13px; color: var(--muted); word-break: break-word; }

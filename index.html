@@ -81,6 +81,30 @@
   <div id="tooltip" class="tooltip hidden"></div>
   <div id="toast" class="toast"></div>
 
+  <!-- Shows a readable message if the app fails to start -->
+  <script>
+    (function () {
+      function show(msg) {
+        if (document.getElementById('error-box')) return;
+        var box = document.createElement('div');
+        box.id = 'error-box';
+        box.className = 'error-box';
+        box.innerHTML = '<strong>Vetomy couldn\u2019t start</strong>' +
+          'Check your internet connection (the 3D library loads online). ' +
+          'If you opened index.html by double-clicking it, run it through a local server instead.' +
+          '<code></code>';
+        box.querySelector('code').textContent = msg;
+        document.body.appendChild(box);
+      }
+      window.addEventListener('error', function (e) {
+        if (e instanceof ErrorEvent) show(e.message);
+        else if (e.target && e.target.tagName === 'SCRIPT') show('Failed to load ' + (e.target.src || 'a script'));
+      }, true);
+      window.addEventListener('unhandledrejection', function (e) { show(String(e.reason && e.reason.message || e.reason)); });
+      window.__vetomyShowError = show;
+      setTimeout(function () { if (!window.__vetomyReady) show('The app did not finish loading within 15 seconds.'); }, 15000);
+    })();
+  </script>
   <script type="module" src="app.js"></script>
 </body>
 </html>

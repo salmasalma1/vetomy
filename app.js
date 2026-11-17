@@ -690,6 +690,7 @@ function tick(now) {
 (async function init() {
   renderTabs();
   await loadData();
-  await loadSpecies(state.species);
   requestAnimationFrame(tick);
+  await loadSpecies(state.species);
+  window.__vetomyReady = true;
 })();
