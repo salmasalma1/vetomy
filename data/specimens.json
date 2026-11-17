@@ -2,7 +2,7 @@
   "_meta": {
     "source": "PaleoLab-ULE (University of León) on Sketchfab",
     "profile": "https://sketchfab.com/PaleoLab-ULE",
-    "note": "Real bone scans shown through the Sketchfab embed viewer. Keys match bone keys in bones.json."
+    "note": "Entries with 'file' open in Vetomy's own viewer; entries with 'uid' open the Sketchfab embed."
   },
   "horse": {
     "humerus": [
@@ -77,6 +77,20 @@
       {
         "title": "Lumbar vertebra (L6)",
         "uid": "89c0999f7123418093400169a625799d"
+      }
+    ],
+    "skull": [
+      {
+        "title": "Skull (photo scan)",
+        "file": "specimens/horse_skull.glb",
+        "credit": "matousekfoto, CC BY 4.0",
+        "source": "https://sketchfab.com/3d-models/lebka-kone-horse-skull-b2b5037626514e88bf183db22acbc8bc"
+      },
+      {
+        "title": "Hyoid apparatus",
+        "file": "specimens/horse_hyoid.glb",
+        "credit": "sonea, CC BY 4.0",
+        "source": "https://sketchfab.com/3d-models/equine-hyoid-apparatus-c225d71c8bcc4cad826d580e26986210"
       }
     ]
   },

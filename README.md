@@ -63,7 +63,8 @@ vetomy/
 ├── data/
 │   ├── bones.json      # Anatomical content for every structure
 │   └── specimens.json  # Links from bones to real specimen scans
-├── models/             # 3D models: horse.glb, cattle.glb, dog.glb, cat.glb
+├── models/             # Skeleton models: horse.glb, cattle.glb, dog.glb, cat.glb
+├── specimens/          # High-resolution scans of individual bones
 └── docs/
     └── MODEL_SPEC.md   # Naming and export requirements for 3D models
 ```

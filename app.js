@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261118c';
+import { buildPlaceholder } from './placeholder.js?v=20261118d';
 
 // ------------------------------------------------------------------
 // Config
@@ -190,8 +190,11 @@ async function loadSpecies(id) {
 
   let root;
   let isPlaceholder = false;
+  let extras = null;
   try {
-    root = (await loader.loadAsync(`models/${id}.glb`)).scene;
+    const gltf = await loader.loadAsync(`models/${id}.glb`);
+    root = gltf.scene;
+    extras = gltf.asset?.extras || null;
   } catch {
     console.info(`models/${id}.glb not found, using the placeholder skeleton.`);
     root = buildPlaceholder(id);
@@ -208,6 +211,7 @@ async function loadSpecies(id) {
   prepareModel(root);
 
   $('placeholder-badge').classList.toggle('hidden', !isPlaceholder);
+  renderModelCredit(extras);
   $('explode').value = 0;
   state.explode = 0;
   $('explode-val').textContent = '0%';
@@ -216,6 +220,14 @@ async function loadSpecies(id) {
 
   const s = species();
   toast(`${s.en} loaded, ${uniqueBones().length} bones`);
+}
+
+function renderModelCredit(extras) {
+  const el = $('model-credit');
+  if (!extras?.author) { el.textContent = ''; return; }
+  const author = String(extras.author).replace(/\s*\(https?:[^)]*\)/, '');
+  const license = String(extras.license || '').split(' ')[0].replace(/-/g, ' ').replace('CC BY 4.0', 'CC BY 4.0');
+  el.innerHTML = `Model by <a href="${esc(extras.source || '#')}" target="_blank" rel="noopener">${esc(author)}</a>${license ? `, ${esc(license)}` : ''}`;
 }
 
 function disposeModel(root) {
@@ -587,7 +599,7 @@ function renderInfo() {
       <p class="disclaimer">${esc(state.data._meta?.disclaimer || '')}</p>`;
 
     infoPanel.querySelectorAll('.specimen-btn').forEach((btn) => {
-      btn.onclick = () => openSpecimen(btn.dataset.uid, btn.dataset.title);
+      btn.onclick = () => openSpecimen(specimensFor(b.key)[+btn.dataset.index], +btn.dataset.index);
     });
 
     // Jump to the same bone in another species
@@ -609,8 +621,8 @@ function specimensFor(key) {
 function specimenSection(key) {
   const list = specimensFor(key);
   if (!list.length) return '';
-  const btns = list.map((sp) => `
-    <button class="specimen-btn" data-uid="${esc(sp.uid)}" data-title="${esc(sp.title)}">
+  const btns = list.map((sp, i) => `
+    <button class="specimen-btn" data-index="${i}">
       <svg viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>
       <span>${esc(sp.title)}</span>
     </button>`).join('');
@@ -619,31 +631,141 @@ function specimenSection(key) {
 
 let activeSpecimen = null;
 
-function openSpecimen(uid, title) {
-  if (!/^[a-f0-9]{32}$/.test(uid)) return;
-  const s = species();
-  const dark = document.documentElement.dataset.theme === 'dark';
-  activeSpecimen = uid;
-  $('specimen-title').textContent = `${s.en} ${title.toLowerCase()}`;
-  const credit = $('specimen-credit');
-  credit.textContent = `Scan: ${state.specimens?._meta?.source || 'Sketchfab'}`;
-  credit.href = `https://sketchfab.com/3d-models/${uid}`;
-  const params = new URLSearchParams({
-    autostart: '1', preload: '1', ui_theme: dark ? 'dark' : 'light',
-    ui_infos: '0', ui_hint: '0', ui_stop: '0', ui_inspector: '0', ui_settings: '0',
-    ui_help: '0', ui_vr: '0', ui_ar: '0', ui_annotations: '0', ui_fullscreen: '1',
+// A small second viewer for specimen files we host ourselves
+const spec = { renderer: null, scene: null, camera: null, controls: null, model: null, raf: 0, token: 0 };
+
+function ensureSpecViewer() {
+  if (spec.renderer) return;
+  const wrap = $('specimen-canvas');
+  spec.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  spec.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  spec.renderer.outputColorSpace = THREE.SRGBColorSpace;
+  wrap.appendChild(spec.renderer.domElement);
+  spec.scene = new THREE.Scene();
+  spec.scene.add(new THREE.HemisphereLight(0xffffff, 0xb7c9bf, 1.5));
+  const key = new THREE.DirectionalLight(0xffffff, 1.6);
+  key.position.set(2, 3, 2);
+  spec.scene.add(key);
+  const fill = new THREE.DirectionalLight(0xbcd2ff, 0.6);
+  fill.position.set(-3, 1, -2);
+  spec.scene.add(fill);
+  spec.camera = new THREE.PerspectiveCamera(35, 1, 0.001, 1000);
+  spec.controls = new OrbitControls(spec.camera, spec.renderer.domElement);
+  spec.controls.enableDamping = true;
+  spec.controls.autoRotate = true;
+  spec.controls.autoRotateSpeed = 0.8;
+  spec.renderer.domElement.addEventListener('pointerdown', () => (spec.controls.autoRotate = false));
+  new ResizeObserver(() => {
+    const w = wrap.clientWidth, h = wrap.clientHeight;
+    if (!w || !h) return;
+    spec.renderer.setSize(w, h);
+    spec.camera.aspect = w / h;
+    spec.camera.updateProjectionMatrix();
+  }).observe(wrap);
+}
+
+async function showSpecimenFile(file) {
+  ensureSpecViewer();
+  const token = ++spec.token;
+  $('specimen-canvas').classList.remove('hidden');
+  $('specimen-frame').classList.add('hidden');
+  $('specimen-loading').textContent = 'Loading scan…';
+  $('specimen-loading').classList.remove('hidden');
+  let gltf;
+  try {
+    gltf = await loader.loadAsync(file);
+  } catch (e) {
+    if (token === spec.token) $('specimen-loading').textContent = 'Could not load this scan.';
+    return;
+  }
+  if (token !== spec.token) return;
+  clearSpecimenModel();
+  const model = gltf.scene;
+  model.traverse((o) => {
+    if (o.isMesh && !o.material?.map) {
+      o.material = new THREE.MeshStandardMaterial({ color: COLORS.bone, roughness: 0.55 });
+    }
   });
-  $('specimen-frame').src = `https://sketchfab.com/models/${uid}/embed?${params}`;
+  const box = new THREE.Box3().setFromObject(model);
+  const c = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3()).length();
+  model.position.sub(c);
+  spec.scene.add(model);
+  spec.model = model;
+  spec.camera.near = size / 500;
+  spec.camera.far = size * 50;
+  spec.camera.position.set(size * 0.55, size * 0.25, size * 0.7);
+  spec.camera.updateProjectionMatrix();
+  spec.controls.target.set(0, 0, 0);
+  spec.controls.autoRotate = true;
+  $('specimen-loading').classList.add('hidden');
+  cancelAnimationFrame(spec.raf);
+  const loop = () => {
+    spec.controls.update();
+    spec.renderer.render(spec.scene, spec.camera);
+    spec.raf = requestAnimationFrame(loop);
+  };
+  loop();
+}
+
+function clearSpecimenModel() {
+  if (!spec.model) return;
+  spec.scene.remove(spec.model);
+  spec.model.traverse((o) => {
+    if (!o.isMesh) return;
+    o.geometry?.dispose();
+    (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => {
+      m?.map?.dispose();
+      m?.dispose();
+    });
+  });
+  spec.model = null;
+}
+
+function openSpecimen(sp, index) {
+  if (!sp) return;
+  const s = species();
+  activeSpecimen = sp;
+  $('specimen-title').textContent = `${s.en} ${sp.title.toLowerCase()}`;
+  const credit = $('specimen-credit');
+
+  if (sp.file) {
+    credit.textContent = `Scan by ${sp.credit || 'unknown author'}`;
+    credit.href = sp.source || '#';
+    showSpecimenFile(sp.file);
+  } else if (/^[a-f0-9]{32}$/.test(sp.uid || '')) {
+    spec.token++;
+    cancelAnimationFrame(spec.raf);
+    clearSpecimenModel();
+    const dark = document.documentElement.dataset.theme === 'dark';
+    credit.textContent = `Scan: ${state.specimens?._meta?.source || 'Sketchfab'}`;
+    credit.href = `https://sketchfab.com/3d-models/${sp.uid}`;
+    const params = new URLSearchParams({
+      autostart: '1', preload: '1', ui_theme: dark ? 'dark' : 'light',
+      ui_infos: '0', ui_hint: '0', ui_stop: '0', ui_inspector: '0', ui_settings: '0',
+      ui_help: '0', ui_vr: '0', ui_ar: '0', ui_annotations: '0', ui_fullscreen: '1',
+    });
+    $('specimen-canvas').classList.add('hidden');
+    $('specimen-frame').classList.remove('hidden');
+    $('specimen-loading').textContent = 'Loading high-resolution scan…';
+    $('specimen-loading').classList.remove('hidden');
+    $('specimen-frame').src = `https://sketchfab.com/models/${sp.uid}/embed?${params}`;
+  } else {
+    return;
+  }
   $('specimen-view').classList.remove('hidden');
   document.body.classList.add('specimen-mode');
   controls.enabled = false;
   tooltip.classList.add('hidden');
-  infoPanel.querySelectorAll('.specimen-btn').forEach((b) => b.classList.toggle('active', b.dataset.uid === uid));
+  infoPanel.querySelectorAll('.specimen-btn').forEach((b) => b.classList.toggle('active', +b.dataset.index === index));
 }
 
 function closeSpecimen() {
   if (!activeSpecimen) return;
   activeSpecimen = null;
+  spec.token++;
+  cancelAnimationFrame(spec.raf);
+  clearSpecimenModel();
   $('specimen-view').classList.add('hidden');
   $('specimen-frame').src = 'about:blank';
   document.body.classList.remove('specimen-mode');

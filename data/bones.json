@@ -452,5 +452,209 @@
       "dog": "Usually four (Mt II–V). Mt I is often absent or vestigial (the hind dewclaw varies).",
       "cat": "Four main metatarsals; Mt I is vestigial."
     }
+  },
+  "teeth": {
+    "region": "head",
+    "names": {
+      "en": "Teeth",
+      "nav": "Dentes"
+    },
+    "type": "Dental structures",
+    "description": "Incisors, canines, premolars and molars set in the alveoli of the incisive bone, maxilla and mandible. The dental formula differs markedly between species.",
+    "landmarks": [
+      "Incisors",
+      "Canines",
+      "Premolars",
+      "Molars",
+      "Crown",
+      "Root"
+    ],
+    "articulations": [
+      "Alveoli of the incisive bone, maxilla and mandible (gomphosis)"
+    ],
+    "species": {
+      "horse": "Hypsodont teeth that keep erupting through life. Adult dentition 36–44 teeth; canines are usually absent or small in mares, and the first premolar (wolf tooth) is inconstant.",
+      "cattle": "No upper incisors or canines; the lower incisors meet the dental pad. Adult dentition 32 teeth, with the lower canine shaped like an incisor.",
+      "dog": "Brachydont teeth. Adult dentition 42 teeth. The upper fourth premolar and lower first molar are the carnassial teeth.",
+      "cat": "Brachydont teeth. Adult dentition 30 teeth, the fewest of the four species. Carnassials are the upper fourth premolar and lower first molar."
+    }
+  },
+  "sternum": {
+    "region": "trunk",
+    "names": {
+      "en": "Sternum",
+      "nav": "Sternum"
+    },
+    "type": "Segmented flat bone",
+    "description": "Ventral floor of the thorax, formed by a series of sternebrae joined by cartilage. It carries the costal cartilages of the sternal ribs.",
+    "landmarks": [
+      "Manubrium",
+      "Body (sternebrae)",
+      "Xiphoid process",
+      "Xiphoid cartilage",
+      "Costal notches"
+    ],
+    "articulations": [
+      "Costal cartilages of the sternal ribs"
+    ],
+    "species": {
+      "horse": "Usually 7 sternebrae. Laterally compressed cranially, forming a keel with the cariniform cartilage.",
+      "cattle": "7 sternebrae. Flattened dorsoventrally; the manubrium forms a movable joint with the body.",
+      "dog": "8 sternebrae, roughly cylindrical.",
+      "cat": "8 sternebrae, slender and cylindrical."
+    }
+  },
+  "carpus": {
+    "region": "forelimb",
+    "names": {
+      "en": "Carpal bones",
+      "nav": "Ossa carpi"
+    },
+    "type": "Short bones",
+    "description": "Two rows of short bones between the radius and ulna and the metacarpus, forming the carpus (the 'knee' of large animals).",
+    "landmarks": [
+      "Radial carpal bone",
+      "Intermediate carpal bone",
+      "Ulnar carpal bone",
+      "Accessory carpal bone",
+      "Distal row (C1–C4)"
+    ],
+    "articulations": [
+      "Radius and ulna (antebrachiocarpal joint)",
+      "Between the two rows (middle carpal joint)",
+      "Metacarpal bones (carpometacarpal joint)"
+    ],
+    "species": {
+      "horse": "7–8 bones; the first carpal bone is inconstant. The accessory carpal bone is prominent on the palmar side.",
+      "cattle": "6 bones; the second and third carpal bones are fused and there is no first carpal bone.",
+      "dog": "7 bones; the radial and intermediate carpal bones are fused into the intermedioradial carpal bone.",
+      "cat": "7 bones, arranged as in the dog."
+    }
+  },
+  "phalanges_fore": {
+    "region": "forelimb",
+    "names": {
+      "en": "Phalanges of the forelimb",
+      "nav": "Ossa digitorum manus"
+    },
+    "type": "Long bones and sesamoids",
+    "description": "Bones of the digits: proximal, middle and distal phalanges, with associated sesamoid bones.",
+    "landmarks": [
+      "Proximal phalanx",
+      "Middle phalanx",
+      "Distal phalanx",
+      "Proximal sesamoid bones",
+      "Distal sesamoid bone"
+    ],
+    "articulations": [
+      "Metacarpal bones (metacarpophalangeal joint)",
+      "Proximal and distal interphalangeal joints"
+    ],
+    "species": {
+      "horse": "A single digit (III): pastern bones and the coffin bone (distal phalanx), with paired proximal sesamoids and the navicular bone.",
+      "cattle": "Two weight-bearing digits (III and IV), each with three phalanges; digits II and V form the small dewclaws.",
+      "dog": "Five digits; digit I (dewclaw) has two phalanges, digits II–V have three. The distal phalanx carries the claw.",
+      "cat": "Five digits as in the dog; the distal phalanges carry retractile claws."
+    }
+  },
+  "phalanges_hind": {
+    "region": "hindlimb",
+    "names": {
+      "en": "Phalanges of the hindlimb",
+      "nav": "Ossa digitorum pedis"
+    },
+    "type": "Long bones and sesamoids",
+    "description": "Bones of the digits of the hindlimb, arranged like those of the forelimb.",
+    "landmarks": [
+      "Proximal phalanx",
+      "Middle phalanx",
+      "Distal phalanx",
+      "Proximal sesamoid bones",
+      "Distal sesamoid bone"
+    ],
+    "articulations": [
+      "Metatarsal bones (metatarsophalangeal joint)",
+      "Proximal and distal interphalangeal joints"
+    ],
+    "species": {
+      "horse": "A single digit (III), as in the forelimb.",
+      "cattle": "Two main digits (III and IV) plus dewclaws.",
+      "dog": "Usually four digits (II–V); a hind dewclaw is variable.",
+      "cat": "Four digits with retractile claws."
+    }
+  },
+  "patella": {
+    "region": "hindlimb",
+    "names": {
+      "en": "Patella",
+      "nav": "Patella"
+    },
+    "type": "Sesamoid bone",
+    "description": "The largest sesamoid bone, in the tendon of the quadriceps femoris. It glides on the femoral trochlea.",
+    "landmarks": [
+      "Base",
+      "Apex",
+      "Articular surface"
+    ],
+    "articulations": [
+      "Trochlea of the femur (femoropatellar joint)"
+    ],
+    "species": {
+      "horse": "Three patellar ligaments. The patella can lock over the medial trochlear ridge as part of the stay apparatus.",
+      "cattle": "Three patellar ligaments, as in the horse.",
+      "dog": "A single patellar ligament. Medial patellar luxation is common in small breeds.",
+      "cat": "A single patellar ligament; the patella is broad and flat."
+    }
+  },
+  "fibula": {
+    "region": "hindlimb",
+    "names": {
+      "en": "Fibula",
+      "nav": "Fibula"
+    },
+    "type": "Long bone",
+    "description": "Slender lateral bone of the leg (crus), alongside the tibia.",
+    "landmarks": [
+      "Head",
+      "Body",
+      "Lateral malleolus"
+    ],
+    "articulations": [
+      "Tibia",
+      "Tarsus (via the lateral malleolus)"
+    ],
+    "species": {
+      "horse": "Reduced to a head and a tapering shaft; the distal end is fused to the tibia as the lateral malleolus.",
+      "cattle": "The head fuses with the lateral condyle of the tibia; the distal end is a separate malleolar bone.",
+      "dog": "Complete, slender and separate.",
+      "cat": "Complete and separate."
+    }
+  },
+  "tarsus": {
+    "region": "hindlimb",
+    "names": {
+      "en": "Tarsal bones",
+      "nav": "Ossa tarsi"
+    },
+    "type": "Short bones",
+    "description": "Short bones of the hock, between the tibia and the metatarsus. The calcaneal tuber forms the point of the hock.",
+    "landmarks": [
+      "Talus",
+      "Calcaneus",
+      "Calcaneal tuber",
+      "Central tarsal bone",
+      "Distal row (T1–T4)"
+    ],
+    "articulations": [
+      "Tibia and fibula (tarsocrural joint)",
+      "Between the tarsal bones",
+      "Metatarsal bones (tarsometatarsal joint)"
+    ],
+    "species": {
+      "horse": "Usually 6 bones; the first and second tarsal bones are fused.",
+      "cattle": "5 bones; the central and fourth tarsal bones fuse into the centroquartal bone, and the second and third are fused.",
+      "dog": "7 bones.",
+      "cat": "7 bones."
+    }
   }
 }
