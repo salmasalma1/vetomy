@@ -2,7 +2,7 @@
 
 **Interactive 3D comparative anatomy for veterinary students.**
 
-Vetomy is a browser-based anatomy atlas for domestic animals. Students can explore 3D models, select any structure, and read its details: the Latin name from the *Nomina Anatomica Veterinaria* (NAV), English and Arabic names, key landmarks, articulations, and how the structure differs across species.
+Vetomy is a browser-based anatomy atlas for domestic animals. Students can explore 3D models, select any structure, and read its details: its English name and Latin name from the *Nomina Anatomica Veterinaria* (NAV), key landmarks, articulations, and how the structure differs across species.
 
 The first release covers the **skeletal system** of four species. Muscles, nerves, vessels and viscera are planned for later releases.
 
@@ -18,14 +18,14 @@ The first release covers the **skeletal system** of four species. Muscles, nerve
 ## Features
 
 - **Interactive 3D viewer**: rotate, zoom and pan around each skeleton.
-- **Click to explore**: selecting a bone highlights it and opens its details panel.
-- **Trilingual terminology**: NAV Latin, English and Arabic names for every structure.
-- **Comparative anatomy**: each bone's details include notes for all four species side by side.
+- **Click to explore**: selecting a bone highlights it and opens its details.
+- **Standard terminology**: English and NAV Latin names for every structure.
+- **Comparative anatomy**: each bone's details include notes for all four species, and one click opens the same bone in another species.
 - **Ghost mode**: fades the surrounding bones so the selected one stands out.
 - **Exploded view**: separates the bones to show how they fit together.
 - **Region toggles**: show or hide the head, vertebral column and thorax, forelimb and hindlimb.
 - **Anatomical camera views**: three-quarter, right and left lateral, cranial and dorsal, plus auto-rotate.
-- **Search**: by English, Latin or Arabic name (press `/` to focus).
+- **Search**: by English or Latin name, with keyboard navigation (press `/` to focus).
 - **Light and dark themes**.
 - **Responsive**: works on desktop and mobile browsers.
 
@@ -83,7 +83,7 @@ All anatomical content lives in `data/bones.json`. Each key matches a bone name 
 ```json
 "femur": {
   "region": "hindlimb",
-  "names": { "en": "Femur", "nav": "Os femoris", "ar": "عظمة الفخذ" },
+  "names": { "en": "Femur", "nav": "Os femoris" },
   "type": "Long bone",
   "description": "The bone of the thigh, between the hip and the stifle.",
   "landmarks": ["Head", "Neck", "Greater trochanter"],

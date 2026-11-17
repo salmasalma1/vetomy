@@ -7,21 +7,21 @@ import { buildPlaceholder } from './placeholder.js';
 // Config
 // ------------------------------------------------------------------
 const SPECIES = [
-  { id: 'horse',  en: 'Horse',  ar: 'الحصان', latin: 'Equus caballus',   emoji: '🐴' },
-  { id: 'cattle', en: 'Cattle', ar: 'الأبقار', latin: 'Bos taurus',       emoji: '🐄' },
-  { id: 'dog',    en: 'Dog',    ar: 'الكلب',  latin: 'Canis familiaris', emoji: '🐶' },
-  { id: 'cat',    en: 'Cat',    ar: 'القطة',  latin: 'Felis catus',      emoji: '🐱' },
+  { id: 'horse',  en: 'Horse',  latin: 'Equus caballus' },
+  { id: 'cattle', en: 'Cattle', latin: 'Bos taurus' },
+  { id: 'dog',    en: 'Dog',    latin: 'Canis familiaris' },
+  { id: 'cat',    en: 'Cat',    latin: 'Felis catus' },
 ];
 
 const REGIONS = [
-  { id: 'head',     en: 'Head',           color: '#ff8a65' },
-  { id: 'trunk',    en: 'Spine & thorax', color: '#7c5cff' },
-  { id: 'forelimb', en: 'Forelimb',       color: '#3ddc97' },
-  { id: 'hindlimb', en: 'Hindlimb',       color: '#ffd66b' },
-  { id: 'other',    en: 'Other',          color: '#a39cbf' },
+  { id: 'head',     en: 'Head',           color: '#ff6b3d' },
+  { id: 'trunk',    en: 'Spine & thorax', color: '#3355ff' },
+  { id: 'forelimb', en: 'Forelimb',       color: '#a8d94a' },
+  { id: 'hindlimb', en: 'Hindlimb',       color: '#b49cff' },
+  { id: 'other',    en: 'Other',          color: '#8fa39a' },
 ];
 
-const COLORS = { bone: 0xefe3cf, selected: 0x7c5cff, hover: 0xff8a65 };
+const COLORS = { bone: 0xeee6d6, selected: 0xff6b3d, hover: 0x3355ff };
 
 // ------------------------------------------------------------------
 // State
@@ -38,7 +38,7 @@ const state = {
   hiddenRegions: new Set(),
   explode: 0,
   search: '',
-  tab: 'regions',
+  resultIndex: 0,
   loadToken: 0,
   camAnim: null,
   frame: { center: new THREE.Vector3(), dist: 5 },
@@ -67,11 +67,11 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.autoRotateSpeed = 1.2;
 
-scene.add(new THREE.HemisphereLight(0xffffff, 0xb9b0e6, 1.4));
+scene.add(new THREE.HemisphereLight(0xffffff, 0xb7c9bf, 1.4));
 const keyLight = new THREE.DirectionalLight(0xffffff, 1.7);
 keyLight.position.set(3, 6, 4);
 scene.add(keyLight);
-const fillLight = new THREE.DirectionalLight(0xc9bcff, 0.6);
+const fillLight = new THREE.DirectionalLight(0xbcd2ff, 0.6);
 fillLight.position.set(-4, 2, -3);
 scene.add(fillLight);
 
@@ -91,9 +91,9 @@ function makeGround() {
   c.width = c.height = 256;
   const g = c.getContext('2d');
   const grad = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-  grad.addColorStop(0, 'rgba(90, 70, 170, 0.22)');
-  grad.addColorStop(0.6, 'rgba(90, 70, 170, 0.08)');
-  grad.addColorStop(1, 'rgba(90, 70, 170, 0)');
+  grad.addColorStop(0, 'rgba(18, 32, 27, 0.20)');
+  grad.addColorStop(0.6, 'rgba(18, 32, 27, 0.07)');
+  grad.addColorStop(1, 'rgba(18, 32, 27, 0)');
   g.fillStyle = grad;
   g.fillRect(0, 0, 256, 256);
   const tex = new THREE.CanvasTexture(c);
@@ -178,7 +178,6 @@ async function loadSpecies(id) {
   state.selected = null;
   state.hovered = null;
   renderTabs();
-  $('model-meta').textContent = 'Loading…';
 
   let root;
   let isPlaceholder = false;
@@ -207,7 +206,7 @@ async function loadSpecies(id) {
   renderAll();
 
   const s = species();
-  toast(`${s.emoji} ${s.en} loaded · ${uniqueBones().length} bones to explore`);
+  toast(`${s.en} loaded, ${uniqueBones().length} bones`);
 }
 
 function disposeModel(root) {
@@ -291,7 +290,7 @@ function setView(name, animate = true) {
   const { center, dist } = state.frame;
   const pos = center.clone().addScaledVector(VIEWS[name], dist);
   moveCamera(pos, center.clone(), animate);
-  document.querySelectorAll('.rail [data-view]').forEach((b) => b.classList.toggle('active', b.dataset.view === name));
+  document.querySelectorAll('.views [data-view]').forEach((b) => b.classList.toggle('active', b.dataset.view === name));
 }
 
 function focusOn(mesh) {
@@ -301,7 +300,7 @@ function focusOn(mesh) {
   const dir = camera.position.clone().sub(controls.target).normalize();
   const dist = Math.max(size * 2.4, state.frame.dist * 0.18);
   moveCamera(center.clone().addScaledVector(dir, dist), center, true);
-  document.querySelectorAll('.rail [data-view]').forEach((b) => b.classList.remove('active'));
+  document.querySelectorAll('.views [data-view]').forEach((b) => b.classList.remove('active'));
 }
 
 function moveCamera(pos, target, animate) {
@@ -386,7 +385,7 @@ renderer.domElement.addEventListener('pointermove', (e) => {
       applyMaterials();
     }
     if (b) {
-      tooltip.textContent = displayName(b.key) + (b.side ? ` · ${b.side}` : '');
+      tooltip.textContent = displayName(b.key) + (b.side ? ` (${b.side})` : '');
       tooltip.style.left = `${e.clientX + 14}px`;
       tooltip.style.top = `${e.clientY + 14}px`;
       tooltip.classList.remove('hidden');
@@ -408,7 +407,6 @@ function select(b, focus) {
   if (b && state.hiddenRegions.has(b.region)) state.hiddenRegions.delete(b.region);
   applyMaterials();
   renderInfo();
-  renderBoneList();
   renderRegions();
   if (b && focus) focusOn(b.mesh);
 }
@@ -419,22 +417,23 @@ function select(b, focus) {
 function renderAll() {
   renderTabs();
   renderRegions();
-  renderBoneList();
+  renderResults();
   renderInfo();
-  renderCounts();
   applyMaterials();
 }
 
 function renderTabs() {
-  const nav = $('species-tabs');
+  const nav = $('species');
   nav.innerHTML = '';
   for (const s of SPECIES) {
+    const active = s.id === state.species;
     const btn = document.createElement('button');
-    btn.className = s.id === state.species ? 'active' : '';
-    btn.setAttribute('aria-pressed', s.id === state.species);
-    btn.innerHTML = `<span class="emoji">${s.emoji}</span>
-      <span class="labels"><span>${esc(s.en)}</span><span class="ar">${esc(s.ar)}</span></span>`;
-    btn.onclick = () => s.id !== state.species && loadSpecies(s.id);
+    btn.className = active ? 'active' : '';
+    btn.setAttribute('aria-pressed', active);
+    btn.innerHTML = active
+      ? `${esc(s.en)}<span class="latin">${esc(s.latin)}<span class="count">${uniqueBones().length || ''} ${uniqueBones().length ? 'bones' : ''}</span></span>`
+      : esc(s.en);
+    btn.onclick = () => !active && loadSpecies(s.id);
     nav.appendChild(btn);
   }
 }
@@ -442,60 +441,56 @@ function renderTabs() {
 function renderCounts() {
   const all = uniqueBones();
   const visible = all.filter((b) => !state.hiddenRegions.has(b.region));
-  const s = species();
-  $('bone-count').textContent = all.length;
-  $('model-meta').textContent = `${all.length} bones · ${s.en} (${s.latin})`;
-  $('visible-count').textContent = `${visible.length} of ${all.length} visible`;
-  $('toggle-all').textContent = state.hiddenRegions.size ? 'Show all' : 'Hide all';
+  $('visible-count').textContent = `${visible.length} of ${all.length} bones visible`;
 }
 
 function renderRegions() {
-  const list = $('region-list');
-  list.innerHTML = '';
+  const box = $('region-chips');
+  box.innerHTML = '';
   const all = uniqueBones();
   for (const r of REGIONS) {
     const n = all.filter((b) => b.region === r.id).length;
     if (!n) continue;
     const on = !state.hiddenRegions.has(r.id);
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <span class="swatch" style="background:${r.color}"></span>
-      <span class="name">${esc(r.en)}</span>
-      <span class="num">${n}</span>
-      <button class="switch" role="switch" aria-checked="${on}" aria-label="Show ${esc(r.en)}"></button>`;
-    li.querySelector('.switch').onclick = () => {
+    const chip = document.createElement('button');
+    chip.className = 'chip';
+    chip.setAttribute('aria-pressed', on);
+    chip.innerHTML = `<span class="swatch" style="background:${r.color}"></span>${esc(r.en)}<span class="n">${n}</span>`;
+    chip.onclick = () => {
       if (on) state.hiddenRegions.add(r.id); else state.hiddenRegions.delete(r.id);
       if (state.selected && state.hiddenRegions.has(state.selected.region)) {
         state.selected = null;
         renderInfo();
       }
       renderRegions();
-      renderBoneList();
-      renderCounts();
       applyMaterials();
     };
-    list.appendChild(li);
+    box.appendChild(chip);
   }
   renderCounts();
 }
 
-function renderBoneList() {
-  const list = $('bone-list');
-  list.innerHTML = '';
+// Search results dropdown (also works as the full bone index when empty)
+function resultItems() {
   const q = state.search.trim().toLowerCase();
   const order = REGIONS.map((r) => r.id);
-
-  const items = uniqueBones()
+  return uniqueBones()
     .filter((b) => {
       if (!q) return true;
       const d = info(b.key);
-      return [b.key, d?.names?.en, d?.names?.nav, d?.names?.ar].join(' ').toLowerCase().includes(q);
+      return [b.key, d?.names?.en, d?.names?.nav].join(' ').toLowerCase().includes(q);
     })
     .sort((a, b) => order.indexOf(a.region) - order.indexOf(b.region)
       || displayName(a.key).localeCompare(displayName(b.key)));
+}
 
+function renderResults() {
+  const list = $('results');
+  list.innerHTML = '';
+  const items = resultItems();
+  state.resultIndex = Math.min(state.resultIndex, Math.max(items.length - 1, 0));
   let last = null;
-  for (const b of items) {
+  items.forEach((b, i) => {
     if (b.region !== last) {
       last = b.region;
       const g = document.createElement('li');
@@ -504,17 +499,37 @@ function renderBoneList() {
       list.appendChild(g);
     }
     const li = document.createElement('li');
-    li.className = state.selected?.key === b.key ? 'active' : '';
-    li.innerHTML = `<span>${esc(displayName(b.key))}</span><span class="ar">${esc(info(b.key)?.names?.ar || '')}</span>`;
-    li.onclick = () => select(b, true);
+    li.setAttribute('role', 'option');
+    li.className = i === state.resultIndex ? 'active' : '';
+    li.innerHTML = `<span>${esc(displayName(b.key))}</span><span class="latin">${esc(info(b.key)?.names?.nav || '')}</span>`;
+    li.onmousedown = (e) => {
+      e.preventDefault(); // keep focus logic simple
+      chooseResult(b);
+    };
     list.appendChild(li);
-  }
+  });
   if (!items.length) {
     const li = document.createElement('li');
-    li.className = 'empty-row';
-    li.textContent = q ? `No bone matches “${state.search}”. Try the Latin name?` : 'No bones in this model yet.';
+    li.className = 'empty';
+    li.textContent = `No bone matches "${state.search}". Try the Latin name.`;
     list.appendChild(li);
   }
+}
+
+function chooseResult(b) {
+  closeResults();
+  $('search').value = '';
+  state.search = '';
+  $('search').blur();
+  select(b, true);
+}
+
+function openResults() {
+  renderResults();
+  $('results').classList.remove('hidden');
+}
+function closeResults() {
+  $('results').classList.add('hidden');
 }
 
 function renderInfo() {
@@ -527,33 +542,30 @@ function renderInfo() {
   const d = info(b.key);
   const s = species();
   const region = regionOf(b.region);
+  const closeBtn = `<button class="icon-btn small close" aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>`;
+  const regionLine = `<div class="region-line"><span class="swatch" style="background:${region.color}"></span>${esc(region.en)}${b.side ? ` · ${b.side} side` : ''}</div>`;
 
   if (!d) {
-    infoPanel.innerHTML = `
-      <button class="close" aria-label="Close">✕</button>
+    infoPanel.innerHTML = `${closeBtn}${regionLine}
       <h2>${esc(displayName(b.key))}</h2>
-      <div class="tags"><span class="tag">${s.emoji} ${esc(s.en)}</span>${b.side ? `<span class="tag">${b.side}</span>` : ''}</div>
       <div class="missing">No details for <strong>${esc(b.key)}</strong> yet. Add an entry with this key to <code>data/bones.json</code>.</div>`;
   } else {
     const list = (arr) => (arr?.length ? `<ul>${arr.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '<p>—</p>');
-    const compare = SPECIES.map((sp) => `
-      <div class="row ${sp.id === state.species ? 'current' : ''}">
-        <span class="emoji">${sp.emoji}</span>
-        <div><strong>${esc(sp.en)}</strong><span>${esc(d.species?.[sp.id] || 'No notes yet.')}</span></div>
-      </div>`).join('');
+    const compare = SPECIES.map((sp) => {
+      const cur = sp.id === state.species;
+      return `<button class="row ${cur ? 'current' : ''}" data-species="${sp.id}" ${cur ? 'disabled' : ''}>
+        <strong>${esc(sp.en)}</strong><span>${esc(d.species?.[sp.id] || 'No notes yet.')}</span></button>`;
+    }).join('');
 
-    infoPanel.innerHTML = `
-      <button class="close" aria-label="Close">✕</button>
+    infoPanel.innerHTML = `${closeBtn}${regionLine}
       <h2>${esc(d.names?.en || displayName(b.key))}</h2>
       <div class="nav">${esc(d.names?.nav || '')}</div>
-      <div class="ar-name" dir="rtl">${esc(d.names?.ar || '')}</div>
       <div class="tags">
-        <span class="tag hot">${s.emoji} ${esc(s.en)}</span>
-        ${b.side ? `<span class="tag">${b.side}</span>` : ''}
-        ${d.type ? `<span class="tag">${esc(d.type)}</span>` : ''}
-        <span class="tag">${esc(region.en)}</span>
+        <span>${esc(s.en)}</span>
+        ${d.type ? `<span>${esc(d.type)}</span>` : ''}
       </div>
-      <h3>What it is</h3>
+      <h3>Description</h3>
       <p>${esc(d.description || '—')}</p>
       <h3>Landmarks</h3>
       ${list(d.landmarks)}
@@ -562,32 +574,46 @@ function renderInfo() {
       <h3>Across species</h3>
       <div class="compare">${compare}</div>
       <p class="disclaimer">${esc(state.data._meta?.disclaimer || '')}</p>`;
+
+    // Jump to the same bone in another species
+    infoPanel.querySelectorAll('.compare .row[data-species]').forEach((row) => {
+      row.onclick = () => openInSpecies(row.dataset.species, b.key);
+    });
   }
   infoPanel.querySelector('.close').onclick = () => select(null);
   infoPanel.scrollTop = 0;
 }
 
-function setTab(tab) {
-  state.tab = tab;
-  document.querySelectorAll('#panel-tabs button').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
-  $('region-list').classList.toggle('hidden', tab !== 'regions');
-  $('bone-list').classList.toggle('hidden', tab !== 'bones');
+async function openInSpecies(id, key) {
+  await loadSpecies(id);
+  const target = state.bones.find((x) => x.key === key);
+  if (target) select(target, true);
 }
 
 // ------------------------------------------------------------------
 // Controls
 // ------------------------------------------------------------------
-document.querySelectorAll('#panel-tabs button').forEach((b) => (b.onclick = () => setTab(b.dataset.tab)));
-
-$('search').addEventListener('input', (e) => {
+const searchEl = $('search');
+searchEl.addEventListener('focus', openResults);
+searchEl.addEventListener('blur', () => setTimeout(closeResults, 120));
+searchEl.addEventListener('input', (e) => {
   state.search = e.target.value;
-  setTab('bones');
-  renderBoneList();
+  state.resultIndex = 0;
+  openResults();
 });
-$('search').addEventListener('keydown', (e) => {
-  if (e.key !== 'Enter') return;
-  const first = $('bone-list').querySelector('li:not(.group):not(.empty-row)');
-  first?.click();
+searchEl.addEventListener('keydown', (e) => {
+  const items = resultItems();
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    state.resultIndex = Math.min(state.resultIndex + 1, items.length - 1);
+    renderResults();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    state.resultIndex = Math.max(state.resultIndex - 1, 0);
+    renderResults();
+  } else if (e.key === 'Enter' && items[state.resultIndex]) {
+    chooseResult(items[state.resultIndex]);
+  }
 });
 
 $('explode').addEventListener('input', (e) => {
@@ -603,23 +629,11 @@ $('ghost-btn').addEventListener('click', (e) => {
   applyMaterials();
 });
 
-$('toggle-all').addEventListener('click', () => {
-  if (state.hiddenRegions.size) state.hiddenRegions.clear();
-  else {
-    REGIONS.forEach((r) => state.hiddenRegions.add(r.id));
-    state.selected = null;
-    renderInfo();
-  }
-  renderRegions();
-  renderBoneList();
-  applyMaterials();
-});
-
-document.querySelectorAll('.rail [data-view]').forEach((b) => (b.onclick = () => setView(b.dataset.view)));
+document.querySelectorAll('.views [data-view]').forEach((b) => (b.onclick = () => setView(b.dataset.view)));
 
 $('spin-btn').addEventListener('click', (e) => {
   controls.autoRotate = !controls.autoRotate;
-  e.currentTarget.classList.toggle('active', controls.autoRotate);
+  e.currentTarget.setAttribute('aria-pressed', controls.autoRotate);
 });
 
 $('reset-btn').addEventListener('click', () => {
@@ -630,27 +644,26 @@ $('reset-btn').addEventListener('click', () => {
   applyExplode();
   select(null);
   setView('three');
-  toast('Back to square one ✨');
+  toast('View reset');
 });
 
 // Theme
-const savedTheme = (() => { try { return localStorage.getItem('vetomy-theme'); } catch { return null; } })();
-if (savedTheme) document.documentElement.dataset.theme = savedTheme;
-const syncThemeIcon = () => ($('theme-btn').textContent = document.documentElement.dataset.theme === 'dark' ? '☀️' : '🌙');
-syncThemeIcon();
+try {
+  const saved = localStorage.getItem('vetomy-theme');
+  if (saved) document.documentElement.dataset.theme = saved;
+} catch {}
 $('theme-btn').addEventListener('click', () => {
   const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
   document.documentElement.dataset.theme = next;
   try { localStorage.setItem('vetomy-theme', next); } catch {}
-  syncThemeIcon();
 });
 
 // Keyboard
 window.addEventListener('keydown', (e) => {
-  const typing = document.activeElement?.tagName === 'INPUT';
+  const typing = document.activeElement?.tagName === 'INPUT' && document.activeElement.type !== 'range';
   if (e.key === '/' && !typing) {
     e.preventDefault();
-    $('search').focus();
+    searchEl.focus();
   } else if (e.key === 'Escape') {
     if (typing) document.activeElement.blur();
     select(null);
