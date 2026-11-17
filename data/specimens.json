@@ -1,0 +1,182 @@
+{
+  "_meta": {
+    "source": "PaleoLab-ULE (University of León) on Sketchfab",
+    "profile": "https://sketchfab.com/PaleoLab-ULE",
+    "note": "Real bone scans shown through the Sketchfab embed viewer. Keys match bone keys in bones.json."
+  },
+  "horse": {
+    "humerus": [
+      {
+        "title": "Humerus",
+        "uid": "54722088f1664c0886db6ddfee98b940"
+      }
+    ],
+    "scapula": [
+      {
+        "title": "Scapula",
+        "uid": "1f0e90e8683945c580b5ea0e054f878a"
+      }
+    ],
+    "radius": [
+      {
+        "title": "Radius and ulna",
+        "uid": "1e139425732b48ed8af0123f84700f1b"
+      }
+    ],
+    "ulna": [
+      {
+        "title": "Radius and ulna",
+        "uid": "1e139425732b48ed8af0123f84700f1b"
+      }
+    ],
+    "femur": [
+      {
+        "title": "Femur",
+        "uid": "476425f513ef476fa4e65c34fe1f25b0"
+      }
+    ],
+    "os_coxae": [
+      {
+        "title": "Hip bones",
+        "uid": "958a4c82d0244b298506376c1f7e11fb"
+      }
+    ],
+    "sacrum": [
+      {
+        "title": "Sacrum",
+        "uid": "117999aa4558479eb74356e93802cc53"
+      }
+    ],
+    "sternum": [
+      {
+        "title": "Sternum",
+        "uid": "118dc24842f445d3a5f65304b83db20a"
+      }
+    ],
+    "vertebrae_cervical": [
+      {
+        "title": "Atlas (C1)",
+        "uid": "2983012d8e2f48c38379f9115c359e57"
+      },
+      {
+        "title": "Axis (C2)",
+        "uid": "ca83550010ac41cdb97d36f653b1f638"
+      },
+      {
+        "title": "Cervical vertebra (C3–C5)",
+        "uid": "3b46e7e8adfd41c9b75ca1506b020fe0"
+      }
+    ],
+    "vertebrae_thoracic": [
+      {
+        "title": "Thoracic vertebra",
+        "uid": "ea8f7e61e01847f797b143914b52177e"
+      }
+    ],
+    "vertebrae_lumbar": [
+      {
+        "title": "Lumbar vertebra (L6)",
+        "uid": "89c0999f7123418093400169a625799d"
+      }
+    ]
+  },
+  "cattle": {
+    "humerus": [
+      {
+        "title": "Humerus",
+        "uid": "022cd13551ec4b25b55d81a4733e0e81"
+      }
+    ],
+    "scapula": [
+      {
+        "title": "Scapula",
+        "uid": "867acbb27836443787cf06c720d25a80"
+      }
+    ],
+    "radius": [
+      {
+        "title": "Radius and ulna",
+        "uid": "99a4f28e256b4e6880e618ffb20fb19a"
+      }
+    ],
+    "ulna": [
+      {
+        "title": "Radius and ulna",
+        "uid": "99a4f28e256b4e6880e618ffb20fb19a"
+      }
+    ],
+    "metacarpus": [
+      {
+        "title": "Metacarpus",
+        "uid": "be6846364329402e8bbcabe75ba5900a"
+      }
+    ],
+    "femur": [
+      {
+        "title": "Femur",
+        "uid": "a04e1f0d52a44eb38fd5275a24dc0dc9"
+      }
+    ],
+    "sacrum": [
+      {
+        "title": "Sacrum",
+        "uid": "f6742ff392954788ba751f4c9b15cd64"
+      }
+    ],
+    "phalanges_fore": [
+      {
+        "title": "Hoof",
+        "uid": "2fe0b5ce85c34f3b80e711395c7479bb"
+      }
+    ],
+    "vertebrae_cervical": [
+      {
+        "title": "Atlas (C1)",
+        "uid": "3cbb9b9032ef43d7bd4350742ddf91ec"
+      },
+      {
+        "title": "Axis (C2)",
+        "uid": "7c928e0cc9f64d5dbf22c3243eefcafc"
+      }
+    ],
+    "vertebrae_thoracic": [
+      {
+        "title": "Thoracic vertebra",
+        "uid": "4efb0ea156ea48b68d62601b11f0bd5d"
+      }
+    ],
+    "vertebrae_lumbar": [
+      {
+        "title": "Lumbar vertebra",
+        "uid": "63a96c4867054f9ea091cb889f47f38a"
+      }
+    ]
+  },
+  "dog": {
+    "humerus": [
+      {
+        "title": "Humerus",
+        "uid": "5dda43c7b4264c85932c7d8ddac65918"
+      }
+    ],
+    "radius": [
+      {
+        "title": "Radius and ulna",
+        "uid": "99c860b493ea408f82c39d07037a7e08"
+      }
+    ],
+    "ulna": [
+      {
+        "title": "Radius and ulna",
+        "uid": "99c860b493ea408f82c39d07037a7e08"
+      }
+    ],
+    "metacarpus": [
+      {
+        "title": "Manus (forepaw)",
+        "uid": "a6359068d5b141ab95687d28351bc077"
+      }
+    ]
+  },
+  "cat": {}
+}

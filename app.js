@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261118';
+import { buildPlaceholder } from './placeholder.js?v=20261118b';
 
 // ------------------------------------------------------------------
 // Config
@@ -29,6 +29,7 @@ const COLORS = { bone: 0xeee6d6, selected: 0xff6b3d, hover: 0x3355ff };
 const state = {
   species: 'horse',
   data: {},
+  specimens: {},
   model: null,
   ground: null,
   bones: [],               // [{ mesh, key, side, region, origPos, offset }]
@@ -163,13 +164,20 @@ function toast(msg) {
 // ------------------------------------------------------------------
 const loader = new GLTFLoader();
 
-async function loadData() {
+async function loadJSON(path) {
   try {
-    state.data = await (await fetch('data/bones.json', { cache: 'no-cache' })).json();
+    return await (await fetch(path, { cache: 'no-cache' })).json();
   } catch (e) {
-    console.error('Could not load data/bones.json', e);
-    state.data = {};
+    console.error(`Could not load ${path}`, e);
+    return {};
   }
+}
+
+async function loadData() {
+  [state.data, state.specimens] = await Promise.all([
+    loadJSON('data/bones.json'),
+    loadJSON('data/specimens.json'),
+  ]);
 }
 
 async function loadSpecies(id) {
@@ -571,9 +579,14 @@ function renderInfo() {
       ${list(d.landmarks)}
       <h3>Articulates with</h3>
       ${list(d.articulations)}
+      ${specimenSection(b.key)}
       <h3>Across species</h3>
       <div class="compare">${compare}</div>
       <p class="disclaimer">${esc(state.data._meta?.disclaimer || '')}</p>`;
+
+    infoPanel.querySelectorAll('.specimen-btn').forEach((btn) => {
+      btn.onclick = () => openSpecimen(btn.dataset.uid, btn.dataset.title);
+    });
 
     // Jump to the same bone in another species
     infoPanel.querySelectorAll('.compare .row[data-species]').forEach((row) => {
@@ -583,6 +596,47 @@ function renderInfo() {
   infoPanel.querySelector('.close').onclick = () => select(null);
   infoPanel.scrollTop = 0;
 }
+
+// ------------------------------------------------------------------
+// Real specimens (Sketchfab embeds)
+// ------------------------------------------------------------------
+function specimensFor(key) {
+  return state.specimens?.[state.species]?.[key] || [];
+}
+
+function specimenSection(key) {
+  const list = specimensFor(key);
+  if (!list.length) return '';
+  const btns = list.map((sp) => `
+    <button class="specimen-btn" data-uid="${esc(sp.uid)}" data-title="${esc(sp.title)}">
+      <svg viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>
+      <span>${esc(sp.title)}</span>
+    </button>`).join('');
+  return `<h3>Real specimen</h3><div class="specimens">${btns}</div>`;
+}
+
+function openSpecimen(uid, title) {
+  if (!/^[a-f0-9]{32}$/.test(uid)) return;
+  const s = species();
+  const dark = document.documentElement.dataset.theme === 'dark';
+  $('specimen-title').textContent = `${s.en}: ${title}`;
+  const credit = $('specimen-credit');
+  credit.textContent = `Scan: ${state.specimens?._meta?.source || 'Sketchfab'}`;
+  credit.href = `https://sketchfab.com/3d-models/${uid}`;
+  $('specimen-frame').src = `https://sketchfab.com/models/${uid}/embed?autostart=1&ui_hint=0&ui_theme=${dark ? 'dark' : 'light'}`;
+  $('specimen-modal').classList.remove('hidden');
+  $('specimen-close').focus();
+}
+
+function closeSpecimen() {
+  $('specimen-modal').classList.add('hidden');
+  $('specimen-frame').src = 'about:blank';
+}
+
+$('specimen-close').addEventListener('click', closeSpecimen);
+$('specimen-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'specimen-modal') closeSpecimen();
+});
 
 async function openInSpecies(id, key) {
   await loadSpecies(id);
@@ -665,6 +719,7 @@ window.addEventListener('keydown', (e) => {
     e.preventDefault();
     searchEl.focus();
   } else if (e.key === 'Escape') {
+    if (!$('specimen-modal').classList.contains('hidden')) return closeSpecimen();
     if (typing) document.activeElement.blur();
     select(null);
   }

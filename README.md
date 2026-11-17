@@ -21,6 +21,7 @@ The first release covers the **skeletal system** of four species. Muscles, nerve
 - **Click to explore**: selecting a bone highlights it and opens its details.
 - **Standard terminology**: English and NAV Latin names for every structure.
 - **Comparative anatomy**: each bone's details include notes for all four species, and one click opens the same bone in another species.
+- **Real specimens**: for many bones, open a high-resolution 3D scan of a real specimen inside the app.
 - **Ghost mode**: fades the surrounding bones so the selected one stands out.
 - **Exploded view**: separates the bones to show how they fit together.
 - **Region toggles**: show or hide the head, vertebral column and thorax, forelimb and hindlimb.
@@ -60,7 +61,8 @@ vetomy/
 ├── app.js              # Viewer, selection, search, filters and info panel
 ├── placeholder.js      # Simple stand-in skeleton, shown until a real model is added
 ├── data/
-│   └── bones.json      # Anatomical content for every structure
+│   ├── bones.json      # Anatomical content for every structure
+│   └── specimens.json  # Links from bones to real specimen scans
 ├── models/             # 3D models: horse.glb, cattle.glb, dog.glb, cat.glb
 └── docs/
     └── MODEL_SPEC.md   # Naming and export requirements for 3D models
@@ -119,4 +121,4 @@ Vetomy is an educational tool under active development. Anatomical content is be
 
 ## Third-party assets
 
-3D models from external sources are used under their respective licenses. Attribution for each model will be listed in `CREDITS.md` as models are added.
+3D models and scans from external sources are used under their respective terms. See [`CREDITS.md`](CREDITS.md).

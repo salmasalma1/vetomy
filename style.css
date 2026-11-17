@@ -442,7 +442,63 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
   .explode input { width: 90px; }
   .badge { top: 128px; left: 16px; }
   .sheet { top: auto; left: 0; right: 0; bottom: 0; width: 100%; max-height: 62vh; border-radius: 28px 28px 0 0; }
+  .modal { padding: 12px; }
+  .modal-card { padding: 14px; border-radius: 22px; }
+  .modal-frame { aspect-ratio: 4 / 5; }
 }
+
+/* ============ Real specimens ============ */
+.specimens { display: grid; gap: 8px; }
+.specimen-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  cursor: pointer;
+  font-weight: 600;
+  text-align: left;
+}
+.specimen-btn svg { width: 18px; height: 18px; color: var(--cobalt); flex: none; }
+.specimen-btn:hover { border-color: var(--cobalt); }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(10, 18, 15, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 80;
+}
+.modal-card {
+  width: min(960px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: var(--surface);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  animation: slide .25s ease-out;
+}
+.modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
+.modal-kicker { margin: 0; font-size: 13px; color: var(--cobalt); font-weight: 600; }
+.modal-head h3 { margin: 2px 0 4px; font-size: 26px; font-weight: 800; letter-spacing: -0.6px; }
+.modal-head a { font-size: 13px; color: var(--muted); }
+.modal-frame {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+.modal-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.modal-note { margin: 10px 0 0; font-size: 12px; color: var(--muted); }
 
 /* ============ Error box ============ */
 .error-box {
