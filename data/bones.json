@@ -656,5 +656,58 @@
       "dog": "7 bones.",
       "cat": "7 bones."
     }
+  },
+  "atlas": {
+    "region": "trunk",
+    "names": {
+      "en": "Atlas (C1)",
+      "nav": "Atlas"
+    },
+    "type": "Irregular bone",
+    "description": "First cervical vertebra. It has no body and no spinous process; instead, two lateral masses are joined by dorsal and ventral arches and carry broad wings (alae).",
+    "landmarks": [
+      "Wings (alae)",
+      "Dorsal arch",
+      "Ventral arch",
+      "Cranial articular foveae",
+      "Caudal articular foveae",
+      "Fovea of the dens"
+    ],
+    "articulations": [
+      "Occipital condyles (atlanto-occipital joint, nodding movement)",
+      "Axis (atlanto-axial joint, rotation)"
+    ],
+    "species": {
+      "horse": "Large wings that are easy to palpate behind the skull.",
+      "cattle": "Thick, flat wings; there is no transverse foramen.",
+      "dog": "Broad, flat wings with an alar notch instead of an alar foramen.",
+      "cat": "Similar to the dog, with broad wings."
+    }
+  },
+  "axis": {
+    "region": "trunk",
+    "names": {
+      "en": "Axis (C2)",
+      "nav": "Axis"
+    },
+    "type": "Irregular bone",
+    "description": "Second cervical vertebra, the longest in the neck. The dens projects cranially into the atlas and forms the pivot for rotating the head.",
+    "landmarks": [
+      "Dens",
+      "Spinous process",
+      "Body",
+      "Transverse processes",
+      "Caudal articular processes"
+    ],
+    "articulations": [
+      "Atlas (atlanto-axial joint)",
+      "Third cervical vertebra"
+    ],
+    "species": {
+      "horse": "Long body with a spout-shaped dens.",
+      "cattle": "Shorter and more massive than in the horse, with a broad dens.",
+      "dog": "A long, blade-like spinous process overhangs the atlas cranially; the dens is peg-shaped.",
+      "cat": "Similar to the dog."
+    }
   }
 }

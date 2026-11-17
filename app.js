@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261118d';
+import { buildPlaceholder } from './placeholder.js?v=20261118e';
 
 // ------------------------------------------------------------------
 // Config
@@ -136,11 +136,31 @@ function esc(s) {
   }[c]));
 }
 
-const info = (key) => (key && key !== '_meta' ? state.data[key] : null);
+// Individual vertebrae (atlas, axis, vertebra_t5 …) fall back to their group's content
+const VERTEBRA_GROUPS = {
+  c: { key: 'vertebrae_cervical', label: 'Cervical vertebra', letter: 'C' },
+  t: { key: 'vertebrae_thoracic', label: 'Thoracic vertebra', letter: 'T' },
+  l: { key: 'vertebrae_lumbar', label: 'Lumbar vertebra', letter: 'L' },
+  cd: { key: 'vertebrae_caudal', label: 'Caudal vertebra', letter: 'Cd' },
+};
+function vertebra(key) {
+  if (key === 'atlas') return { group: VERTEBRA_GROUPS.c, n: 1 };
+  if (key === 'axis') return { group: VERTEBRA_GROUPS.c, n: 2 };
+  const m = /^vertebra_(c|t|l|cd)(\d+)$/.exec(key || '');
+  return m ? { group: VERTEBRA_GROUPS[m[1]], n: +m[2] } : null;
+}
+const groupKey = (key) => vertebra(key)?.group.key || key;
+const info = (key) => {
+  if (!key || key === '_meta') return null;
+  return state.data[key] || state.data[groupKey(key)] || null;
+};
 const species = () => SPECIES.find((s) => s.id === state.species);
 const regionOf = (id) => REGIONS.find((r) => r.id === id) || REGIONS.at(-1);
 
 function displayName(key) {
+  if (state.data[key]?.names?.en) return state.data[key].names.en;
+  const v = vertebra(key);
+  if (v) return `${v.group.label} ${v.group.letter}${v.n}`;
   return info(key)?.names?.en || key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
@@ -503,7 +523,7 @@ function resultItems() {
       return [b.key, d?.names?.en, d?.names?.nav].join(' ').toLowerCase().includes(q);
     })
     .sort((a, b) => order.indexOf(a.region) - order.indexOf(b.region)
-      || displayName(a.key).localeCompare(displayName(b.key)));
+      || displayName(a.key).localeCompare(displayName(b.key), 'en', { numeric: true }));
 }
 
 function renderResults() {
@@ -581,7 +601,7 @@ function renderInfo() {
     }).join('');
 
     infoPanel.innerHTML = `${closeBtn}${regionLine}
-      <h2>${esc(d.names?.en || displayName(b.key))}</h2>
+      <h2>${esc(displayName(b.key))}</h2>
       <div class="nav">${esc(d.names?.nav || '')}</div>
       <div class="tags">
         <span>${esc(s.en)}</span>
@@ -615,7 +635,8 @@ function renderInfo() {
 // Real specimens (Sketchfab embeds)
 // ------------------------------------------------------------------
 function specimensFor(key) {
-  return state.specimens?.[state.species]?.[key] || [];
+  const sp = state.specimens?.[state.species] || {};
+  return sp[key] || sp[groupKey(key)] || [];
 }
 
 function specimenSection(key) {

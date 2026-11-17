@@ -55,14 +55,6 @@
     ],
     "vertebrae_cervical": [
       {
-        "title": "Atlas (C1)",
-        "uid": "2983012d8e2f48c38379f9115c359e57"
-      },
-      {
-        "title": "Axis (C2)",
-        "uid": "ca83550010ac41cdb97d36f653b1f638"
-      },
-      {
         "title": "Cervical vertebra (C3–C5)",
         "uid": "3b46e7e8adfd41c9b75ca1506b020fe0"
       }
@@ -91,6 +83,18 @@
         "file": "specimens/horse_hyoid.glb",
         "credit": "sonea, CC BY 4.0",
         "source": "https://sketchfab.com/3d-models/equine-hyoid-apparatus-c225d71c8bcc4cad826d580e26986210"
+      }
+    ],
+    "atlas": [
+      {
+        "title": "Atlas (C1)",
+        "uid": "2983012d8e2f48c38379f9115c359e57"
+      }
+    ],
+    "axis": [
+      {
+        "title": "Axis (C2)",
+        "uid": "ca83550010ac41cdb97d36f653b1f638"
       }
     ]
   },
@@ -143,16 +147,7 @@
         "uid": "2fe0b5ce85c34f3b80e711395c7479bb"
       }
     ],
-    "vertebrae_cervical": [
-      {
-        "title": "Atlas (C1)",
-        "uid": "3cbb9b9032ef43d7bd4350742ddf91ec"
-      },
-      {
-        "title": "Axis (C2)",
-        "uid": "7c928e0cc9f64d5dbf22c3243eefcafc"
-      }
-    ],
+    "vertebrae_cervical": [],
     "vertebrae_thoracic": [
       {
         "title": "Thoracic vertebra",
@@ -163,6 +158,18 @@
       {
         "title": "Lumbar vertebra",
         "uid": "63a96c4867054f9ea091cb889f47f38a"
+      }
+    ],
+    "atlas": [
+      {
+        "title": "Atlas (C1)",
+        "uid": "3cbb9b9032ef43d7bd4350742ddf91ec"
+      }
+    ],
+    "axis": [
+      {
+        "title": "Axis (C2)",
+        "uid": "7c928e0cc9f64d5dbf22c3243eefcafc"
       }
     ]
   },
