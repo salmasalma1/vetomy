@@ -442,9 +442,9 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
   .explode input { width: 90px; }
   .badge { top: 128px; left: 16px; }
   .sheet { top: auto; left: 0; right: 0; bottom: 0; width: 100%; max-height: 62vh; border-radius: 28px 28px 0 0; }
-  .modal { padding: 12px; }
-  .modal-card { padding: 14px; border-radius: 22px; }
-  .modal-frame { aspect-ratio: 4 / 5; }
+  .specimen-view { top: 116px; left: 12px; right: 12px; bottom: calc(62vh + 12px); }
+  .specimen-credit { display: none; }
+  .specimen-heading h3 { font-size: 18px; }
 }
 
 /* ============ Real specimens ============ */
@@ -464,41 +464,81 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
 }
 .specimen-btn svg { width: 18px; height: 18px; color: var(--cobalt); flex: none; }
 .specimen-btn:hover { border-color: var(--cobalt); }
+.specimen-btn.active { border-color: var(--cobalt); background: color-mix(in srgb, var(--cobalt) 10%, var(--surface)); }
 
-.modal {
+/* Specimen view sits in the stage, between the species index and the info sheet */
+.specimen-view {
   position: fixed;
+  top: 88px;
+  left: 260px;
+  right: 428px;
+  bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 15;
+  animation: fade .3s ease-out;
+}
+@keyframes fade { from { opacity: 0; transform: scale(.985); } }
+.specimen-bar { display: flex; align-items: center; gap: 16px; }
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  flex: none;
+}
+.back-btn svg { width: 18px; height: 18px; }
+.specimen-heading { min-width: 0; }
+.specimen-kicker { margin: 0; font-size: 12px; font-weight: 600; color: var(--cobalt); }
+.specimen-heading h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.specimen-credit { margin-left: auto; font-size: 12px; color: var(--muted); text-align: right; flex: none; max-width: 200px; }
+.specimen-frame {
+  position: relative;
+  flex: 1;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.specimen-loading {
+  position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 24px;
-  background: rgba(10, 18, 15, 0.55);
-  backdrop-filter: blur(6px);
-  z-index: 80;
+  color: var(--muted);
+  font-size: 14px;
 }
-.modal-card {
-  width: min(960px, 100%);
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background: var(--surface);
-  border-radius: 28px;
-  box-shadow: var(--shadow);
-  animation: slide .25s ease-out;
+.specimen-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* While a specimen is open, the skeleton and its controls step back */
+body.specimen-mode #stage canvas { opacity: 0; transition: opacity .3s; }
+body.specimen-mode .dock,
+body.specimen-mode .regions,
+body.specimen-mode #placeholder-badge { display: none; }
+
+@media (max-width: 1100px) {
+  .specimen-view { left: 200px; right: 388px; }
 }
-.modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
-.modal-kicker { margin: 0; font-size: 13px; color: var(--cobalt); font-weight: 600; }
-.modal-head h3 { margin: 2px 0 4px; font-size: 26px; font-weight: 800; letter-spacing: -0.6px; }
-.modal-head a { font-size: 13px; color: var(--muted); }
-.modal-frame {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  border-radius: 18px;
-  overflow: hidden;
-  background: var(--surface-2);
+@media (max-width: 760px) {
+  .specimen-view { top: 116px; left: 12px; right: 12px; bottom: calc(62vh + 12px); }
 }
-.modal-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.modal-note { margin: 10px 0 0; font-size: 12px; color: var(--muted); }
 
 /* ============ Error box ============ */
 .error-box {

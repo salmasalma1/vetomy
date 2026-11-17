@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261118b';
+import { buildPlaceholder } from './placeholder.js?v=20261118c';
 
 // ------------------------------------------------------------------
 // Config
@@ -182,6 +182,7 @@ async function loadData() {
 
 async function loadSpecies(id) {
   const token = ++state.loadToken;
+  closeSpecimen();
   state.species = id;
   state.selected = null;
   state.hovered = null;
@@ -411,6 +412,7 @@ renderer.domElement.addEventListener('pointerleave', () => {
 });
 
 function select(b, focus) {
+  closeSpecimen();
   state.selected = b;
   if (b && state.hiddenRegions.has(b.region)) state.hiddenRegions.delete(b.region);
   applyMaterials();
@@ -615,28 +617,41 @@ function specimenSection(key) {
   return `<h3>Real specimen</h3><div class="specimens">${btns}</div>`;
 }
 
+let activeSpecimen = null;
+
 function openSpecimen(uid, title) {
   if (!/^[a-f0-9]{32}$/.test(uid)) return;
   const s = species();
   const dark = document.documentElement.dataset.theme === 'dark';
-  $('specimen-title').textContent = `${s.en}: ${title}`;
+  activeSpecimen = uid;
+  $('specimen-title').textContent = `${s.en} ${title.toLowerCase()}`;
   const credit = $('specimen-credit');
   credit.textContent = `Scan: ${state.specimens?._meta?.source || 'Sketchfab'}`;
   credit.href = `https://sketchfab.com/3d-models/${uid}`;
-  $('specimen-frame').src = `https://sketchfab.com/models/${uid}/embed?autostart=1&ui_hint=0&ui_theme=${dark ? 'dark' : 'light'}`;
-  $('specimen-modal').classList.remove('hidden');
-  $('specimen-close').focus();
+  const params = new URLSearchParams({
+    autostart: '1', preload: '1', ui_theme: dark ? 'dark' : 'light',
+    ui_infos: '0', ui_hint: '0', ui_stop: '0', ui_inspector: '0', ui_settings: '0',
+    ui_help: '0', ui_vr: '0', ui_ar: '0', ui_annotations: '0', ui_fullscreen: '1',
+  });
+  $('specimen-frame').src = `https://sketchfab.com/models/${uid}/embed?${params}`;
+  $('specimen-view').classList.remove('hidden');
+  document.body.classList.add('specimen-mode');
+  controls.enabled = false;
+  tooltip.classList.add('hidden');
+  infoPanel.querySelectorAll('.specimen-btn').forEach((b) => b.classList.toggle('active', b.dataset.uid === uid));
 }
 
 function closeSpecimen() {
-  $('specimen-modal').classList.add('hidden');
+  if (!activeSpecimen) return;
+  activeSpecimen = null;
+  $('specimen-view').classList.add('hidden');
   $('specimen-frame').src = 'about:blank';
+  document.body.classList.remove('specimen-mode');
+  controls.enabled = true;
+  infoPanel.querySelectorAll('.specimen-btn').forEach((b) => b.classList.remove('active'));
 }
 
-$('specimen-close').addEventListener('click', closeSpecimen);
-$('specimen-modal').addEventListener('click', (e) => {
-  if (e.target.id === 'specimen-modal') closeSpecimen();
-});
+$('specimen-back').addEventListener('click', closeSpecimen);
 
 async function openInSpecies(id, key) {
   await loadSpecies(id);
@@ -719,7 +734,7 @@ window.addEventListener('keydown', (e) => {
     e.preventDefault();
     searchEl.focus();
   } else if (e.key === 'Escape') {
-    if (!$('specimen-modal').classList.contains('hidden')) return closeSpecimen();
+    if (activeSpecimen) return closeSpecimen();
     if (typing) document.activeElement.blur();
     select(null);
   }

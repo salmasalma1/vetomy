@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261118b">
+  <link rel="stylesheet" href="style.css?v=20261118c">
   <script type="importmap">
   {
     "imports": {
@@ -77,25 +77,24 @@
     </button>
   </div>
 
-  <!-- Real specimen viewer -->
-  <div id="specimen-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="specimen-title">
-    <div class="modal-card">
-      <div class="modal-head">
-        <div>
-          <p class="modal-kicker">Real specimen</p>
-          <h3 id="specimen-title"></h3>
-          <a id="specimen-credit" target="_blank" rel="noopener"></a>
-        </div>
-        <button id="specimen-close" class="icon-btn small" aria-label="Close specimen viewer">
-          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
-        </button>
+  <!-- Real specimen view (replaces the skeleton in the stage) -->
+  <section id="specimen-view" class="specimen-view hidden" aria-labelledby="specimen-title">
+    <div class="specimen-bar">
+      <button id="specimen-back" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        Back to skeleton
+      </button>
+      <div class="specimen-heading">
+        <p class="specimen-kicker">Real specimen</p>
+        <h3 id="specimen-title"></h3>
       </div>
-      <div class="modal-frame">
-        <iframe id="specimen-frame" title="Real specimen 3D scan" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
-      </div>
-      <p class="modal-note">High-resolution scan, it can take a few seconds to load.</p>
+      <a id="specimen-credit" class="specimen-credit" target="_blank" rel="noopener"></a>
     </div>
-  </div>
+    <div class="specimen-frame">
+      <div class="specimen-loading">Loading high-resolution scan…</div>
+      <iframe id="specimen-frame" title="Real specimen 3D scan" allow="autoplay; fullscreen; xr-spatial-tracking"></iframe>
+    </div>
+  </section>
 
   <p id="placeholder-badge" class="badge hidden">Placeholder model</p>
   <div id="tooltip" class="tooltip hidden"></div>
@@ -126,6 +125,6 @@
       setTimeout(function () { if (!window.__vetomyReady) show('The app did not finish loading within 15 seconds.'); }, 15000);
     })();
   </script>
-  <script type="module" src="app.js?v=20261118b"></script>
+  <script type="module" src="app.js?v=20261118c"></script>
 </body>
 </html>
