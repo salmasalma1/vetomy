@@ -74,13 +74,13 @@
     "skull": [
       {
         "title": "Skull (photo scan)",
-        "file": "specimens/horse_skull.glb",
+        "file": "models/specimens/horse_skull.glb",
         "credit": "matousekfoto, CC BY 4.0",
         "source": "https://sketchfab.com/3d-models/lebka-kone-horse-skull-b2b5037626514e88bf183db22acbc8bc"
       },
       {
         "title": "Hyoid apparatus",
-        "file": "specimens/horse_hyoid.glb",
+        "file": "models/specimens/horse_hyoid.glb",
         "credit": "sonea, CC BY 4.0",
         "source": "https://sketchfab.com/3d-models/equine-hyoid-apparatus-c225d71c8bcc4cad826d580e26986210"
       }

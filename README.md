@@ -57,25 +57,30 @@ In VS Code, you can also use the **Live Server** extension: right-click `index.h
 
 ```
 vetomy/
-├── index.html          # Page layout
-├── style.css           # Styles
-├── app.js              # Viewer, selection, search, filters and info panel
-├── placeholder.js      # Simple stand-in skeleton, shown until a real model is added
+├── index.html                 # Page layout
+├── site.webmanifest           # Install metadata for phones and desktops
+├── assets/
+│   ├── css/style.css          # Styles (dark and light themes)
+│   ├── js/app.js              # Viewer, selection, search, landmarks, specimens
+│   ├── js/placeholder.js      # Stand-in skeleton shown until a real model exists
+│   ├── js/translate-es.js     # Spanish → English osteology terms for scan labels
+│   └── icons/                 # Favicon and app icons
 ├── data/
-│   ├── bones.json      # Anatomical content for every structure
-│   ├── specimens.json  # Links from bones to real specimen scans
-│   └── landmarks.json  # Named points on bones and their descriptions
-├── models/             # Skeleton models: horse.glb, cattle.glb, dog.glb, cat.glb
-├── specimens/          # High-resolution scans of individual bones
+│   ├── bones.json             # Anatomical content for every structure
+│   ├── specimens.json         # Links from bones to real specimen scans
+│   └── landmarks.json         # Named points on bones and their descriptions
+├── models/
+│   ├── skeletons/             # One skeleton per species: horse.glb, cattle.glb, dog.glb, cat.glb
+│   └── specimens/             # High-resolution scans of individual bones
 └── docs/
-    └── MODEL_SPEC.md   # Naming and export requirements for 3D models
+    └── MODEL_SPEC.md          # Naming and export requirements for 3D models
 ```
 
 ---
 
 ## Adding 3D models
 
-Place a binary glTF file named after the species in `models/` (for example `models/horse.glb`) and reload the page. The app loads it automatically in place of the placeholder skeleton.
+Place a binary glTF file named after the species in `models/skeletons/` (for example `models/skeletons/horse.glb`) and reload the page. The app loads it automatically in place of the placeholder skeleton.
 
 Each bone must be a separate, named object so it can be selected. Bilateral bones use `_L` / `_R` suffixes (`femur_L`, `femur_R`). The full naming convention, orientation, scale and export settings are in [`docs/MODEL_SPEC.md`](docs/MODEL_SPEC.md).
 

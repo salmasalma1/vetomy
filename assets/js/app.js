@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261118i';
-import { translateEs } from './translate-es.js?v=20261118i';
+import { buildPlaceholder } from './placeholder.js?v=20261118j';
+import { translateEs } from './translate-es.js?v=20261118j';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261118i';
+const ASSET_V = '20261118j';
 
 // ------------------------------------------------------------------
 // Config
@@ -237,11 +237,11 @@ async function loadSpecies(id) {
   let isPlaceholder = false;
   let extras = null;
   try {
-    const gltf = await loader.loadAsync(`models/${id}.glb?v=${ASSET_V}`);
+    const gltf = await loader.loadAsync(`models/skeletons/${id}.glb?v=${ASSET_V}`);
     root = gltf.scene;
     extras = gltf.asset?.extras || null;
   } catch {
-    console.info(`models/${id}.glb not found, using the placeholder skeleton.`);
+    console.info(`models/skeletons/${id}.glb not found, using the placeholder skeleton.`);
     root = buildPlaceholder(id);
     isPlaceholder = true;
   }

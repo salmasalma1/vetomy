@@ -8,7 +8,7 @@ Requirements for skeleton models used by Vetomy. Following them lets a new model
 |---|---|
 | Format | Binary glTF (`.glb`) |
 | File names | `horse.glb`, `cattle.glb`, `dog.glb`, `cat.glb` |
-| Location | `models/` |
+| Location | `models/skeletons/` |
 | Orientation | Standing; head toward **+X**, **Y up**, feet on the ground plane |
 | Scale | Real-world size in **metres** |
 | File size | Under 20 MB per species |
