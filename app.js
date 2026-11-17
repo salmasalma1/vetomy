@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261118g';
-import { translateEs } from './translate-es.js?v=20261118g';
+import { buildPlaceholder } from './placeholder.js?v=20261118h';
+import { translateEs } from './translate-es.js?v=20261118h';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261118g';
+const ASSET_V = '20261118h';
 
 // ------------------------------------------------------------------
 // Config
@@ -26,6 +26,15 @@ const REGIONS = [
 ];
 
 const COLORS = { bone: 0xe9dfcc, selected: 0xc8a96b, hover: 0x7fa7a0 };
+// Accent colour of the selected bone follows the theme: brass at night, orange by day
+const THEME_COLORS = {
+  dark:  { selected: 0xc8a96b, hover: 0x7fa7a0, glow: 0.6 },
+  light: { selected: 0xff5a1f, hover: 0x0a0a0a, glow: 0.75 },
+};
+function applyThemeColors() {
+  const t = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+  Object.assign(COLORS, THEME_COLORS[t]);
+}
 
 // ------------------------------------------------------------------
 // State
@@ -97,8 +106,8 @@ resize();
 // Soft pool of light (dark theme) or shadow (light theme) under the animal
 function groundTexture() {
   const dark = document.documentElement.dataset.theme !== 'light';
-  const rgb = dark ? '233, 214, 170' : '30, 40, 35';
-  const a = dark ? [0.16, 0.05] : [0.16, 0.05];
+  const rgb = dark ? '233, 214, 170' : '0, 0, 0';
+  const a = dark ? [0.16, 0.05] : [0.14, 0.04];
   const c = document.createElement('canvas');
   c.width = c.height = 256;
   const g = c.getContext('2d');
@@ -384,7 +393,7 @@ function applyMaterials() {
     b.mesh.visible = !state.hiddenRegions.has(b.region);
 
     m.emissive.setHex(isSel ? COLORS.selected : isHover ? COLORS.hover : 0x000000);
-    m.emissiveIntensity = isSel ? 0.6 : isHover ? 0.35 : 0;
+    m.emissiveIntensity = isSel ? COLORS.glow : isHover ? 0.3 : 0;
 
     const ghosted = !!(state.ghost && state.selected && !isSel);
     m.opacity = ghosted ? 0.1 : 1;
@@ -960,6 +969,7 @@ try {
     document.documentElement.dataset.theme = saved;
     state.ground.material.map = groundTexture();
   }
+  applyThemeColors();
 } catch {}
 $('theme-btn').addEventListener('click', () => {
   const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
@@ -969,7 +979,9 @@ $('theme-btn').addEventListener('click', () => {
   state.ground.material.map = groundTexture();
   state.ground.material.needsUpdate = true;
   old?.dispose();
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'dark' ? '#0c1411' : '#e9e6df');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'dark' ? '#0c1411' : '#ffffff');
+  applyThemeColors();
+  applyMaterials();
 });
 
 // Keyboard
