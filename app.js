@@ -1,7 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261118e';
+import { buildPlaceholder } from './placeholder.js?v=20261118f';
+import { translateEs } from './translate-es.js?v=20261118f';
+
+// Bump with every release so browsers never mix old and new files
+const ASSET_V = '20261118f';
 
 // ------------------------------------------------------------------
 // Config
@@ -195,8 +199,8 @@ async function loadJSON(path) {
 
 async function loadData() {
   [state.data, state.specimens] = await Promise.all([
-    loadJSON('data/bones.json'),
-    loadJSON('data/specimens.json'),
+    loadJSON(`data/bones.json?v=${ASSET_V}`),
+    loadJSON(`data/specimens.json?v=${ASSET_V}`),
   ]);
 }
 
@@ -212,7 +216,7 @@ async function loadSpecies(id) {
   let isPlaceholder = false;
   let extras = null;
   try {
-    const gltf = await loader.loadAsync(`models/${id}.glb`);
+    const gltf = await loader.loadAsync(`models/${id}.glb?v=${ASSET_V}`);
     root = gltf.scene;
     extras = gltf.asset?.extras || null;
   } catch {
@@ -694,7 +698,7 @@ async function showSpecimenFile(file) {
   $('specimen-loading').classList.remove('hidden');
   let gltf;
   try {
-    gltf = await loader.loadAsync(file);
+    gltf = await loader.loadAsync(`${file}?v=${ASSET_V}`);
   } catch (e) {
     if (token === spec.token) $('specimen-loading').textContent = 'Could not load this scan.';
     return;
@@ -751,6 +755,9 @@ function openSpecimen(sp, index) {
   const credit = $('specimen-credit');
 
   if (sp.file) {
+    sketchfabSession++;
+    $('specimen-landmarks').classList.add('hidden');
+    $('specimen-frame').src = 'about:blank';
     credit.textContent = `Scan by ${sp.credit || 'unknown author'}`;
     credit.href = sp.source || '#';
     showSpecimenFile(sp.file);
@@ -758,19 +765,13 @@ function openSpecimen(sp, index) {
     spec.token++;
     cancelAnimationFrame(spec.raf);
     clearSpecimenModel();
-    const dark = document.documentElement.dataset.theme === 'dark';
     credit.textContent = `Scan: ${state.specimens?._meta?.source || 'Sketchfab'}`;
     credit.href = `https://sketchfab.com/3d-models/${sp.uid}`;
-    const params = new URLSearchParams({
-      autostart: '1', preload: '1', ui_theme: dark ? 'dark' : 'light',
-      ui_infos: '0', ui_hint: '0', ui_stop: '0', ui_inspector: '0', ui_settings: '0',
-      ui_help: '0', ui_vr: '0', ui_ar: '0', ui_annotations: '0', ui_fullscreen: '1',
-    });
     $('specimen-canvas').classList.add('hidden');
     $('specimen-frame').classList.remove('hidden');
     $('specimen-loading').textContent = 'Loading high-resolution scan…';
     $('specimen-loading').classList.remove('hidden');
-    $('specimen-frame').src = `https://sketchfab.com/models/${sp.uid}/embed?${params}`;
+    showSketchfab(sp.uid);
   } else {
     return;
   }
@@ -781,13 +782,95 @@ function openSpecimen(sp, index) {
   infoPanel.querySelectorAll('.specimen-btn').forEach((b) => b.classList.toggle('active', +b.dataset.index === index));
 }
 
+// ---- Sketchfab embeds, through the official Viewer API so we can translate the landmarks
+const SKETCHFAB_API = 'https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js';
+let sketchfabApiPromise = null;
+function loadSketchfabApi() {
+  if (window.Sketchfab) return Promise.resolve(window.Sketchfab);
+  sketchfabApiPromise ||= new Promise((resolve, reject) => {
+    const tag = document.createElement('script');
+    tag.src = SKETCHFAB_API;
+    tag.onload = () => (window.Sketchfab ? resolve(window.Sketchfab) : reject(new Error('Viewer API missing')));
+    tag.onerror = () => { sketchfabApiPromise = null; reject(new Error('Viewer API failed to load')); };
+    document.head.appendChild(tag);
+  });
+  return sketchfabApiPromise;
+}
+
+function sketchfabOptions() {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  return {
+    autostart: 1, preload: 1, ui_theme: dark ? 'dark' : 'light',
+    ui_infos: 0, ui_hint: 0, ui_stop: 0, ui_inspector: 0, ui_settings: 0, ui_help: 0,
+    ui_vr: 0, ui_ar: 0, ui_annotations: 0, ui_fullscreen: 1, annotation_tooltip_visible: 0,
+  };
+}
+
+let sketchfabSession = 0;
+async function showSketchfab(uid) {
+  const session = ++sketchfabSession;
+  const frame = $('specimen-frame');
+  $('specimen-landmarks').classList.add('hidden');
+  $('lm-list').innerHTML = '';
+  const fallback = () => {
+    if (session !== sketchfabSession) return;
+    frame.onload = () => $('specimen-loading').classList.add('hidden');
+    frame.src = `https://sketchfab.com/models/${uid}/embed?${new URLSearchParams(sketchfabOptions())}`;
+  };
+  try {
+    const Sketchfab = await loadSketchfabApi();
+    if (session !== sketchfabSession) return;
+    const client = new Sketchfab(frame);
+    client.init(uid, {
+      ...sketchfabOptions(),
+      success(api) {
+        api.start();
+        api.addEventListener('viewerready', () => {
+          if (session !== sketchfabSession) return;
+          $('specimen-loading').classList.add('hidden');
+          api.getAnnotationList((err, list) => {
+            if (!err && list?.length && session === sketchfabSession) renderLandmarks(api, list);
+          });
+        });
+        api.addEventListener('annotationSelect', (i) => markLandmark(i));
+      },
+      error: fallback,
+    });
+  } catch {
+    fallback();
+  }
+}
+
+function renderLandmarks(api, list) {
+  const ol = $('lm-list');
+  ol.innerHTML = '';
+  list.forEach((a, i) => {
+    const li = document.createElement('li');
+    const name = translateEs(String(a.name || '').replace(/^\s*\d+[.)-]?\s*/, '')) || `Landmark ${i + 1}`;
+    li.innerHTML = `<button data-i="${i}"><span class="n">${i + 1}</span><span>${esc(name)}</span></button>`;
+    li.querySelector('button').onclick = () => {
+      api.gotoAnnotation(i, { preventCameraAnimation: false });
+      markLandmark(i);
+    };
+    ol.appendChild(li);
+  });
+  $('specimen-landmarks').classList.remove('hidden');
+}
+
+function markLandmark(i) {
+  $('lm-list').querySelectorAll('button').forEach((b) => b.classList.toggle('active', +b.dataset.i === i));
+}
+
 function closeSpecimen() {
   if (!activeSpecimen) return;
   activeSpecimen = null;
   spec.token++;
   cancelAnimationFrame(spec.raf);
   clearSpecimenModel();
+  sketchfabSession++;
   $('specimen-view').classList.add('hidden');
+  $('specimen-landmarks').classList.add('hidden');
+  $('specimen-frame').onload = null;
   $('specimen-frame').src = 'about:blank';
   document.body.classList.remove('specimen-mode');
   controls.enabled = true;

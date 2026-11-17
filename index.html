@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20261118e">
+  <link rel="stylesheet" href="style.css?v=20261118f">
   <script type="importmap">
   {
     "imports": {
@@ -93,6 +93,10 @@
     <div class="specimen-frame">
       <div id="specimen-loading" class="specimen-loading">Loading high-resolution scan…</div>
       <div id="specimen-canvas" class="specimen-canvas hidden"></div>
+      <div id="specimen-landmarks" class="landmarks hidden">
+        <p class="lm-head">Landmarks <span>translated from Spanish</span></p>
+        <ol id="lm-list"></ol>
+      </div>
       <iframe id="specimen-frame" title="Real specimen 3D scan" allow="autoplay; fullscreen; xr-spatial-tracking"></iframe>
     </div>
   </section>
@@ -127,6 +131,6 @@
       setTimeout(function () { if (!window.__vetomyReady) show('The app did not finish loading within 15 seconds.'); }, 15000);
     })();
   </script>
-  <script type="module" src="app.js?v=20261118e"></script>
+  <script type="module" src="app.js?v=20261118f"></script>
 </body>
 </html>
