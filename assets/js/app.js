@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261119d';
-import { translateEs, partLabel } from './translate-es.js?v=20261119d';
+import { buildPlaceholder } from './placeholder.js?v=20261119e';
+import { translateEs, partLabel } from './translate-es.js?v=20261119e';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261119d';
+const ASSET_V = '20261119e';
 
 // ------------------------------------------------------------------
 // Config
@@ -863,6 +863,8 @@ function sketchfabOptions() {
 let sketchfabSession = 0;
 async function showSketchfab(uid, sp = {}) {
   const session = ++sketchfabSession;
+  Object.assign(scan, { api: null, uid: null, parts: null, points: [], session: 0 });
+  $('lm-undo').classList.add('hidden');
   const frame = $('specimen-frame');
   const panel = $('specimen-landmarks');
   panel.classList.add('hidden');
@@ -890,11 +892,15 @@ async function showSketchfab(uid, sp = {}) {
           api.getAnnotationList((err, list) => {
             if (session !== sketchfabSession) return;
             if (!err && list?.length && !parts?.length) renderScanLandmarks(api, list);
-            else if (parts?.length) linkPartsToScan(api, parts, session);
-            else detectScanParts(api, session);
+            else if (parts?.length) {
+              scan.api = api; scan.uid = uid; scan.parts = parts; scan.session = session;
+              linkPartsToScan(api, parts, session);
+              placeScanPoints();
+              if (EDIT) enableScanEditing(api, session);
+            } else detectScanParts(api, session);
           });
         });
-        api.addEventListener('annotationSelect', (i) => markScanLandmark(i));
+        api.addEventListener('annotationSelect', (i) => (scan.api === api ? onScanPointSelect(i) : markScanLandmark(i)));
       },
       error: fallback,
     });
@@ -917,6 +923,111 @@ function renderScanLandmarks(api, list) {
     ol.appendChild(li);
   });
   $('specimen-landmarks').classList.remove('hidden');
+}
+
+
+// ---- Numbered points on a scan, one per bone (stored in landmarks.json under "scans")
+const scan = { api: null, uid: null, parts: null, points: [], session: 0 };
+const normName = (t) => String(t || '').toLowerCase().replace(/\(.*?\)/g, '').trim();
+const samePart = (a, b) => normName(a) === normName(b) || normName(b).startsWith(normName(a)) || normName(a).startsWith(normName(b));
+
+function scanPointsData(uid) {
+  const base = state.landmarks?.scans?.[uid] || [];
+  if (!EDIT) return base;
+  const draft = lmDrafts().scans?.[uid];
+  return draft || base;
+}
+
+function placeScanPoints() {
+  const api = scan.api, session = scan.session;
+  const list = scanPointsData(scan.uid);
+  scan.points = [];
+  const next = (i) => {
+    if (i >= list.length || session !== sketchfabSession) return markPartsWithPoints();
+    const pt = list[i];
+    api.createAnnotationFromScenePosition(pt.p, pt.eye, pt.target, pt.name, '', () => {
+      scan.points.push(pt);
+      next(i + 1);
+    });
+  };
+  next(0);
+}
+
+function markPartsWithPoints() {
+  if (!scan.parts) return;
+  $('lm-list').querySelectorAll('.lm-part').forEach((b) => {
+    const part = scan.parts[+b.dataset.part];
+    const n = scan.points.findIndex((pt) => samePart(pt.name, part.name));
+    let badge = b.querySelector('.lm-part-num');
+    if (n >= 0) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'lm-part-num';
+        b.querySelector('.lm-part-top').prepend(badge);
+      }
+      badge.textContent = n + 1;
+    } else badge?.remove();
+  });
+}
+
+function onScanPointSelect(i) {
+  const pt = scan.points[i];
+  if (!pt || !scan.parts) return;
+  const idx = scan.parts.findIndex((p) => samePart(pt.name, p.name));
+  if (idx >= 0) openSpecimenPart(idx);
+  toast(pt.name);
+}
+
+function enableScanEditing(api, session) {
+  $('lm-edit-hint').innerHTML = '<strong>Landmark editor</strong> Click on the scan where a bone is, then choose its name.';
+  $('lm-undo').classList.remove('hidden');
+  api.addEventListener('click', (info) => {
+    if (session !== sketchfabSession || !info?.position3D) return;
+    api.getCameraLookAt((err, cam) => {
+      if (err) return;
+      const rect = $('specimen-frame').getBoundingClientRect();
+      const [x, y] = info.position2D || [rect.width / 2, rect.height / 2];
+      lm.pending = { scan: true, uid: scan.uid, p: info.position3D, eye: cam.position, target: cam.target };
+      $('lm-suggest').innerHTML = scan.parts.map((p) => `<option value="${esc(p.name)}">`).join('');
+      const form = $('lm-editor');
+      form.classList.remove('hidden');
+      form.style.left = `${Math.min(rect.left + x + 12, window.innerWidth - 296)}px`;
+      form.style.top = `${Math.min(rect.top + y + 12, window.innerHeight - 170)}px`;
+      $('lm-name').value = '';
+      $('lm-name').focus();
+    });
+  }, { pick: 'slow' });
+}
+
+function saveScanPoint(pend, name) {
+  const round = (a) => (a || []).map((n) => Math.round(n * 1e5) / 1e5);
+  const pt = { name, p: round(pend.p), eye: round(pend.eye), target: round(pend.target) };
+  const d = lmDrafts();
+  d.scans ||= {};
+  const list = (d.scans[pend.uid] ||= [...(state.landmarks?.scans?.[pend.uid] || [])]);
+  list.push(pt);
+  saveLmDrafts(d);
+  if (scan.api && scan.uid === pend.uid) {
+    scan.api.createAnnotationFromScenePosition(pt.p, pt.eye, pt.target, pt.name, '', () => {
+      scan.points.push(pt);
+      markPartsWithPoints();
+    });
+  }
+}
+
+function undoScanPoint() {
+  if (!scan.uid) return;
+  const d = lmDrafts();
+  d.scans ||= {};
+  const list = (d.scans[scan.uid] ||= [...(state.landmarks?.scans?.[scan.uid] || [])]);
+  if (!list.length) return;
+  const removed = list.pop();
+  saveLmDrafts(d);
+  const i = scan.points.length - 1;
+  if (scan.api && i >= 0) scan.api.removeAnnotation(i, () => {});
+  scan.points.pop();
+  markPartsWithPoints();
+  toast(`Removed "${removed.name}"`);
 }
 
 // ---- Bones of a structure shown beside its scan (e.g. the bones of the skull)
@@ -944,7 +1055,13 @@ function renderSpecimenParts(parts) {
       </button></li>`;
   });
   ol.innerHTML = html;
-  ol.querySelectorAll('.lm-part').forEach((b) => (b.onclick = () => openSpecimenPart(+b.dataset.part, true)));
+  ol.querySelectorAll('.lm-part').forEach((b) => (b.onclick = () => {
+    const i = +b.dataset.part;
+    openSpecimenPart(i, true);
+    const pi = scan.points.findIndex((pt) => samePart(pt.name, parts[i].name));
+    if (pi >= 0 && scan.api) scan.api.gotoAnnotation(pi, { preventCameraAnimation: false });
+    markPartsWithPoints();
+  }));
   panel.classList.remove('hidden');
 }
 
@@ -1154,7 +1271,10 @@ function lmSpeciesData(id = state.species) {
 function lmDefinition(b, name) {
   const defs = state.landmarks?.definitions || {};
   const n = String(name).toLowerCase();
-  return defs[b.key]?.[n] || defs[groupKey(b.key)]?.[n] || null;
+  const def = defs[b.key]?.[n] || defs[groupKey(b.key)]?.[n];
+  if (def) return def;
+  const part = (info(b.key)?.parts || []).find((p) => samePart(name, p.name));
+  return part ? { nav: part.nav, description: part.description } : null;
 }
 
 // Points for a bone; if only the opposite side has points, mirror them across the midline
@@ -1272,7 +1392,8 @@ function openLmEditor(hit, ev) {
     n: hit.face.normal.clone(),
   };
   const sug = $('lm-suggest');
-  sug.innerHTML = (info(b.key)?.landmarks || []).map((n) => `<option value="${esc(n)}">`).join('');
+  const names = [...(info(b.key)?.landmarks || []), ...(info(b.key)?.parts || []).map((p) => p.name)];
+  sug.innerHTML = names.map((n) => `<option value="${esc(n)}">`).join('');
   const form = $('lm-editor');
   form.classList.remove('hidden');
   const fw = 280;
@@ -1307,6 +1428,12 @@ if (EDIT) {
     const name = $('lm-name').value.trim();
     const pend = lm.pending;
     if (!name || !pend) return;
+    if (pend.scan) {
+      saveScanPoint(pend, name);
+      closeLmEditor();
+      toast(`Saved "${name}"`);
+      return;
+    }
     const r = (v) => [v.x, v.y, v.z].map((n) => Math.round(n * 1e5) / 1e5);
     const d = lmDrafts();
     const sp = (d[state.species] ||= {});
@@ -1319,6 +1446,7 @@ if (EDIT) {
     toast(`Saved "${name}"`);
   });
   $('lm-cancel').addEventListener('click', closeLmEditor);
+  $('lm-undo').addEventListener('click', undoScanPoint);
 
   $('lm-export').addEventListener('click', () => {
     const out = { ...state.landmarks };
@@ -1326,6 +1454,8 @@ if (EDIT) {
       const merged = lmSpeciesData(s.id);
       if (Object.keys(merged).length) out[s.id] = merged;
     }
+    const draftScans = lmDrafts().scans;
+    if (draftScans) out.scans = { ...(state.landmarks?.scans || {}), ...draftScans };
     const blob = new Blob([JSON.stringify(out, null, 2) + '\n'], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);

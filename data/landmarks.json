@@ -1,7 +1,8 @@
 {
   "_meta": {
     "note": "Named points on bones. Positions are in each mesh's local space (p) with a surface normal (n). Points on a left bone are mirrored to the right bone automatically. Definitions are keyed by bone key and lower-case landmark name.",
-    "editor": "Open the site with ?edit at the end of the address to place points, then use Export JSON and replace this file."
+    "editor": "Open the site with ?edit at the end of the address to place points, then use Export JSON and replace this file.",
+    "scans": "Numbered points on Sketchfab scans, keyed by model uid: name, scene position (p), and the camera eye/target used when the point is selected."
   },
   "definitions": {
     "humerus": {
@@ -295,5 +296,6 @@
       }
     }
   },
-  "horse": {}
+  "horse": {},
+  "scans": {}
 }

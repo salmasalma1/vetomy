@@ -588,6 +588,18 @@ body.specimen-mode #placeholder-badge { display: none; }
 .landmarks button.lm-part:hover { background: var(--surface-2); }
 .landmarks button.lm-part[aria-expanded="true"] { border-color: var(--brass); background: var(--brass-soft); }
 .lm-part-top { display: flex; align-items: center; gap: 8px; }
+.lm-part-num {
+  display: grid;
+  place-items: center;
+  width: 20px; height: 20px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--brass);
+  color: var(--surface-solid);
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 600;
+}
 .lm-part-name { flex: 1; font-family: var(--serif); font-size: 17px; line-height: 1.2; }
 .lm-part-kind { font-size: 10px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--muted); }
 .lm-part-body { display: none; margin-top: 6px; }

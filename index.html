@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261119d">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261119e">
   <script type="importmap">
   {
     "imports": {
@@ -61,7 +61,8 @@
 
   <!-- Landmark editor (open the site with ?edit) -->
   <div id="lm-editbar" class="lm-editbar hidden">
-    <span><strong>Landmark editor</strong> Select a bone, then click on it to add a point.</span>
+    <span id="lm-edit-hint"><strong>Landmark editor</strong> Select a bone, then click on it to add a point.</span>
+    <button id="lm-undo" class="pill hidden">Undo last point</button>
     <button id="lm-export" class="pill">Export JSON</button>
     <button id="lm-discard" class="pill">Discard drafts</button>
   </div>
@@ -157,6 +158,6 @@
       setTimeout(function () { if (!window.__vetomyReady) show('The app did not finish loading within 15 seconds.'); }, 15000);
     })();
   </script>
-  <script type="module" src="assets/js/app.js?v=20261119d"></script>
+  <script type="module" src="assets/js/app.js?v=20261119e"></script>
 </body>
 </html>
