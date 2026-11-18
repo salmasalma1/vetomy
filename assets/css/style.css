@@ -575,6 +575,41 @@ body.specimen-mode .dock,
 body.specimen-mode .regions,
 body.specimen-mode #placeholder-badge { display: none; }
 
+/* ============ Functions and parts ============ */
+.sheet ol.functions { margin: 0; padding-left: 20px; line-height: 1.7; }
+.sheet ol.functions li { padding: 2px 0; }
+.sheet ol.functions li::marker { color: var(--brass); font-variant-numeric: tabular-nums; }
+.parts { display: grid; gap: 8px; }
+.part-card {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .2s, background .2s;
+}
+.part-card:hover { border-color: var(--brass); }
+.part-card[aria-expanded="true"] { border-color: var(--brass); background: var(--brass-soft); }
+.part-top { display: flex; align-items: center; gap: 10px; }
+.part-name { flex: 1; font-family: var(--serif); font-size: 18px; line-height: 1.2; }
+.part-kind {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  color: var(--muted);
+}
+.part-chev { width: 16px; height: 16px; color: var(--muted); flex: none; transition: transform .25s; }
+.part-card[aria-expanded="true"] .part-chev { transform: rotate(180deg); color: var(--brass); }
+.part-body { display: none; margin-top: 8px; }
+.part-card[aria-expanded="true"] .part-body { display: block; }
+.part-nav { display: block; font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--brass); }
+.part-text { display: block; margin-top: 4px; font-size: 13px; line-height: 1.6; color: color-mix(in srgb, var(--ink) 85%, transparent); }
+
 /* ============ Landmarks ============ */
 .lm-layer { position: fixed; inset: 0; pointer-events: none; z-index: 12; }
 .lm-dot {

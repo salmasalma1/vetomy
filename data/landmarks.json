@@ -5,36 +5,294 @@
   },
   "definitions": {
     "humerus": {
-      "head": { "nav": "Caput humeri", "description": "Rounded articular surface at the caudal part of the proximal end. It articulates with the glenoid cavity of the scapula to form the shoulder joint." },
-      "greater tubercle": { "nav": "Tuberculum majus", "description": "Large eminence on the lateral side of the proximal end. Insertion of the supraspinatus and infraspinatus." },
-      "lesser tubercle": { "nav": "Tuberculum minus", "description": "Eminence on the medial side of the proximal end. Insertion of the subscapularis." },
-      "intermediate tubercle": { "nav": "Tuberculum intermedium", "description": "Ridge in the horse that divides the intertubercular groove into two channels for the biceps tendon." },
-      "intertubercular groove": { "nav": "Sulcus intertubercularis", "description": "Groove between the tubercles that carries the tendon of origin of the biceps brachii." },
-      "deltoid tuberosity": { "nav": "Tuberositas deltoidea", "description": "Roughened prominence on the lateral surface of the shaft. Insertion of the deltoideus." },
-      "condyle": { "nav": "Condylus humeri", "description": "Distal articular surface that articulates with the radius and ulna at the elbow joint." },
-      "olecranon fossa": { "nav": "Fossa olecrani", "description": "Deep caudal depression above the condyle that receives the anconeal process of the ulna when the elbow is extended." },
-      "lateral epicondyle": { "nav": "Epicondylus lateralis", "description": "Lateral prominence of the distal end. Origin of the extensor muscles of the carpus and digits." },
-      "medial epicondyle": { "nav": "Epicondylus medialis", "description": "Medial prominence of the distal end. Origin of the flexor muscles of the carpus and digits." }
+      "head": {
+        "nav": "Caput humeri",
+        "description": "Rounded articular surface at the caudal part of the proximal end. It articulates with the glenoid cavity of the scapula to form the shoulder joint."
+      },
+      "greater tubercle": {
+        "nav": "Tuberculum majus",
+        "description": "Large eminence on the lateral side of the proximal end. Insertion of the supraspinatus and infraspinatus."
+      },
+      "lesser tubercle": {
+        "nav": "Tuberculum minus",
+        "description": "Eminence on the medial side of the proximal end. Insertion of the subscapularis."
+      },
+      "intermediate tubercle": {
+        "nav": "Tuberculum intermedium",
+        "description": "Ridge in the horse that divides the intertubercular groove into two channels for the biceps tendon."
+      },
+      "intertubercular groove": {
+        "nav": "Sulcus intertubercularis",
+        "description": "Groove between the tubercles that carries the tendon of origin of the biceps brachii."
+      },
+      "deltoid tuberosity": {
+        "nav": "Tuberositas deltoidea",
+        "description": "Roughened prominence on the lateral surface of the shaft. Insertion of the deltoideus."
+      },
+      "condyle": {
+        "nav": "Condylus humeri",
+        "description": "Distal articular surface that articulates with the radius and ulna at the elbow joint."
+      },
+      "olecranon fossa": {
+        "nav": "Fossa olecrani",
+        "description": "Deep caudal depression above the condyle that receives the anconeal process of the ulna when the elbow is extended."
+      },
+      "lateral epicondyle": {
+        "nav": "Epicondylus lateralis",
+        "description": "Lateral prominence of the distal end. Origin of the extensor muscles of the carpus and digits."
+      },
+      "medial epicondyle": {
+        "nav": "Epicondylus medialis",
+        "description": "Medial prominence of the distal end. Origin of the flexor muscles of the carpus and digits."
+      }
     },
     "femur": {
-      "head": { "nav": "Caput ossis femoris", "description": "Hemispherical proximal articular surface that fits into the acetabulum to form the hip joint." },
-      "fovea capitis": { "nav": "Fovea capitis", "description": "Pit or notch on the head for the ligament of the head of the femur; in the horse it also receives the accessory ligament." },
-      "neck": { "nav": "Collum ossis femoris", "description": "Constriction that joins the head to the shaft." },
-      "greater trochanter": { "nav": "Trochanter major", "description": "Large lateral process at the proximal end. Insertion of the middle and deep gluteal muscles." },
-      "lesser trochanter": { "nav": "Trochanter minor", "description": "Medial process near the proximal end. Insertion of the iliopsoas." },
-      "third trochanter": { "nav": "Trochanter tertius", "description": "Lateral prominence on the shaft, present in the horse. Insertion of the superficial gluteal muscle." },
-      "trochlea": { "nav": "Trochlea ossis femoris", "description": "Grooved cranial surface of the distal end on which the patella glides." },
-      "medial and lateral condyles": { "nav": "Condylus medialis et lateralis", "description": "Caudal articular surfaces of the distal end that articulate with the tibia through the menisci." },
-      "supracondylar fossa": { "nav": "Fossa supracondylaris", "description": "Depression above the lateral condyle, deep in the horse. Origin of the superficial digital flexor." }
+      "head": {
+        "nav": "Caput ossis femoris",
+        "description": "Hemispherical proximal articular surface that fits into the acetabulum to form the hip joint."
+      },
+      "fovea capitis": {
+        "nav": "Fovea capitis",
+        "description": "Pit or notch on the head for the ligament of the head of the femur; in the horse it also receives the accessory ligament."
+      },
+      "neck": {
+        "nav": "Collum ossis femoris",
+        "description": "Constriction that joins the head to the shaft."
+      },
+      "greater trochanter": {
+        "nav": "Trochanter major",
+        "description": "Large lateral process at the proximal end. Insertion of the middle and deep gluteal muscles."
+      },
+      "lesser trochanter": {
+        "nav": "Trochanter minor",
+        "description": "Medial process near the proximal end. Insertion of the iliopsoas."
+      },
+      "third trochanter": {
+        "nav": "Trochanter tertius",
+        "description": "Lateral prominence on the shaft, present in the horse. Insertion of the superficial gluteal muscle."
+      },
+      "trochlea": {
+        "nav": "Trochlea ossis femoris",
+        "description": "Grooved cranial surface of the distal end on which the patella glides."
+      },
+      "medial and lateral condyles": {
+        "nav": "Condylus medialis et lateralis",
+        "description": "Caudal articular surfaces of the distal end that articulate with the tibia through the menisci."
+      },
+      "supracondylar fossa": {
+        "nav": "Fossa supracondylaris",
+        "description": "Depression above the lateral condyle, deep in the horse. Origin of the superficial digital flexor."
+      }
     },
     "scapula": {
-      "spine of scapula": { "nav": "Spina scapulae", "description": "Ridge that divides the lateral surface into the supraspinous and infraspinous fossae." },
-      "tuber of the spine": { "nav": "Tuber spinae scapulae", "description": "Thickening at the middle of the spine in the horse. Attachment of the trapezius." },
-      "supraspinous fossa": { "nav": "Fossa supraspinata", "description": "Area cranial to the spine. Origin of the supraspinatus." },
-      "infraspinous fossa": { "nav": "Fossa infraspinata", "description": "Area caudal to the spine. Origin of the infraspinatus." },
-      "glenoid cavity": { "nav": "Cavitas glenoidalis", "description": "Shallow distal socket that articulates with the head of the humerus." },
-      "supraglenoid tubercle": { "nav": "Tuberculum supraglenoidale", "description": "Prominence above the glenoid cavity. Origin of the biceps brachii." },
-      "scapular cartilage": { "nav": "Cartilago scapulae", "description": "Cartilage extending the dorsal border, large in the horse and ox." }
+      "spine of scapula": {
+        "nav": "Spina scapulae",
+        "description": "Ridge that divides the lateral surface into the supraspinous and infraspinous fossae."
+      },
+      "tuber of the spine": {
+        "nav": "Tuber spinae scapulae",
+        "description": "Thickening at the middle of the spine in the horse. Attachment of the trapezius."
+      },
+      "supraspinous fossa": {
+        "nav": "Fossa supraspinata",
+        "description": "Area cranial to the spine. Origin of the supraspinatus."
+      },
+      "infraspinous fossa": {
+        "nav": "Fossa infraspinata",
+        "description": "Area caudal to the spine. Origin of the infraspinatus."
+      },
+      "glenoid cavity": {
+        "nav": "Cavitas glenoidalis",
+        "description": "Shallow distal socket that articulates with the head of the humerus."
+      },
+      "supraglenoid tubercle": {
+        "nav": "Tuberculum supraglenoidale",
+        "description": "Prominence above the glenoid cavity. Origin of the biceps brachii."
+      },
+      "scapular cartilage": {
+        "nav": "Cartilago scapulae",
+        "description": "Cartilage extending the dorsal border, large in the horse and ox."
+      }
+    },
+    "skull": {
+      "nuchal crest": {
+        "nav": "Crista nuchae",
+        "description": "Transverse ridge at the caudodorsal border of the skull. Attachment of the nuchal ligament and neck muscles."
+      },
+      "external sagittal crest": {
+        "nav": "Crista sagittalis externa",
+        "description": "Median ridge on the parietal bones. The temporal muscle arises on either side of it."
+      },
+      "temporal fossa": {
+        "nav": "Fossa temporalis",
+        "description": "Depression on the side of the cranium, bounded by the temporal crest and the zygomatic arch. Filled by the temporal muscle."
+      },
+      "temporal crest": {
+        "nav": "Crista temporalis",
+        "description": "Ridge that bounds the temporal fossa dorsally."
+      },
+      "zygomatic arch": {
+        "nav": "Arcus zygomaticus",
+        "description": "Bony bridge formed by the zygomatic process of the temporal bone and the temporal process of the zygomatic bone. The masseter arises from it."
+      },
+      "zygomatic process of the frontal bone": {
+        "nav": "Processus zygomaticus ossis frontalis",
+        "description": "Process that joins the zygomatic arch and closes the orbit caudally in the horse and ruminants."
+      },
+      "supraorbital foramen": {
+        "nav": "Foramen supraorbitale",
+        "description": "Opening in the zygomatic process of the frontal bone for the supraorbital nerve and vessels; a site for nerve blocks in the horse."
+      },
+      "orbit": {
+        "nav": "Orbita",
+        "description": "Bony cavity that holds the eyeball. In the horse it is a complete bony ring."
+      },
+      "facial crest": {
+        "nav": "Crista facialis",
+        "description": "Prominent ridge on the maxilla and zygomatic bone. Origin of the masseter and a landmark for the maxillary sinus."
+      },
+      "infraorbital foramen": {
+        "nav": "Foramen infraorbitale",
+        "description": "Rostral opening of the infraorbital canal on the maxilla, where the infraorbital nerve emerges; a site for nerve blocks."
+      },
+      "nasoincisive notch": {
+        "nav": "Incisura nasoincisiva",
+        "description": "Notch between the nasal bone and the nasal process of the incisive bone, forming the margin of the bony nostril."
+      },
+      "nasal process of the incisive bone": {
+        "nav": "Processus nasalis ossis incisivi",
+        "description": "Slender process of the incisive bone that runs caudodorsally towards the nasal bone."
+      },
+      "body of the incisive bone": {
+        "nav": "Corpus ossis incisivi",
+        "description": "Rostral part of the incisive bone that carries the alveoli of the upper incisors."
+      },
+      "interincisive canal": {
+        "nav": "Canalis interincisivus",
+        "description": "Median canal between the bodies of the two incisive bones."
+      },
+      "occipital condyles": {
+        "nav": "Condyli occipitales",
+        "description": "Paired articular surfaces beside the foramen magnum that articulate with the atlas."
+      },
+      "foramen magnum": {
+        "nav": "Foramen magnum",
+        "description": "Large opening in the occipital bone through which the brain continues as the spinal cord."
+      },
+      "hypoglossal canal": {
+        "nav": "Canalis nervi hypoglossi",
+        "description": "Canal in the occipital bone for the hypoglossal nerve (cranial nerve XII)."
+      },
+      "jugular foramen": {
+        "nav": "Foramen jugulare",
+        "description": "Opening for the glossopharyngeal, vagus and accessory nerves (cranial nerves IX, X and XI)."
+      },
+      "basilar part of the occipital bone": {
+        "nav": "Pars basilaris ossis occipitalis",
+        "description": "Part of the occipital bone that forms the floor of the caudal cranial cavity."
+      },
+      "tympanic bulla": {
+        "nav": "Bulla tympanica",
+        "description": "Rounded part of the temporal bone that encloses the middle ear cavity."
+      },
+      "muscular tubercle": {
+        "nav": "Tuberculum musculare",
+        "description": "Tubercle on the base of the skull for the attachment of the ventral neck muscles."
+      },
+      "foramen lacerum": {
+        "nav": "Foramen lacerum",
+        "description": "Large irregular opening in the base of the horse skull between the occipital, sphenoid and temporal bones, for vessels and nerves."
+      },
+      "retroarticular process": {
+        "nav": "Processus retroarticularis",
+        "description": "Process behind the mandibular fossa that limits caudal movement of the mandible."
+      },
+      "mandibular fossa": {
+        "nav": "Fossa mandibularis",
+        "description": "Articular surface of the temporal bone for the condylar process of the mandible (temporomandibular joint)."
+      },
+      "articular tubercle": {
+        "nav": "Tuberculum articulare",
+        "description": "Rounded articular eminence rostral to the mandibular fossa."
+      },
+      "pterygoid process": {
+        "nav": "Processus pterygoideus",
+        "description": "Process of the sphenoid bone that, with the palatine and pterygoid bones, bounds the choanae."
+      },
+      "alar canal": {
+        "nav": "Canalis alaris",
+        "description": "Canal at the base of the pterygoid process of the sphenoid bone in the horse, for the maxillary artery."
+      },
+      "choanae": {
+        "nav": "Choanae",
+        "description": "Caudal openings of the nasal cavity into the nasopharynx."
+      },
+      "maxillary tuber": {
+        "nav": "Tuber maxillae",
+        "description": "Caudal end of the maxilla behind the last upper cheek tooth."
+      },
+      "palatine fissure": {
+        "nav": "Fissura palatina",
+        "description": "Opening in the rostral part of the hard palate, between the incisive bone and the maxilla."
+      },
+      "palatine process of the maxilla": {
+        "nav": "Processus palatinus maxillae",
+        "description": "Horizontal plate of the maxilla that forms most of the hard palate."
+      }
+    },
+    "mandible": {
+      "incisive part": {
+        "nav": "Pars incisiva",
+        "description": "Rostral part of the body of the mandible that carries the lower incisors and canines."
+      },
+      "molar part": {
+        "nav": "Pars molaris",
+        "description": "Caudal part of the body of the mandible that carries the lower cheek teeth."
+      },
+      "ramus": {
+        "nav": "Ramus mandibulae",
+        "description": "Vertical part of the mandible that rises to the coronoid and condylar processes."
+      },
+      "coronoid process": {
+        "nav": "Processus coronoideus",
+        "description": "Rostral process of the ramus, projecting into the temporal fossa. Insertion of the temporal muscle."
+      },
+      "condylar process": {
+        "nav": "Processus condylaris",
+        "description": "Caudal process of the ramus that articulates with the temporal bone at the temporomandibular joint."
+      },
+      "mandibular notch": {
+        "nav": "Incisura mandibulae",
+        "description": "Notch between the coronoid and condylar processes."
+      },
+      "masseteric fossa": {
+        "nav": "Fossa masseterica",
+        "description": "Depression on the lateral surface of the ramus. Insertion of the masseter."
+      },
+      "pterygoid fossa": {
+        "nav": "Fossa pterygoidea",
+        "description": "Depression on the medial surface of the ramus. Insertion of the medial pterygoid muscle."
+      },
+      "mandibular foramen": {
+        "nav": "Foramen mandibulae",
+        "description": "Opening on the medial surface of the ramus where the inferior alveolar nerve and vessels enter the mandibular canal."
+      },
+      "mental foramen": {
+        "nav": "Foramen mentale",
+        "description": "Opening on the lateral surface of the incisive part where the mental nerve emerges; a site for nerve blocks."
+      },
+      "interalveolar border": {
+        "nav": "Margo interalveolaris",
+        "description": "Toothless gap between the incisors or canine and the cheek teeth (the 'bars'), where the bit rests in the horse."
+      },
+      "mandibular angle": {
+        "nav": "Angulus mandibulae",
+        "description": "Rounded caudoventral corner where the body meets the ramus."
+      },
+      "vascular groove": {
+        "nav": "Incisura vasorum facialium",
+        "description": "Notch on the ventral border where the facial artery, facial vein and parotid duct cross onto the face; the facial pulse is taken here."
+      }
     }
   },
   "horse": {}

@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261119b';
-import { translateEs, partLabel } from './translate-es.js?v=20261119b';
+import { buildPlaceholder } from './placeholder.js?v=20261119c';
+import { translateEs, partLabel } from './translate-es.js?v=20261119c';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261119b';
+const ASSET_V = '20261119c';
 
 // ------------------------------------------------------------------
 // Config
@@ -655,6 +655,8 @@ function renderInfo() {
       </div>
       <h3>Description</h3>
       <p>${esc(d.description || '—')}</p>
+      ${functionsSection(d)}
+      ${partsSection(d)}
       <h3>Landmarks</h3>
       ${landmarkList(b, d.landmarks)}
       <h3>Articulates with</h3>
@@ -663,6 +665,13 @@ function renderInfo() {
       <h3>Across species</h3>
       <div class="compare">${compare}</div>
       <p class="disclaimer">${esc(state.data._meta?.disclaimer || '')}</p>`;
+
+    infoPanel.querySelectorAll('.part-card').forEach((card) => {
+      card.onclick = () => {
+        const open = card.getAttribute('aria-expanded') !== 'true';
+        card.setAttribute('aria-expanded', open);
+      };
+    });
 
     infoPanel.querySelectorAll('[data-lm]').forEach((li) => {
       li.onclick = () => openLm(+li.dataset.lm);
@@ -679,6 +688,32 @@ function renderInfo() {
   }
   infoPanel.querySelector('.close').onclick = () => select(null);
   infoPanel.scrollTop = 0;
+}
+
+// Optional "Functions" and grouped "parts" sections (e.g. the bones of the skull)
+function functionsSection(d) {
+  if (!d.functions?.length) return '';
+  return `<h3>Functions</h3><ol class="functions">${d.functions.map((f) => `<li>${esc(f)}</li>`).join('')}</ol>`;
+}
+
+function partsSection(d) {
+  if (!d.parts?.length) return '';
+  const groups = [...new Set(d.parts.map((p) => p.group || 'Parts'))];
+  return groups.map((g) => {
+    const cards = d.parts.filter((p) => (p.group || 'Parts') === g).map((p) => `
+      <button class="part-card" aria-expanded="false">
+        <span class="part-top">
+          <span class="part-name">${esc(p.name)}</span>
+          ${p.kind ? `<span class="part-kind">${esc(p.kind)}</span>` : ''}
+          <svg class="part-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+        </span>
+        <span class="part-body">
+          ${p.nav ? `<span class="part-nav">${esc(p.nav)}</span>` : ''}
+          <span class="part-text">${esc(p.description || '')}</span>
+        </span>
+      </button>`).join('');
+    return `<h3>${esc(g)}</h3><div class="parts">${cards}</div>`;
+  }).join('');
 }
 
 // ------------------------------------------------------------------

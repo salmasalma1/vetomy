@@ -16,14 +16,39 @@
       "nav": "Cranium"
     },
     "type": "Compound (flat & irregular bones)",
-    "description": "Formed by the cranial bones, which enclose the brain, and the facial bones, which form the face and the nasal and oral cavities. Most skull bones are joined by immovable sutures.",
+    "description": "The bones of the head. They are divided into cranial bones, which enclose the brain, meninges and ear, and facial bones, which form the skeleton of the oral and nasal cavities. Most are joined by immovable sutures.",
     "landmarks": [
-      "Orbit",
-      "Zygomatic arch",
       "Nuchal crest",
+      "External sagittal crest",
+      "Temporal fossa",
+      "Temporal crest",
+      "Zygomatic arch",
+      "Zygomatic process of the frontal bone",
+      "Supraorbital foramen",
+      "Orbit",
+      "Facial crest",
+      "Infraorbital foramen",
+      "Nasoincisive notch",
+      "Nasal process of the incisive bone",
+      "Body of the incisive bone",
+      "Interincisive canal",
       "Occipital condyles",
       "Foramen magnum",
-      "Paranasal sinuses"
+      "Hypoglossal canal",
+      "Jugular foramen",
+      "Basilar part of the occipital bone",
+      "Tympanic bulla",
+      "Muscular tubercle",
+      "Foramen lacerum",
+      "Retroarticular process",
+      "Mandibular fossa",
+      "Articular tubercle",
+      "Pterygoid process",
+      "Alar canal",
+      "Choanae",
+      "Maxillary tuber",
+      "Palatine fissure",
+      "Palatine process of the maxilla"
     ],
     "articulations": [
       "Mandible (temporomandibular joint)",
@@ -35,7 +60,141 @@
       "cattle": "The frontal bone forms most of the dorsal surface and the poll (intercornual protuberance). Cornual processes in horned breeds, with the frontal sinus extending into them. Complete bony orbit.",
       "dog": "Shape varies with breed: dolichocephalic, mesaticephalic or brachycephalic. The orbit is incomplete and closed laterally by the orbital ligament. The sagittal crest is often prominent.",
       "cat": "Short, rounded skull with very large orbits. The orbit is almost complete; the frontal and zygomatic processes nearly meet and are joined by a ligament."
-    }
+    },
+    "functions": [
+      "Protects the brain",
+      "Supports and protects the sense organs (eye and ear)",
+      "Forms the passages into the respiratory and digestive systems",
+      "Gives attachment to the facial and masticatory muscles"
+    ],
+    "parts": [
+      {
+        "group": "Cranial bones",
+        "kind": "Single",
+        "name": "Occipital bone",
+        "nav": "Os occipitale",
+        "description": "Forms the caudal wall of the cranium around the foramen magnum. Its condyles articulate with the atlas, and the nuchal crest gives attachment to the nuchal ligament and neck muscles."
+      },
+      {
+        "group": "Cranial bones",
+        "kind": "Single",
+        "name": "Sphenoid bone",
+        "nav": "Os sphenoidale",
+        "description": "Forms much of the floor of the cranial cavity. It has a body with wings and pterygoid processes, and carries the optic canal and the openings for nerves to the orbit."
+      },
+      {
+        "group": "Cranial bones",
+        "kind": "Single",
+        "name": "Ethmoid bone",
+        "nav": "Os ethmoidale",
+        "description": "Lies between the cranial and nasal cavities. Its cribriform plate is perforated by the olfactory nerve fibres, and it carries the ethmoidal conchae."
+      },
+      {
+        "group": "Cranial bones",
+        "kind": "Single",
+        "name": "Interparietal bone",
+        "nav": "Os interparietale",
+        "description": "Small median bone between the two parietal bones and the occipital bone. It fuses with its neighbours early in life."
+      },
+      {
+        "group": "Cranial bones",
+        "kind": "Paired",
+        "name": "Parietal bone",
+        "nav": "Os parietale",
+        "description": "Forms the roof of the caudal part of the cranium. In the horse the two parietal bones meet at the external sagittal crest."
+      },
+      {
+        "group": "Cranial bones",
+        "kind": "Paired",
+        "name": "Frontal bone",
+        "nav": "Os frontale",
+        "description": "Forms the forehead and the roof of the rostral cranium. Its zygomatic process completes the bony orbit, and it contains the frontal sinus and the supraorbital foramen."
+      },
+      {
+        "group": "Cranial bones",
+        "kind": "Paired",
+        "name": "Temporal bone",
+        "nav": "Os temporale",
+        "description": "Forms the lateral wall of the cranium. The squamous part gives the zygomatic process and the mandibular fossa of the temporomandibular joint; the petrous part houses the middle and inner ear."
+      },
+      {
+        "group": "Facial bones",
+        "kind": "Paired",
+        "name": "Maxilla",
+        "nav": "Maxilla",
+        "description": "The largest facial bone. It carries the upper cheek teeth, the facial crest and the infraorbital foramen, and contains the maxillary sinus."
+      },
+      {
+        "group": "Facial bones",
+        "kind": "Paired",
+        "name": "Incisive bone (premaxilla)",
+        "nav": "Os incisivum",
+        "description": "The most rostral bone of the upper jaw, with a body, a nasal process and a palatine process. It carries the upper incisors, which are absent in ruminants."
+      },
+      {
+        "group": "Facial bones",
+        "kind": "Paired",
+        "name": "Palatine bone",
+        "nav": "Os palatinum",
+        "description": "Forms the caudal part of the hard palate and the borders of the choanae."
+      },
+      {
+        "group": "Facial bones",
+        "kind": "Paired",
+        "name": "Pterygoid bone",
+        "nav": "Os pterygoideum",
+        "description": "Small thin bone on the lateral wall of the choanae, ending in a hook-like hamulus."
+      },
+      {
+        "group": "Facial bones",
+        "kind": "Paired",
+        "name": "Nasal bone",
+        "nav": "Os nasale",
+        "description": "Forms the roof of the nasal cavity."
+      },
+      {
+        "group": "Facial bones",
+        "kind": "Paired",
+        "name": "Lacrimal bone",
+        "nav": "Os lacrimale",
+        "description": "Forms the rostral wall of the orbit and contains the fossa for the lacrimal sac."
+      },
+      {
+        "group": "Facial bones",
+        "kind": "Paired",
+        "name": "Zygomatic bone (malar)",
+        "nav": "Os zygomaticum",
+        "description": "Forms the ventral margin of the orbit and the rostral part of the zygomatic arch. In the horse the facial crest continues onto it."
+      },
+      {
+        "group": "Facial bones",
+        "kind": "Single",
+        "name": "Vomer",
+        "nav": "Vomer",
+        "description": "Median bone on the floor of the nasal cavity that supports the nasal septum."
+      },
+      {
+        "group": "Facial bones",
+        "kind": "Single",
+        "name": "Turbinates (nasal conchae)",
+        "nav": "Conchae nasales",
+        "description": "Thin scrolls of bone inside the nasal cavity, covered by mucosa, that warm and humidify inspired air."
+      },
+      {
+        "group": "Facial bones",
+        "kind": "Single",
+        "name": "Mandible",
+        "nav": "Mandibula",
+        "description": "The lower jaw and the only movable bone of the skull. It carries the lower teeth and articulates with the temporal bone."
+      },
+      {
+        "group": "Facial bones",
+        "kind": "Single",
+        "name": "Hyoid apparatus",
+        "nav": "Apparatus hyoideus",
+        "description": "Chain of small bones that suspends the tongue and larynx from the temporal bone."
+      }
+    ]
   },
   "mandible": {
     "region": "head",
@@ -46,13 +205,19 @@
     "type": "Irregular bone",
     "description": "The only movable bone of the skull; it carries the lower teeth. Each half has a horizontal body and a vertical ramus.",
     "landmarks": [
-      "Body",
+      "Incisive part",
+      "Molar part",
       "Ramus",
       "Coronoid process",
       "Condylar process",
+      "Mandibular notch",
+      "Masseteric fossa",
+      "Pterygoid fossa",
       "Mandibular foramen",
       "Mental foramen",
-      "Mandibular symphysis"
+      "Interalveolar border",
+      "Mandibular angle",
+      "Vascular groove"
     ],
     "articulations": [
       "Temporal bone (temporomandibular joint)"
