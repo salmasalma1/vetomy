@@ -73,6 +73,11 @@
     ],
     "skull": [
       {
+        "title": "Skull, colour-coded bones",
+        "uid": "4e295f0c6daa4e7abeebe128b9dee7c4",
+        "credit": "Vetanat.UZH (Institute of Veterinary Anatomy, University of Zurich)"
+      },
+      {
         "title": "Skull (photo scan)",
         "file": "models/specimens/horse_skull.glb",
         "credit": "matousekfoto, CC BY 4.0",

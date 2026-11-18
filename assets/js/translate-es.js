@@ -201,3 +201,44 @@ export function translateEs(text) {
   });
   return out.replace(/\bof the the\b/gi, 'of the').replace(/\s{2,}/g, ' ').trim();
 }
+
+// Latin (NAV) and German bone names that appear as part names in scans
+const PART_NAMES = {
+  'os incisivum': 'Incisive bone', 'ossa incisiva': 'Incisive bone', 'zwischenkieferbein': 'Incisive bone', 'os praemaxillare': 'Incisive bone',
+  'os nasale': 'Nasal bone', 'ossa nasalia': 'Nasal bone', 'nasenbein': 'Nasal bone',
+  'maxilla': 'Maxilla', 'oberkieferbein': 'Maxilla', 'oberkiefer': 'Maxilla',
+  'os lacrimale': 'Lacrimal bone', 'tränenbein': 'Lacrimal bone', 'traenenbein': 'Lacrimal bone',
+  'os zygomaticum': 'Zygomatic bone', 'jochbein': 'Zygomatic bone',
+  'os frontale': 'Frontal bone', 'stirnbein': 'Frontal bone',
+  'os parietale': 'Parietal bone', 'scheitelbein': 'Parietal bone',
+  'os interparietale': 'Interparietal bone', 'zwischenscheitelbein': 'Interparietal bone',
+  'os occipitale': 'Occipital bone', 'hinterhauptsbein': 'Occipital bone', 'hinterhauptbein': 'Occipital bone',
+  'os temporale': 'Temporal bone', 'schläfenbein': 'Temporal bone', 'schlaefenbein': 'Temporal bone',
+  'os sphenoidale': 'Sphenoid bone', 'os basisphenoidale': 'Basisphenoid bone', 'os praesphenoidale': 'Presphenoid bone', 'keilbein': 'Sphenoid bone',
+  'os palatinum': 'Palatine bone', 'gaumenbein': 'Palatine bone',
+  'vomer': 'Vomer', 'pflugscharbein': 'Vomer',
+  'os pterygoideum': 'Pterygoid bone', 'flügelbein': 'Pterygoid bone', 'fluegelbein': 'Pterygoid bone',
+  'os ethmoidale': 'Ethmoid bone', 'siebbein': 'Ethmoid bone',
+  'mandibula': 'Mandible', 'unterkiefer': 'Mandible', 'unterkieferbein': 'Mandible',
+  'apparatus hyoideus': 'Hyoid apparatus', 'zungenbein': 'Hyoid apparatus',
+  'hueso frontal': 'Frontal bone', 'hueso parietal': 'Parietal bone', 'hueso occipital': 'Occipital bone',
+  'hueso temporal': 'Temporal bone', 'hueso nasal': 'Nasal bone', 'hueso incisivo': 'Incisive bone',
+  'hueso lagrimal': 'Lacrimal bone', 'hueso cigomático': 'Zygomatic bone', 'hueso palatino': 'Palatine bone',
+  'hueso esfenoides': 'Sphenoid bone', 'hueso etmoides': 'Ethmoid bone', 'hueso maxilar': 'Maxilla', 'maxilar': 'Maxilla',
+  'dentes': 'Teeth', 'zähne': 'Teeth', 'zaehne': 'Teeth',
+};
+
+// Turns a raw part/material name from a scan into a readable English label, or null if it looks generic
+export function partLabel(raw) {
+  const clean = String(raw || '')
+    .replace(/[_\-.]+/g, ' ')
+    .replace(/\b(mat|material|mtl)\b/gi, '')
+    .replace(/\s*\d+$/, '')
+    .trim();
+  if (!clean || clean.length < 3) return null;
+  if (/^(default|lambert|phong|standard|blinn|scene|object|mesh|root|texture|none|initialshading)/i.test(clean)) return null;
+  const known = PART_NAMES[clean.toLowerCase()];
+  if (known) return known;
+  const t = translateEs(clean);
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}

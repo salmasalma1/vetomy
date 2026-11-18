@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261118k';
-import { translateEs } from './translate-es.js?v=20261118k';
+import { buildPlaceholder } from './placeholder.js?v=20261119a';
+import { translateEs, partLabel } from './translate-es.js?v=20261119a';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261118k';
+const ASSET_V = '20261119a';
 
 // ------------------------------------------------------------------
 // Config
@@ -811,7 +811,7 @@ function openSpecimen(sp, index) {
     spec.token++;
     cancelAnimationFrame(spec.raf);
     clearSpecimenModel();
-    credit.textContent = `Scan: ${state.specimens?._meta?.source || 'Sketchfab'}`;
+    credit.textContent = `Scan: ${sp.credit || state.specimens?._meta?.source || 'Sketchfab'}`;
     credit.href = `https://sketchfab.com/3d-models/${sp.uid}`;
     $('specimen-canvas').classList.add('hidden');
     $('specimen-frame').classList.remove('hidden');
@@ -858,6 +858,7 @@ async function showSketchfab(uid) {
   const session = ++sketchfabSession;
   const frame = $('specimen-frame');
   $('specimen-landmarks').classList.add('hidden');
+  $('specimen-landmarks').querySelector('.lm-head').innerHTML = 'Landmarks <span>translated from Spanish</span>';
   $('lm-list').innerHTML = '';
   const fallback = () => {
     if (session !== sketchfabSession) return;
@@ -876,7 +877,9 @@ async function showSketchfab(uid) {
           if (session !== sketchfabSession) return;
           $('specimen-loading').classList.add('hidden');
           api.getAnnotationList((err, list) => {
-            if (!err && list?.length && session === sketchfabSession) renderScanLandmarks(api, list);
+            if (session !== sketchfabSession) return;
+            if (!err && list?.length) renderScanLandmarks(api, list);
+            else detectScanParts(api, session);
           });
         });
         api.addEventListener('annotationSelect', (i) => markScanLandmark(i));
@@ -902,6 +905,33 @@ function renderScanLandmarks(api, list) {
     ol.appendChild(li);
   });
   $('specimen-landmarks').classList.remove('hidden');
+}
+
+// Some scans colour each bone with its own named material (e.g. the Zurich skull).
+// If the names are meaningful, list them and label whatever part is clicked.
+function detectScanParts(api, session) {
+  api.getMaterialList((err, mats) => {
+    if (err || session !== sketchfabSession) return;
+    console.info('[Vetomy] scan materials:', (mats || []).map((m) => m.name));
+    const parts = [...new Map((mats || [])
+      .map((m) => [m.name, partLabel(m.name)])
+      .filter(([, label]) => label)
+    ).entries()];
+    if (parts.length < 2) return;
+    const labels = new Map(parts);
+    const ol = $('lm-list');
+    ol.innerHTML = parts
+      .map(([raw, label], i) => `<li><button data-raw="${esc(raw)}"><span class="n">${i + 1}</span><span>${esc(label)}</span></button></li>`)
+      .join('');
+    $('specimen-landmarks').querySelector('.lm-head').innerHTML = 'Parts <span>Click a coloured area on the scan</span>';
+    $('specimen-landmarks').classList.remove('hidden');
+    api.addEventListener('click', (info) => {
+      const raw = info?.material?.name;
+      if (!raw || !labels.has(raw)) return;
+      ol.querySelectorAll('button').forEach((b) => b.classList.toggle('active', b.dataset.raw === raw));
+      toast(labels.get(raw));
+    }, { pick: 'slow' });
+  });
 }
 
 function markScanLandmark(i) {
