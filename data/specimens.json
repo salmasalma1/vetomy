@@ -75,7 +75,8 @@
       {
         "title": "Skull, colour-coded bones",
         "uid": "4e295f0c6daa4e7abeebe128b9dee7c4",
-        "credit": "Vetanat.UZH (Institute of Veterinary Anatomy, University of Zurich)"
+        "credit": "Vetanat.UZH (Institute of Veterinary Anatomy, University of Zurich)",
+        "partsFrom": "skull"
       },
       {
         "title": "Hyoid apparatus",

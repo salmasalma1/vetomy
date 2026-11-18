@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261119c';
-import { translateEs, partLabel } from './translate-es.js?v=20261119c';
+import { buildPlaceholder } from './placeholder.js?v=20261119d';
+import { translateEs, partLabel } from './translate-es.js?v=20261119d';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261119c';
+const ASSET_V = '20261119d';
 
 // ------------------------------------------------------------------
 // Config
@@ -656,7 +656,6 @@ function renderInfo() {
       <h3>Description</h3>
       <p>${esc(d.description || '—')}</p>
       ${functionsSection(d)}
-      ${partsSection(d)}
       <h3>Landmarks</h3>
       ${landmarkList(b, d.landmarks)}
       <h3>Articulates with</h3>
@@ -665,13 +664,6 @@ function renderInfo() {
       <h3>Across species</h3>
       <div class="compare">${compare}</div>
       <p class="disclaimer">${esc(state.data._meta?.disclaimer || '')}</p>`;
-
-    infoPanel.querySelectorAll('.part-card').forEach((card) => {
-      card.onclick = () => {
-        const open = card.getAttribute('aria-expanded') !== 'true';
-        card.setAttribute('aria-expanded', open);
-      };
-    });
 
     infoPanel.querySelectorAll('[data-lm]').forEach((li) => {
       li.onclick = () => openLm(+li.dataset.lm);
@@ -694,26 +686,6 @@ function renderInfo() {
 function functionsSection(d) {
   if (!d.functions?.length) return '';
   return `<h3>Functions</h3><ol class="functions">${d.functions.map((f) => `<li>${esc(f)}</li>`).join('')}</ol>`;
-}
-
-function partsSection(d) {
-  if (!d.parts?.length) return '';
-  const groups = [...new Set(d.parts.map((p) => p.group || 'Parts'))];
-  return groups.map((g) => {
-    const cards = d.parts.filter((p) => (p.group || 'Parts') === g).map((p) => `
-      <button class="part-card" aria-expanded="false">
-        <span class="part-top">
-          <span class="part-name">${esc(p.name)}</span>
-          ${p.kind ? `<span class="part-kind">${esc(p.kind)}</span>` : ''}
-          <svg class="part-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
-        </span>
-        <span class="part-body">
-          ${p.nav ? `<span class="part-nav">${esc(p.nav)}</span>` : ''}
-          <span class="part-text">${esc(p.description || '')}</span>
-        </span>
-      </button>`).join('');
-    return `<h3>${esc(g)}</h3><div class="parts">${cards}</div>`;
-  }).join('');
 }
 
 // ------------------------------------------------------------------
@@ -852,7 +824,7 @@ function openSpecimen(sp, index) {
     $('specimen-frame').classList.remove('hidden');
     $('specimen-loading').textContent = 'Loading high-resolution scan…';
     $('specimen-loading').classList.remove('hidden');
-    showSketchfab(sp.uid);
+    showSketchfab(sp.uid, sp);
   } else {
     return;
   }
@@ -889,12 +861,16 @@ function sketchfabOptions() {
 }
 
 let sketchfabSession = 0;
-async function showSketchfab(uid) {
+async function showSketchfab(uid, sp = {}) {
   const session = ++sketchfabSession;
   const frame = $('specimen-frame');
-  $('specimen-landmarks').classList.add('hidden');
-  $('specimen-landmarks').querySelector('.lm-head').innerHTML = 'Landmarks <span>translated from Spanish</span>';
+  const panel = $('specimen-landmarks');
+  panel.classList.add('hidden');
+  panel.classList.remove('wide');
+  panel.querySelector('.lm-head').innerHTML = 'Landmarks <span>translated from Spanish</span>';
   $('lm-list').innerHTML = '';
+  const parts = sp.partsFrom ? state.data[sp.partsFrom]?.parts : null;
+  if (parts?.length) renderSpecimenParts(parts);
   const fallback = () => {
     if (session !== sketchfabSession) return;
     frame.onload = () => $('specimen-loading').classList.add('hidden');
@@ -913,7 +889,8 @@ async function showSketchfab(uid) {
           $('specimen-loading').classList.add('hidden');
           api.getAnnotationList((err, list) => {
             if (session !== sketchfabSession) return;
-            if (!err && list?.length) renderScanLandmarks(api, list);
+            if (!err && list?.length && !parts?.length) renderScanLandmarks(api, list);
+            else if (parts?.length) linkPartsToScan(api, parts, session);
             else detectScanParts(api, session);
           });
         });
@@ -940,6 +917,67 @@ function renderScanLandmarks(api, list) {
     ol.appendChild(li);
   });
   $('specimen-landmarks').classList.remove('hidden');
+}
+
+// ---- Bones of a structure shown beside its scan (e.g. the bones of the skull)
+function renderSpecimenParts(parts) {
+  const panel = $('specimen-landmarks');
+  panel.classList.add('wide');
+  panel.querySelector('.lm-head').innerHTML = 'Bones of the skull <span>Click a bone to read about it</span>';
+  const ol = $('lm-list');
+  let html = '', last = null;
+  parts.forEach((p, i) => {
+    if (p.group && p.group !== last) {
+      last = p.group;
+      html += `<li class="lm-group">${esc(p.group)}</li>`;
+    }
+    html += `<li>
+      <button class="lm-part" data-part="${i}" aria-expanded="false">
+        <span class="lm-part-top">
+          <span class="lm-part-name">${esc(p.name)}</span>
+          ${p.kind ? `<span class="lm-part-kind">${esc(p.kind)}</span>` : ''}
+        </span>
+        <span class="lm-part-body">
+          ${p.nav ? `<span class="lm-part-nav">${esc(p.nav)}</span>` : ''}
+          <span class="lm-part-text">${esc(p.description || '')}</span>
+        </span>
+      </button></li>`;
+  });
+  ol.innerHTML = html;
+  ol.querySelectorAll('.lm-part').forEach((b) => (b.onclick = () => openSpecimenPart(+b.dataset.part, true)));
+  panel.classList.remove('hidden');
+}
+
+function openSpecimenPart(i, toggle = false) {
+  $('lm-list').querySelectorAll('.lm-part').forEach((b) => {
+    const match = +b.dataset.part === i;
+    const open = match && (!toggle || b.getAttribute('aria-expanded') !== 'true');
+    b.setAttribute('aria-expanded', open);
+    if (open && !toggle) b.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  });
+}
+
+// If the scan's colours are named after bones, clicking a colour opens that bone in the list
+function linkPartsToScan(api, parts, session) {
+  api.getMaterialList((err, mats) => {
+    if (err || session !== sketchfabSession) return;
+    console.info('[Vetomy] scan materials:', (mats || []).map((m) => m.name));
+    const norm = (t) => String(t || '').toLowerCase().replace(/\(.*?\)/g, '').trim();
+    const byMaterial = new Map();
+    (mats || []).forEach((m) => {
+      const label = norm(partLabel(m.name));
+      if (!label) return;
+      const i = parts.findIndex((p) => norm(p.name) === label || norm(p.name).startsWith(label) || label.startsWith(norm(p.name)));
+      if (i >= 0) byMaterial.set(m.name, i);
+    });
+    if (!byMaterial.size) return;
+    api.addEventListener('click', (info) => {
+      const i = byMaterial.get(info?.material?.name);
+      if (i === undefined) return;
+      openSpecimenPart(i);
+      toast(parts[i].name);
+    }, { pick: 'slow' });
+  });
 }
 
 // Some scans colour each bone with its own named material (e.g. the Zurich skull).
