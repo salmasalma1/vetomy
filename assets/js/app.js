@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261119f';
-import { translateEs, partLabel } from './translate-es.js?v=20261119f';
+import { buildPlaceholder } from './placeholder.js?v=20261119g';
+import { translateEs, partLabel } from './translate-es.js?v=20261119g';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261119f';
+const ASSET_V = '20261119g';
 
 // ------------------------------------------------------------------
 // Config
@@ -693,7 +693,7 @@ function functionsSection(d) {
 // ------------------------------------------------------------------
 function specimensFor(key) {
   const sp = state.specimens?.[state.species] || {};
-  return sp[key] || sp[groupKey(key)] || [];
+  return sp[key] || sp[baseKey(key)] || sp[groupKey(key)] || [];
 }
 
 function specimenSection(key) {

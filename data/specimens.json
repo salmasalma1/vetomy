@@ -65,12 +65,6 @@
         "uid": "ea8f7e61e01847f797b143914b52177e"
       }
     ],
-    "vertebrae_lumbar": [
-      {
-        "title": "Lumbar vertebra (L6)",
-        "uid": "89c0999f7123418093400169a625799d"
-      }
-    ],
     "skull": [
       {
         "title": "Skull, colour-coded bones",
@@ -94,6 +88,75 @@
       {
         "title": "Axis (C2)",
         "uid": "ca83550010ac41cdb97d36f653b1f638"
+      }
+    ],
+    "carpus": [
+      {
+        "title": "Carpal bones",
+        "uid": "0dbee84c8fa942d2b8ab8c13f6bdf2d0",
+        "credit": "Sketchfab (see the model page for the author)"
+      }
+    ],
+    "metacarpus": [
+      {
+        "title": "Metacarpal bones",
+        "uid": "1a67722ff4e6429aa96b41584b0abbf3",
+        "credit": "Sketchfab (see the model page for the author)"
+      }
+    ],
+    "phalanx_proximal": [
+      {
+        "title": "Proximal phalanx",
+        "uid": "c52d369ea1764158b3ef55f0fae1ef22"
+      }
+    ],
+    "phalanx_middle": [
+      {
+        "title": "Middle phalanx",
+        "uid": "79857ac869bd437391984a873e128db0"
+      }
+    ],
+    "phalanx_distal": [
+      {
+        "title": "Distal phalanx",
+        "uid": "add5204c00ae4368916b3f5d15e18a5f"
+      }
+    ],
+    "tibia": [
+      {
+        "title": "Tibia",
+        "uid": "8e7f06431108470ea67e4dbded0d116d"
+      }
+    ],
+    "vertebra_c6": [
+      {
+        "title": "Sixth cervical vertebra (C6)",
+        "uid": "66c72b1518a14259b41acc5d2bac062f"
+      }
+    ],
+    "vertebra_c7": [
+      {
+        "title": "Seventh cervical vertebra (C7)",
+        "uid": "71f4b9a21e124903a65ab2773d3c1540"
+      }
+    ],
+    "vertebra_t1": [
+      {
+        "title": "First thoracic vertebra (T1)",
+        "uid": "18814765351a4cfa9c1c7ee2f149ccda",
+        "credit": "Sketchfab (see the model page for the author)"
+      }
+    ],
+    "ribs": [
+      {
+        "title": "Rib",
+        "uid": "a4cbadc59d5a40c2930be27c0194343d"
+      }
+    ],
+    "vertebra_l6": [
+      {
+        "title": "Sixth lumbar vertebra (L6)",
+        "uid": "89c0999f7123418093400169a625799d"
       }
     ]
   },

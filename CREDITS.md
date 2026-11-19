@@ -19,3 +19,5 @@ The scans are displayed through Sketchfab's official embed viewer and are not do
 | Horse skeleton (`models/skeletons/horse.glb`) | Diego Luján García | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | [Sketchfab](https://sketchfab.com/3d-models/horse-skeleton-eaca504567604e879b8ab2cf2763025e) | Split into individual bones, renamed with anatomical names, reoriented and rescaled |
 
 The colour-coded horse skull is shown through Sketchfab's embed viewer, courtesy of the Institute of Veterinary Anatomy, University of Zurich (**Vetanat.UZH**): https://sketchfab.com/3d-models/horse-skull-4e295f0c6daa4e7abeebe128b9dee7c4. It is not downloaded or redistributed by this project.
+
+Additional horse bone scans shown through Sketchfab embeds (not downloaded or redistributed): carpal bones (https://sketchfab.com/3d-models/0dbee84c8fa942d2b8ab8c13f6bdf2d0), metacarpal bones (https://sketchfab.com/3d-models/1a67722ff4e6429aa96b41584b0abbf3) and the first thoracic vertebra (https://sketchfab.com/3d-models/18814765351a4cfa9c1c7ee2f149ccda). Authors are credited on each model page.
