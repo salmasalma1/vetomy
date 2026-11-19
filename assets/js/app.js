@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261119n';
-import { translateEs, partLabel } from './translate-es.js?v=20261119n';
+import { buildPlaceholder } from './placeholder.js?v=20261119p';
+import { translateEs, partLabel } from './translate-es.js?v=20261119p';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261119n';
+const ASSET_V = '20261119p';
 
 // ------------------------------------------------------------------
 // Config
@@ -330,6 +330,7 @@ function prepareModel(root) {
       map: old?.map || null,
       roughness: 0.55,
       metalness: 0,
+      side: THREE.DoubleSide,
     });
 
     const wc = new THREE.Box3().setFromObject(mesh).getCenter(new THREE.Vector3());
