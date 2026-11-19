@@ -23,3 +23,5 @@ The colour-coded horse skull is shown through Sketchfab's embed viewer, courtesy
 Additional horse bone scans shown through Sketchfab embeds (not downloaded or redistributed): carpal bones (https://sketchfab.com/3d-models/0dbee84c8fa942d2b8ab8c13f6bdf2d0), metacarpal bones (https://sketchfab.com/3d-models/1a67722ff4e6429aa96b41584b0abbf3) and the first thoracic vertebra (https://sketchfab.com/3d-models/18814765351a4cfa9c1c7ee2f149ccda). Authors are credited on each model page.
 
 Horse mandible scan by **jdb56**, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), shown through the Sketchfab embed viewer: https://sketchfab.com/3d-models/horse-skull-bottom-97e95681a003433994e8c83d9b14d095
+
+Colour-coded bovine skull shown through the Sketchfab embed viewer, courtesy of Veterinary Anatomy, LMU Munich (**vetanatMunich**): https://sketchfab.com/3d-models/painted-bovine-upper-skull-cadd3c5bdfbd4530bd334151a6fbf5f0

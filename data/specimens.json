@@ -240,6 +240,13 @@
         "title": "Axis (C2)",
         "uid": "7c928e0cc9f64d5dbf22c3243eefcafc"
       }
+    ],
+    "skull": [
+      {
+        "title": "Skull, colour-coded bones",
+        "uid": "cadd3c5bdfbd4530bd334151a6fbf5f0",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
     ]
   },
   "dog": {
