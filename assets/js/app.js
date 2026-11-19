@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261120a';
-import { translateEs, partLabel } from './translate-es.js?v=20261120a';
+import { buildPlaceholder } from './placeholder.js?v=20261120b';
+import { translateEs, partLabel } from './translate-es.js?v=20261120b';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261120a';
+const ASSET_V = '20261120b';
 
 // ------------------------------------------------------------------
 // Config
@@ -13,6 +13,7 @@ const ASSET_V = '20261120a';
 const SPECIES = [
   { id: 'horse',  en: 'Horse',  latin: 'Equus caballus' },
   { id: 'cattle', en: 'Cattle', latin: 'Bos taurus' },
+  { id: 'sheep',  en: 'Sheep',  latin: 'Ovis canadensis' },
   { id: 'dog',    en: 'Dog',    latin: 'Canis familiaris' },
   { id: 'cat',    en: 'Cat',    latin: 'Felis catus' },
 ];

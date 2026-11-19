@@ -7,6 +7,7 @@ const DIMS = {
   //        trunk  withers  head   neck   tail   (metres, rough)
   horse:  { L: 1.6, H: 1.55, head: 0.60, neck: 0.80, tail: 0.50 },
   cattle: { L: 1.7, H: 1.35, head: 0.50, neck: 0.45, tail: 0.80 },
+  sheep:  { L: 1.05, H: 0.95, head: 0.30, neck: 0.35, tail: 0.12 },
   dog:    { L: 0.70, H: 0.55, head: 0.22, neck: 0.25, tail: 0.35 },
   cat:    { L: 0.40, H: 0.25, head: 0.09, neck: 0.10, tail: 0.28 },
 };

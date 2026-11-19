@@ -282,5 +282,13 @@
       }
     ]
   },
-  "cat": {}
+  "cat": {},
+  "sheep": {
+    "_skeleton": {
+      "title": "Bighorn sheep skeleton (IMNH R-862)",
+      "uid": "8d2a0eeb6bcf4c50aacd365fd7a1b345",
+      "credit": "Idaho Virtualization Laboratory",
+      "source": "https://sketchfab.com/3d-models/imnh-r-862-big-horn-sheep-8d2a0eeb6bcf4c50aacd365fd7a1b345"
+    }
+  }
 }
