@@ -158,6 +158,13 @@
         "title": "Sixth lumbar vertebra (L6)",
         "uid": "89c0999f7123418093400169a625799d"
       }
+    ],
+    "mandible": [
+      {
+        "title": "Mandible",
+        "uid": "97e95681a003433994e8c83d9b14d095",
+        "credit": "jdb56, CC BY 4.0"
+      }
     ]
   },
   "cattle": {
