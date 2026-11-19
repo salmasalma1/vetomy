@@ -786,3 +786,15 @@ body.embed-mode .model-credit { bottom: 40px; right: 40px; z-index: 9; }
   .specimen-heading h3 { font-size: 22px; }
   .landmarks { top: auto; bottom: 10px; left: 10px; right: 10px; width: auto; max-height: 40%; }
 }
+
+/* Comparison view */
+.compare-labels { position: absolute; inset: 0; pointer-events: none; }
+.compare-label { position: absolute; left: 0; top: 0; display: grid; justify-items: center; gap: 2px; text-align: center; white-space: nowrap; }
+.compare-label strong { font-family: var(--serif); font-weight: 400; font-size: 26px; color: var(--ink); }
+.compare-label span { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--brass); }
+.compare-label em { font-style: normal; font-size: 12px; color: var(--muted); }
+.compare-missing { position: absolute; left: 24px; top: 20px; font-size: 13px; color: var(--muted); }
+.compare-tools { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+.compare-tools button { font: inherit; font-size: 13px; color: var(--muted); background: none; border: 0; padding: 8px 16px; border-radius: 999px; cursor: pointer; }
+.compare-tools button.on { background: var(--brass-soft); color: var(--ink); }
+.compare-tools button:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }

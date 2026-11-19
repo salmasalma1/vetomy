@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261119q';
-import { translateEs, partLabel } from './translate-es.js?v=20261119q';
+import { buildPlaceholder } from './placeholder.js?v=20261120a';
+import { translateEs, partLabel } from './translate-es.js?v=20261120a';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261119q';
+const ASSET_V = '20261120a';
 
 // ------------------------------------------------------------------
 // Config
@@ -664,6 +664,7 @@ function renderInfo() {
       <h3>Articulates with</h3>
       ${list(d.articulations)}
       ${specimenSection(b.key)}
+      ${comparisonSection(b)}
       <h3>Across species</h3>
       <div class="compare">${compare}</div>
       <p class="disclaimer">${esc(state.data._meta?.disclaimer || '')}</p>`;
@@ -675,6 +676,8 @@ function renderInfo() {
     infoPanel.querySelectorAll('.specimen-btn').forEach((btn) => {
       btn.onclick = () => openSpecimen(specimensFor(b.key)[+btn.dataset.index], +btn.dataset.index);
     });
+
+    infoPanel.querySelector('.compare-btn')?.addEventListener('click', () => openComparison(b));
 
     // Jump to the same bone in another species
     infoPanel.querySelectorAll('.compare .row[data-species]').forEach((row) => {
@@ -805,6 +808,7 @@ function clearSpecimenModel() {
 
 function openSpecimen(sp, index) {
   if (!sp) return;
+  if (activeSpecimen === COMPARE_MARK) stopComparison();
   const s = species();
   activeSpecimen = sp;
   $('specimen-title').textContent = `${s.en} ${sp.title.toLowerCase()}`;
@@ -1133,6 +1137,7 @@ function markScanLandmark(i) {
 
 function closeSpecimen() {
   if (!activeSpecimen) return;
+  if (activeSpecimen === COMPARE_MARK) stopComparison();
   activeSpecimen = null;
   spec.token++;
   cancelAnimationFrame(spec.raf);
@@ -1149,6 +1154,234 @@ function closeSpecimen() {
 }
 
 $('specimen-back').addEventListener('click', closeSpecimen);
+
+// ------------------------------------------------------------------
+// Comparison: the same bone side by side in every species we have a split model for
+// ------------------------------------------------------------------
+const COMPARE_SPECIES = ['horse', 'dog', 'cat'];
+const COMPARE_MARK = { compare: true };
+const speciesModels = new Map();
+const cmp = { items: [], yaw: 0.6, pitch: 0.15, spin: true, trueScale: false, raf: 0, token: 0, drag: null, labels: null, tools: null, bone: null };
+
+function speciesModel(id) {
+  if (!speciesModels.has(id)) {
+    speciesModels.set(id, loader.loadAsync(`models/skeletons/${id}.glb?v=${ASSET_V}`)
+      .then((g) => { g.scene.updateMatrixWorld(true); return g.scene; })
+      .catch(() => null));
+  }
+  return speciesModels.get(id);
+}
+
+// Which mesh names count as "the same bone" in another model, best match first
+function compareCandidates(key) {
+  if (key === 'radius' || key === 'ulna') return [['radius', 'ulna']];
+  const ph = /^(phalanx_(proximal|middle|distal)|phalanges)_(fore|hind)$/.exec(key);
+  if (ph) {
+    const l = ph[3];
+    return [[key], [`phalanges_${l}`], [`phalanx_proximal_${l}`, `phalanx_middle_${l}`, `phalanx_distal_${l}`]];
+  }
+  if (vertebra(key)) return [[key], [groupKey(key)]];
+  return [[key]];
+}
+
+function findBoneMeshes(root, key, side) {
+  const meshes = [];
+  root.traverse((o) => { if (o.isMesh) meshes.push(o); });
+  let found = [];
+  let exact = false;
+  if (/^vertebrae_/.test(key)) {
+    found = meshes.filter((o) => boneKey(o.name) === key || groupKey(boneKey(o.name)) === key);
+    exact = found.length > 0;
+  } else {
+    const lists = compareCandidates(key);
+    for (let i = 0; i < lists.length && !found.length; i++) {
+      found = meshes.filter((o) => lists[i].includes(boneKey(o.name)));
+      exact = i === 0;
+    }
+  }
+  if (side) {
+    const same = found.filter((o) => boneSide(o.name) === side);
+    if (same.length) found = same;
+  }
+  return { meshes: found, exact };
+}
+
+function comparisonSection(b) {
+  const names = COMPARE_SPECIES.map((id) => SPECIES.find((x) => x.id === id)?.en).filter(Boolean);
+  if (!names.length) return '';
+  const list = names.join(', ').replace(/, ([^,]*)$/, ' and $1');
+  return `<h3>Comparison</h3><div class="specimens">
+    <button class="specimen-btn compare-btn">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="7" height="14" rx="2"/><rect x="14" y="5" width="7" height="14" rx="2"/></svg>
+      <span>${esc(displayName(b.key))} in the ${esc(list.toLowerCase())}</span>
+    </button></div>`;
+}
+
+function ensureCompareUi() {
+  if (cmp.labels) return;
+  const frame = document.querySelector('.specimen-frame');
+  cmp.labels = document.createElement('div');
+  cmp.labels.className = 'compare-labels hidden';
+  frame.appendChild(cmp.labels);
+  cmp.tools = document.createElement('div');
+  cmp.tools.className = 'compare-tools hidden';
+  cmp.tools.innerHTML = `<button data-scale="same" class="on">Same size</button><button data-scale="true">True scale</button>`;
+  frame.appendChild(cmp.tools);
+  cmp.tools.querySelectorAll('button').forEach((btn) => {
+    btn.onclick = () => {
+      cmp.trueScale = btn.dataset.scale === 'true';
+      cmp.tools.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === btn));
+      layoutComparison();
+    };
+  });
+  const el = spec.renderer.domElement;
+  el.addEventListener('pointerdown', (e) => {
+    if (activeSpecimen !== COMPARE_MARK) return;
+    cmp.drag = { x: e.clientX, y: e.clientY, yaw: cmp.yaw, pitch: cmp.pitch };
+    cmp.spin = false;
+    el.setPointerCapture(e.pointerId);
+  });
+  el.addEventListener('pointermove', (e) => {
+    if (!cmp.drag) return;
+    cmp.yaw = cmp.drag.yaw + (e.clientX - cmp.drag.x) * 0.01;
+    cmp.pitch = Math.max(-1.2, Math.min(1.2, cmp.drag.pitch + (e.clientY - cmp.drag.y) * 0.01));
+  });
+  el.addEventListener('pointerup', () => (cmp.drag = null));
+}
+
+async function openComparison(b) {
+  ensureSpecViewer();
+  ensureCompareUi();
+  const token = ++cmp.token;
+  sketchfabSession++;
+  spec.token++;
+  cancelAnimationFrame(spec.raf);
+  clearSpecimenModel();
+  stopComparison(true);
+  activeSpecimen = COMPARE_MARK;
+  cmp.bone = b;
+  $('specimen-title').textContent = `${displayName(b.key)} across species`;
+  document.querySelector('.specimen-kicker').textContent = 'Comparison';
+  const credit = $('specimen-credit');
+  credit.textContent = 'Models credited in CREDITS.md';
+  credit.href = 'https://github.com/salmasalma1/vetomy/blob/main/CREDITS.md';
+  $('specimen-landmarks').classList.add('hidden');
+  $('specimen-frame').classList.add('hidden');
+  $('specimen-frame').src = 'about:blank';
+  $('specimen-canvas').classList.remove('hidden');
+  $('specimen-loading').textContent = 'Loading the other skeletons…';
+  $('specimen-loading').classList.remove('hidden');
+  $('specimen-view').classList.remove('hidden');
+  document.body.classList.add('specimen-mode');
+  closeLm();
+  controls.enabled = false;
+  spec.controls.enabled = false;
+  spec.controls.autoRotate = false;
+  tooltip.classList.add('hidden');
+
+  const order = [state.species, ...COMPARE_SPECIES.filter((id) => id !== state.species)].filter((id) => COMPARE_SPECIES.includes(id));
+  const roots = await Promise.all(order.map(speciesModel));
+  if (token !== cmp.token || activeSpecimen !== COMPARE_MARK) return;
+
+  const material = new THREE.MeshStandardMaterial({ color: COLORS.bone, roughness: 0.55, side: THREE.DoubleSide });
+  const missing = [];
+  order.forEach((id, i) => {
+    const sp = SPECIES.find((x) => x.id === id);
+    const root = roots[i];
+    const { meshes, exact } = root ? findBoneMeshes(root, b.key, b.side) : { meshes: [] };
+    if (!meshes.length) { missing.push(sp.en); return; }
+    const inner = new THREE.Group();
+    meshes.forEach((o) => {
+      const m = new THREE.Mesh(o.geometry, material);
+      m.applyMatrix4(o.matrixWorld);
+      inner.add(m);
+    });
+    const box = new THREE.Box3().setFromObject(inner);
+    const c = box.getCenter(new THREE.Vector3());
+    inner.position.sub(c);
+    const holder = new THREE.Group();
+    const pivot = new THREE.Group();
+    pivot.add(inner);
+    holder.add(pivot);
+    spec.scene.add(holder);
+    const size = box.getSize(new THREE.Vector3());
+    const label = document.createElement('div');
+    label.className = 'compare-label';
+    const note = exact ? '' : `<em>${meshes.length > 1 ? 'shown as a group in this model' : 'closest match in this model'}</em>`;
+    label.innerHTML = `<strong>${esc(sp.en)}</strong><span>${esc(sp.latin || '')}</span>${note}`;
+    cmp.labels.appendChild(label);
+    cmp.items.push({ holder, pivot, size: Math.max(size.x, size.y, size.z), label, current: id === state.species });
+  });
+  $('specimen-loading').classList.add('hidden');
+  if (!cmp.items.length) {
+    $('specimen-loading').textContent = 'This bone is not separated in the other skeletons yet.';
+    $('specimen-loading').classList.remove('hidden');
+    return;
+  }
+  if (missing.length) {
+    const label = document.createElement('div');
+    label.className = 'compare-missing';
+    label.textContent = `Not separated yet in: ${missing.join(', ')}`;
+    cmp.labels.appendChild(label);
+  }
+  cmp.labels.classList.remove('hidden');
+  cmp.tools.classList.remove('hidden');
+  cmp.spin = true;
+  layoutComparison();
+  let last = performance.now();
+  const v = new THREE.Vector3();
+  const loop = (t) => {
+    const dt = Math.min(0.05, (t - last) / 1000);
+    last = t;
+    if (cmp.spin) cmp.yaw += dt * 0.35;
+    const w = spec.renderer.domElement.clientWidth, h = spec.renderer.domElement.clientHeight;
+    cmp.items.forEach((it) => {
+      it.pivot.rotation.set(cmp.pitch, cmp.yaw, 0, 'XYZ');
+      v.copy(it.holder.position);
+      v.y -= it.box * 0.62;
+      v.project(spec.camera);
+      it.label.style.transform = `translate(-50%, 0) translate(${(v.x * 0.5 + 0.5) * w}px, ${(-v.y * 0.5 + 0.5) * h}px)`;
+    });
+    spec.renderer.render(spec.scene, spec.camera);
+    cmp.raf = requestAnimationFrame(loop);
+  };
+  cmp.raf = requestAnimationFrame(loop);
+}
+
+function layoutComparison() {
+  if (!cmp.items.length) return;
+  const biggest = Math.max(...cmp.items.map((it) => it.size));
+  const gap = 1.15;
+  cmp.items.forEach((it, i) => {
+    const sc = cmp.trueScale ? 1 / biggest : 1 / it.size;
+    it.holder.scale.setScalar(sc);
+    it.box = it.size * sc;
+    it.holder.position.set((i - (cmp.items.length - 1) / 2) * gap, 0, 0);
+  });
+  const width = cmp.items.length * gap;
+  const aspect = spec.camera.aspect || 1.6;
+  const fov = (spec.camera.fov * Math.PI) / 180;
+  const dist = Math.max(width / aspect, 1.6) / (2 * Math.tan(fov / 2)) * 0.98;
+  spec.camera.near = 0.01;
+  spec.camera.far = 100;
+  spec.camera.position.set(0, 0.05, dist);
+  spec.camera.lookAt(0, -0.05, 0);
+  spec.camera.updateProjectionMatrix();
+}
+
+function stopComparison(keepView = false) {
+  cancelAnimationFrame(cmp.raf);
+  cmp.items.forEach((it) => spec.scene.remove(it.holder));
+  cmp.items = [];
+  cmp.drag = null;
+  if (cmp.labels) { cmp.labels.innerHTML = ''; cmp.labels.classList.add('hidden'); }
+  if (cmp.tools) cmp.tools.classList.add('hidden');
+  if (!keepView) {
+    const k = document.querySelector('.specimen-kicker');
+    if (k) k.textContent = 'Real specimen';
+    if (spec.controls) spec.controls.enabled = true;
+  }
+}
 
 async function openInSpecies(id, key) {
   await loadSpecies(id);
