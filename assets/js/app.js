@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261120b';
-import { translateEs, partLabel } from './translate-es.js?v=20261120b';
+import { buildPlaceholder } from './placeholder.js?v=20261120c';
+import { translateEs, partLabel } from './translate-es.js?v=20261120c';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261120b';
+const ASSET_V = '20261120c';
 
 // ------------------------------------------------------------------
 // Config
@@ -1159,7 +1159,7 @@ $('specimen-back').addEventListener('click', closeSpecimen);
 // ------------------------------------------------------------------
 // Comparison: the same bone side by side in every species we have a split model for
 // ------------------------------------------------------------------
-const COMPARE_SPECIES = ['horse', 'dog', 'cat'];
+const COMPARE_SPECIES = ['horse', 'sheep', 'dog', 'cat'];
 const COMPARE_MARK = { compare: true };
 const speciesModels = new Map();
 const cmp = { items: [], yaw: 0.6, pitch: 0.15, spin: true, trueScale: false, raf: 0, token: 0, drag: null, labels: null, tools: null, bone: null };
