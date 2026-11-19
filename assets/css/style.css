@@ -702,6 +702,45 @@ body.specimen-mode #placeholder-badge { display: none; }
 .lm-editor-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
 body.specimen-mode .lm-layer, body.specimen-mode .lm-pop { display: none; }
 
+/* ============ Skeleton through Sketchfab ============ */
+.stage-embed {
+  position: fixed;
+  top: 96px;
+  left: 290px;
+  right: 28px;
+  bottom: 28px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  background: var(--surface);
+  z-index: 8;
+}
+body.sheet-open .stage-embed { right: 446px; }
+.stage-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.stage-embed-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--surface-solid);
+  border: 1px solid var(--line-strong);
+  font-size: 12px;
+  color: var(--muted);
+  pointer-events: none;
+}
+body.embed-mode #stage canvas,
+body.embed-mode .dock,
+body.embed-mode .regions,
+body.embed-mode .lm-layer { display: none; }
+body.specimen-mode .stage-embed { display: none; }
+body.embed-mode .model-credit { bottom: 40px; right: 40px; z-index: 9; }
+@media (max-width: 1180px) { .stage-embed { left: 230px; } body.sheet-open .stage-embed { right: 406px; } }
+@media (max-width: 760px) { .stage-embed { top: 116px; left: 12px; right: 12px; bottom: 16px; } body.sheet-open .stage-embed { right: 12px; bottom: calc(62vh + 12px); } }
+
 /* ============ Error box ============ */
 .error-box strong { display: block; margin-bottom: 6px; font-size: 17px; }
 .error-box code { display: block; margin-top: 10px; font-size: 13px; color: #6c766f; word-break: break-word; }

@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261119i';
-import { translateEs, partLabel } from './translate-es.js?v=20261119i';
+import { buildPlaceholder } from './placeholder.js?v=20261119j';
+import { translateEs, partLabel } from './translate-es.js?v=20261119j';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261119i';
+const ASSET_V = '20261119j';
 
 // ------------------------------------------------------------------
 // Config
@@ -264,6 +264,8 @@ async function loadSpecies(id) {
 
   $('placeholder-badge').classList.toggle('hidden', !isPlaceholder);
   renderModelCredit(extras);
+  const embedded = isPlaceholder && state.specimens?.[id]?._skeleton;
+  if (embedded) showStageEmbed(embedded); else hideStageEmbed();
   $('explode').value = 0;
   state.explode = 0;
   $('explode-val').textContent = '0%';
@@ -1279,6 +1281,7 @@ function lmDefinition(b, name) {
 
 // Points for a bone; if only the opposite side has points, mirror them across the midline
 function landmarksFor(b) {
+  if (!b.mesh) return [];
   const data = lmSpeciesData();
   const own = data[b.name];
   if (own?.length) return own.map((e) => ({ ...e, local: v3(e.p), normal: v3(e.n), mirrored: false }));
@@ -1470,6 +1473,98 @@ if (EDIT) {
     renderLandmarks();
     toast('Drafts discarded');
   });
+}
+
+
+// ------------------------------------------------------------------
+// Full skeleton through Sketchfab (species without a local model)
+// ------------------------------------------------------------------
+let stageEmbedSession = 0;
+
+// Maps a node name from the embedded model to one of our bone keys
+const BONE_ALIASES = [
+  [/metacarp/, 'metacarpus'], [/metatars/, 'metatarsus'],
+  [/carp/, 'carpus'], [/tars|calcane|talus/, 'tarsus'],
+  [/mandib|jaw/, 'mandible'], [/skull|cranium|cranial/, 'skull'], [/tooth|teeth|incisor|molar/, 'teeth'],
+  [/atlas/, 'atlas'], [/axis/, 'axis'], [/cervical|neck vert/, 'vertebrae_cervical'],
+  [/thoracic|dorsal vert/, 'vertebrae_thoracic'], [/lumbar/, 'vertebrae_lumbar'],
+  [/sacrum|sacral/, 'sacrum'], [/caudal|coccyg|tail/, 'vertebrae_caudal'],
+  [/stern/, 'sternum'], [/rib|costa/, 'ribs'],
+  [/scapula|shoulder ?blade/, 'scapula'], [/humer/, 'humerus'], [/radius/, 'radius'], [/ulna/, 'ulna'],
+  [/pelvi|coxa|hip|ilium|ischium|pubis/, 'os_coxae'], [/femur|thigh/, 'femur'], [/patella|kneecap/, 'patella'],
+  [/tibia/, 'tibia'], [/fibula/, 'fibula'], [/phalan|hoof|digit|toe/, 'phalanges_fore'],
+];
+
+function aliasBone(rawName) {
+  const n = String(rawName || '').toLowerCase().replace(/[_\-.]+/g, ' ');
+  const hit = BONE_ALIASES.find(([re]) => re.test(n));
+  if (!hit) return null;
+  const side = /(^|\s)(l|left)(\s|\d|$)/.test(n) ? 'Left' : /(^|\s)(r|right)(\s|\d|$)/.test(n) ? 'Right' : '';
+  return { key: hit[1], side };
+}
+
+async function showStageEmbed(entry) {
+  const session = ++stageEmbedSession;
+  document.body.classList.add('embed-mode');
+  $('stage-embed').classList.remove('hidden');
+  $('stage-embed-loading').classList.remove('hidden');
+  $('stage-embed-hint').classList.add('hidden');
+  $('placeholder-badge').classList.add('hidden');
+  $('model-credit').innerHTML = `Model by <a href="${esc(entry.source || '#')}" target="_blank" rel="noopener">${esc(entry.credit || 'Sketchfab')}</a> on Sketchfab`;
+  const frame = $('stage-embed-frame');
+  const plain = () => {
+    if (session !== stageEmbedSession) return;
+    frame.onload = () => $('stage-embed-loading').classList.add('hidden');
+    frame.src = `https://sketchfab.com/models/${entry.uid}/embed?${new URLSearchParams(sketchfabOptions())}`;
+  };
+  try {
+    const Sketchfab = await loadSketchfabApi();
+    if (session !== stageEmbedSession) return;
+    new Sketchfab(frame).init(entry.uid, {
+      ...sketchfabOptions(),
+      success(api) {
+        api.start();
+        api.addEventListener('viewerready', () => {
+          if (session !== stageEmbedSession) return;
+          $('stage-embed-loading').classList.add('hidden');
+          api.getNodeMap((err, nodes) => {
+            if (err || session !== stageEmbedSession) return;
+            const byId = new Map(Object.values(nodes || {}).map((n) => [n.instanceID, n]));
+            console.info('[Vetomy] skeleton node names:', [...new Set([...byId.values()].map((n) => n.name).filter(Boolean))]);
+            const resolve = (id) => {
+              // walk up the hierarchy until a node name we recognise
+              for (let n = byId.get(id), guard = 0; n && guard < 12; n = byId.get(n.parentID ?? n.parent), guard++) {
+                const a = aliasBone(n.name);
+                if (a) return a;
+              }
+              return null;
+            };
+            const anyKnown = [...byId.values()].some((n) => aliasBone(n.name));
+            if (!anyKnown) return;
+            $('stage-embed-hint').classList.remove('hidden');
+            api.addEventListener('click', (info) => {
+              if (session !== stageEmbedSession || info?.instanceID == null) return;
+              const a = resolve(info.instanceID);
+              if (!a) return;
+              select({ key: a.key, name: a.key, side: a.side, region: regionFor(a.key), mesh: null }, false);
+            }, { pick: 'fast' });
+          });
+        });
+      },
+      error: plain,
+    });
+  } catch {
+    plain();
+  }
+}
+
+function hideStageEmbed() {
+  if (!document.body.classList.contains('embed-mode')) return;
+  stageEmbedSession++;
+  document.body.classList.remove('embed-mode');
+  $('stage-embed').classList.add('hidden');
+  $('stage-embed-frame').onload = null;
+  $('stage-embed-frame').src = 'about:blank';
 }
 
 // ------------------------------------------------------------------

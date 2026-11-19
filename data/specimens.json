@@ -2,7 +2,8 @@
   "_meta": {
     "source": "PaleoLab-ULE (University of León) on Sketchfab",
     "profile": "https://sketchfab.com/PaleoLab-ULE",
-    "note": "Entries with 'file' open in Vetomy's own viewer; entries with 'uid' open the Sketchfab embed."
+    "note": "Entries with 'file' open in Vetomy's own viewer; entries with 'uid' open the Sketchfab embed.",
+    "skeleton_note": "'_skeleton' shows a full skeleton through the Sketchfab embed when no local model exists for that species."
   },
   "horse": {
     "humerus": [
@@ -247,7 +248,13 @@
         "uid": "cadd3c5bdfbd4530bd334151a6fbf5f0",
         "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
       }
-    ]
+    ],
+    "_skeleton": {
+      "title": "Cow skeleton",
+      "uid": "90937bedfdc742df9b00275872bf86ea",
+      "credit": "James.Simon",
+      "source": "https://sketchfab.com/3d-models/cow-skeleton-90937bedfdc742df9b00275872bf86ea"
+    }
   },
   "dog": {
     "humerus": [

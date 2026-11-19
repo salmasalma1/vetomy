@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=20261119i">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261119j">
   <script type="importmap">
   {
     "imports": {
@@ -104,6 +104,13 @@
     </button>
   </div>
 
+  <!-- Full skeleton shown through Sketchfab when we have no local model for a species -->
+  <section id="stage-embed" class="stage-embed hidden">
+    <div id="stage-embed-loading" class="specimen-loading">Loading skeleton…</div>
+    <iframe id="stage-embed-frame" title="Skeleton 3D model" allow="autoplay; fullscreen; xr-spatial-tracking"></iframe>
+    <p id="stage-embed-hint" class="stage-embed-hint hidden">Click a bone to see its details</p>
+  </section>
+
   <!-- Real specimen view (replaces the skeleton in the stage) -->
   <section id="specimen-view" class="specimen-view hidden" aria-labelledby="specimen-title">
     <div class="specimen-bar">
@@ -158,6 +165,6 @@
       setTimeout(function () { if (!window.__vetomyReady) show('The app did not finish loading within 15 seconds.'); }, 15000);
     })();
   </script>
-  <script type="module" src="assets/js/app.js?v=20261119i"></script>
+  <script type="module" src="assets/js/app.js?v=20261119j"></script>
 </body>
 </html>
