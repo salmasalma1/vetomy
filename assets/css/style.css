@@ -798,3 +798,10 @@ body.embed-mode .model-credit { bottom: 40px; right: 40px; z-index: 9; }
 .compare-tools button { font: inherit; font-size: 13px; color: var(--muted); background: none; border: 0; padding: 8px 16px; border-radius: 999px; cursor: pointer; }
 .compare-tools button.on { background: var(--brass-soft); color: var(--ink); }
 .compare-tools button:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+
+.anatomy-sidebar { display: contents; }
+@media (min-width: 761px) {
+  .anatomy-sidebar { position: fixed; top: clamp(90px, 17vh, 150px); bottom: 88px; left: 40px; z-index: 10; display: flex; flex-direction: column; align-items: flex-start; gap: 24px; overflow-y: auto; max-width: 380px; pointer-events: none; }
+  .anatomy-sidebar > * { position: static; flex: none; pointer-events: auto; }
+  .anatomy-sidebar .regions { margin-top: auto; }
+}
