@@ -679,7 +679,7 @@ function renderInfo() {
       btn.onclick = () => openSpecimen(specimensFor(b.key)[+btn.dataset.index], +btn.dataset.index);
     });
 
-    infoPanel.querySelector('.compare-btn')?.addEventListener('click', () => openComparison(b));
+    infoPanel.querySelector('.compare-btn')?.addEventListener('click', () => openComparison(b, infoPanel.querySelector('.compare-target').value));
 
     // Jump to the same bone in another species
     infoPanel.querySelectorAll('.compare .row[data-species]').forEach((row) => {
@@ -1209,14 +1209,11 @@ function findBoneMeshes(root, key, side) {
 }
 
 function comparisonSection(b) {
-  const names = COMPARE_SPECIES.map((id) => SPECIES.find((x) => x.id === id)?.en).filter(Boolean);
-  if (!names.length) return '';
-  const list = names.join(', ').replace(/, ([^,]*)$/, ' and $1');
-  return `<h3>Comparison</h3><div class="specimens">
-    <button class="specimen-btn compare-btn">
-      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="7" height="14" rx="2"/><rect x="14" y="5" width="7" height="14" rx="2"/></svg>
-      <span>${esc(displayName(b.key))} in the ${esc(list.toLowerCase())}</span>
-    </button></div>`;
+  if (state.species !== 'horse') return '';
+  const options = SPECIES.filter(sp => sp.id !== 'horse' && COMPARE_SPECIES.includes(sp.id));
+  return `<h3>Comparison</h3><div class="specimens"><label>Compare this horse bone with
+    <select class="compare-target">${options.map(sp => `<option value="${sp.id}">${esc(sp.en)}</option>`).join('')}</select></label>
+    <button class="specimen-btn compare-btn">Compare ${esc(displayName(b.key))}</button></div>`;
 }
 
 function ensureCompareUi() {
@@ -1251,7 +1248,8 @@ function ensureCompareUi() {
   el.addEventListener('pointerup', () => (cmp.drag = null));
 }
 
-async function openComparison(b) {
+async function openComparison(b, target) {
+  if (state.species !== 'horse' || target === 'horse' || !COMPARE_SPECIES.includes(target)) return;
   ensureSpecViewer();
   ensureCompareUi();
   const token = ++cmp.token;
@@ -1281,7 +1279,7 @@ async function openComparison(b) {
   spec.controls.autoRotate = false;
   tooltip.classList.add('hidden');
 
-  const order = [state.species, ...COMPARE_SPECIES.filter((id) => id !== state.species)].filter((id) => COMPARE_SPECIES.includes(id));
+  const order = ['horse', target];
   const roots = await Promise.all(order.map(speciesModel));
   if (token !== cmp.token || activeSpecimen !== COMPARE_MARK) return;
 
