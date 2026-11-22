@@ -173,12 +173,27 @@
       {
         "title": "Humerus",
         "uid": "022cd13551ec4b25b55d81a4733e0e81"
+      },
+      {
+        "title": "Humerus",
+        "uid": "00c51683f3464fbc95fb81fefd0f4371",
+        "credit": "Veterinary Medicine, Kasetsart University"
       }
     ],
     "scapula": [
       {
         "title": "Scapula",
         "uid": "867acbb27836443787cf06c720d25a80"
+      },
+      {
+        "title": "Scapula (left)",
+        "uid": "23b6db1e116b45978f0bf3176925fe02",
+        "credit": "SGUMedArt (Center for BioMedical Visualization, St. George's University)"
+      },
+      {
+        "title": "Scapula",
+        "uid": "aa03bfa8ab2c4b239b7ef2d61ad4aa24",
+        "credit": "English Heritage"
       }
     ],
     "radius": [
@@ -254,25 +269,59 @@
       "uid": "55a1e80c656446fd8522606426c78adb",
       "credit": "3DHorse",
       "source": "https://sketchfab.com/3d-models/cow-skeleton-55a1e80c656446fd8522606426c78adb"
-    }
+    },
+    "tibia": [
+      {
+        "title": "Tibia and fibula",
+        "uid": "8b121e818bcd4922b8eaaff4fc199b25"
+      }
+    ],
+    "fibula": [
+      {
+        "title": "Tibia and fibula",
+        "uid": "8b121e818bcd4922b8eaaff4fc199b25"
+      }
+    ],
+    "metatarsus": [
+      {
+        "title": "Metatarsus",
+        "uid": "5cac32fd4ebc444a90d5742255082497",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ]
   },
   "dog": {
     "humerus": [
       {
         "title": "Humerus",
         "uid": "5dda43c7b4264c85932c7d8ddac65918"
+      },
+      {
+        "title": "Humerus",
+        "uid": "7e7933d08131495f85c7e925e86ba815",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
       }
     ],
     "radius": [
       {
         "title": "Radius and ulna",
         "uid": "99c860b493ea408f82c39d07037a7e08"
+      },
+      {
+        "title": "Radius",
+        "uid": "958a281670e1465c9e7349d428922796",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
       }
     ],
     "ulna": [
       {
         "title": "Radius and ulna",
         "uid": "99c860b493ea408f82c39d07037a7e08"
+      },
+      {
+        "title": "Ulna",
+        "uid": "c51387a1f60940a09b06c265e1323722",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
       }
     ],
     "metacarpus": [
@@ -280,9 +329,248 @@
         "title": "Manus (forepaw)",
         "uid": "a6359068d5b141ab95687d28351bc077"
       }
+    ],
+    "scapula": [
+      {
+        "title": "Scapula",
+        "uid": "43168c186f094cfd93b7921a77fe56d9",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "femur": [
+      {
+        "title": "Femur",
+        "uid": "d0d5ca5c9fb9475a870c655ea8538bb2",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "tibia": [
+      {
+        "title": "Tibia",
+        "uid": "b35b07145d76478d832f701dd60a9ebb",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "fibula": [
+      {
+        "title": "Fibula",
+        "uid": "5642467f28b945b99a7a25bcd09358d6",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "carpus": [
+      {
+        "title": "Manus (forepaw)",
+        "uid": "a6359068d5b141ab95687d28351bc077"
+      }
+    ],
+    "tarsus": [
+      {
+        "title": "Pes (hindpaw)",
+        "uid": "d49826963d19421ba9e88ebb0505b636"
+      }
+    ],
+    "metatarsus": [
+      {
+        "title": "Pes (hindpaw)",
+        "uid": "d49826963d19421ba9e88ebb0505b636"
+      }
+    ],
+    "phalanx_proximal_fore": [
+      {
+        "title": "Manus (forepaw)",
+        "uid": "a6359068d5b141ab95687d28351bc077"
+      }
+    ],
+    "phalanx_proximal_hind": [
+      {
+        "title": "Pes (hindpaw)",
+        "uid": "d49826963d19421ba9e88ebb0505b636"
+      }
+    ],
+    "phalanx_middle_fore": [
+      {
+        "title": "Manus (forepaw)",
+        "uid": "a6359068d5b141ab95687d28351bc077"
+      }
+    ],
+    "phalanx_middle_hind": [
+      {
+        "title": "Pes (hindpaw)",
+        "uid": "d49826963d19421ba9e88ebb0505b636"
+      }
+    ],
+    "phalanx_distal_fore": [
+      {
+        "title": "Manus (forepaw)",
+        "uid": "a6359068d5b141ab95687d28351bc077"
+      }
+    ],
+    "phalanx_distal_hind": [
+      {
+        "title": "Pes (hindpaw)",
+        "uid": "d49826963d19421ba9e88ebb0505b636"
+      }
     ]
   },
-  "cat": {},
-  "sheep": {},
-  "camel": {}
+  "cat": {
+    "scapula": [
+      {
+        "title": "Scapula",
+        "uid": "60f74f5f0f9649ebac0d6487b7327b76",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "humerus": [
+      {
+        "title": "Humerus",
+        "uid": "3a9bc0dc9b1148d3a5f2c5904e6bd3d1",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "radius": [
+      {
+        "title": "Radius",
+        "uid": "e456718ce5664804a5f3a0c7a27c58dc",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "ulna": [
+      {
+        "title": "Ulna",
+        "uid": "e831a070ea5f454eb39122014c35a8b7",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "femur": [
+      {
+        "title": "Femur",
+        "uid": "f1fe6c63524d40c7b663b9c242f176f5",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "tibia": [
+      {
+        "title": "Tibia",
+        "uid": "76059c1235804e07982d513cd6d6bb40",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "fibula": [
+      {
+        "title": "Fibula",
+        "uid": "bbb62b33073a4884b6c2316fc0c76323",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ]
+  },
+  "sheep": {
+    "humerus": [
+      {
+        "title": "Humerus (sheep or goat)",
+        "uid": "a4b22513982c4cc0b0f21d610d095c13",
+        "credit": "Heritage360"
+      }
+    ],
+    "radius": [
+      {
+        "title": "Radius and ulna",
+        "uid": "59af689340c9445a927d2a2e9840c69c",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "ulna": [
+      {
+        "title": "Radius and ulna",
+        "uid": "59af689340c9445a927d2a2e9840c69c",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "metacarpus": [
+      {
+        "title": "Metacarpus (goat)",
+        "uid": "65141c6fb50d4d7ebcbe8cb0811e0484",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "femur": [
+      {
+        "title": "Femur (juvenile)",
+        "uid": "211d179bbdf640719b279fd0ba1eea2e",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "tibia": [
+      {
+        "title": "Tibia",
+        "uid": "d72cc4a987424496bc04afc9587ce666",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ],
+    "metatarsus": [
+      {
+        "title": "Metatarsus (goat)",
+        "uid": "93713c74c2b741a9afe18f79b240c446",
+        "credit": "vetanatMunich (Veterinary Anatomy, LMU Munich)"
+      }
+    ]
+  },
+  "camel": {
+    "scapula": [
+      {
+        "title": "Scapula (Bactrian camel)",
+        "uid": "fd89bc029f304d5fba210fb44b99bb3b",
+        "credit": "ThinkSee3D"
+      }
+    ],
+    "humerus": [
+      {
+        "title": "Humerus (guanaco, Lama guanicoe)",
+        "uid": "0891cecceac34808b1b4983244cc015b",
+        "credit": "pgomez1"
+      }
+    ],
+    "radius": [
+      {
+        "title": "Radius and ulna (guanaco, Lama guanicoe)",
+        "uid": "89d45a1156c040c092433e445bef469b",
+        "credit": "RLPEH"
+      }
+    ],
+    "ulna": [
+      {
+        "title": "Radius and ulna (guanaco, Lama guanicoe)",
+        "uid": "89d45a1156c040c092433e445bef469b",
+        "credit": "RLPEH"
+      }
+    ],
+    "metacarpus": [
+      {
+        "title": "Metacarpus (guanaco, Lama guanicoe)",
+        "uid": "bc31e3692ca142a5a25058da9f51a241",
+        "credit": "RLPEH"
+      }
+    ],
+    "femur": [
+      {
+        "title": "Femur (guanaco, Lama guanicoe)",
+        "uid": "bef4398311e545e4ab37cacbc88299c4",
+        "credit": "RLPEH"
+      }
+    ],
+    "tibia": [
+      {
+        "title": "Tibia (guanaco, Lama guanicoe)",
+        "uid": "ed4a3037b2ce4ef6917771e065c8ebbb",
+        "credit": "RLPEH"
+      }
+    ],
+    "metatarsus": [
+      {
+        "title": "Metatarsus (llama, Lama glama)",
+        "uid": "2fddeb80fc3d4cb886d2d18e331f27de",
+        "credit": "luchogeo"
+      }
+    ]
+  }
 }

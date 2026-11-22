@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261122d';
-import { translateEs, partLabel } from './translate-es.js?v=20261122d';
+import { buildPlaceholder } from './placeholder.js?v=20261122e';
+import { translateEs, partLabel } from './translate-es.js?v=20261122e';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261122d';
+const ASSET_V = '20261122e';
 
 // ------------------------------------------------------------------
 // Config

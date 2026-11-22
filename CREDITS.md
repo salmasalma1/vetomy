@@ -12,6 +12,28 @@ The "Real specimen" viewer embeds 3D scans of bones from the osteological collec
 
 The scans are displayed through Sketchfab's official embed viewer and are not downloaded, modified or redistributed by this project. All rights remain with their owners.
 
+### Comparative specimens from other collections
+
+The following scans are shown through the Sketchfab embed viewer only. They are not downloaded, modified or redistributed by this project, and all rights remain with their owners. Where a model page states a license it is listed; otherwise the model is shown under Sketchfab's embedding terms.
+
+| Species | Bones | Author | License stated on the model page |
+|---|---|---|---|
+| Cattle | Scapula | SGUMedArt (Center for BioMedical Visualization, St. George's University) | None |
+| Cattle | Scapula | English Heritage | None |
+| Cattle | Humerus | Veterinary Medicine, Kasetsart University (vetkaset) | None |
+| Cattle | Metatarsus | vetanatMunich (Veterinary Anatomy, LMU Munich) | CC BY-NC-ND 4.0 |
+| Bactrian camel | Scapula | ThinkSee3D | None |
+| Guanaco | Humerus | pgomez1 | None |
+| Guanaco | Radius and ulna, metacarpus, femur, tibia | RLPEH | None |
+| Llama | Metatarsus | luchogeo | None |
+| Sheep or goat | Humerus | Heritage360 | None |
+| Sheep | Radius and ulna, femur, tibia | vetanatMunich (Veterinary Anatomy, LMU Munich) | Tibia and femur: CC BY-NC-ND 4.0 |
+| Goat | Metacarpus, metatarsus | vetanatMunich (Veterinary Anatomy, LMU Munich) | None |
+| Dog | Scapula, humerus, radius, ulna, femur, tibia, fibula | vetanatMunich (Veterinary Anatomy, LMU Munich) | Humerus, radius, fibula: CC BY-NC-ND 4.0 |
+| Cat | Scapula, humerus, radius, ulna, femur, tibia, fibula | vetanatMunich (Veterinary Anatomy, LMU Munich) | Tibia, fibula: CC BY-NC-ND 4.0 |
+
+Cattle tibia and fibula, and the dog fore and hind paws, are further scans by PaleoLab-ULE (see above).
+
 ## 3D skeleton models
 
 | Model | Author | License | Source | Changes |
