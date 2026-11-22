@@ -693,7 +693,8 @@
       "cattle": "8 pairs of sternal ribs out of 13.",
       "sheep": "8 pairs of sternal ribs out of 13.",
       "dog": "9 pairs of sternal ribs out of 13.",
-      "cat": "9 pairs of sternal ribs out of 13."
+      "cat": "9 pairs of sternal ribs out of 13.",
+      "camel": "8 pairs of sternal ribs out of 12 (dromedary)."
     }
   },
   "carpus": {
@@ -978,5 +979,17 @@
       "dog": "Carries the claw on its ungual process, framed by an ungual crest.",
       "cat": "Elastic dorsal ligaments hold the ungual process retracted, which makes the claws retractile."
     }
+  },
+  "skeleton": {
+    "region": "other",
+    "names": {
+      "en": "Whole skeleton",
+      "nav": "Skeleton"
+    },
+    "type": "Single piece",
+    "description": "This skeleton is shown as one piece. Its bones are not separated in the source model, so individual bones cannot be selected here. Use the horse, sheep, camel or cat to study individual bones.",
+    "landmarks": [],
+    "articulations": [],
+    "species": {}
   }
 }

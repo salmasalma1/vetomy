@@ -8,9 +8,9 @@ Generated with `tools/mesh-qc`. Per-species tables: [`docs/qc`](qc/).
 |---|---|---|---|---|
 | Horse | 84 | 7 | 0 | Not available |
 | Cat | 80 | 0 | 0 | Yes |
-| Dog | 0 | 0 | 32 | Not possible (AI-generated, fused source) |
+| Dog | 0 | 0 | 1 | Not possible (AI-generated, fused source) |
 | Sheep | 61 | 8 | 0 | Yes |
-| Camel | 76 | 1 | 0 | Yes |
+| Camel | 76 | 3 | 0 | Yes |
 
 ## Root causes found
 
@@ -178,8 +178,8 @@ Sheep and camel were re-exported from the original scans. The segmentation (one 
 
 ## Remaining defects
 
-- **Dog: all 32 meshes FAIL.** The source is AI-generated with fused bones and wrong vertebral and rib counts; it cannot be repaired without inventing anatomy. Replace it with the University of Edinburgh CT dog (CC BY 4.0).
-- **Sheep costal cartilages:** reconstructed, not part of the scan. Positions need checking against a textbook.
+- **Dog: FAIL.** The source is AI-generated with fused bones and wrong vertebral and rib counts. It is now published as a single unsplit piece (no cuts, no removed fragments); the defects that remain are in the source itself. Replace it with the University of Edinburgh CT dog (CC BY 4.0).
+- **Sheep and camel costal cartilages:** reconstructed for the 8 sternal ribs, not part of the scans. Positions need checking against a textbook.
 - **Warnings** (small folds at process tips, a few non-manifold edges inherited near the sheep pelvis, the camel carpus) were inspected visually and do not change anatomy. They stay listed for manual review.
 
 ## Running the check

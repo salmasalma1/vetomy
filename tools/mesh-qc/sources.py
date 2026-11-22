@@ -34,7 +34,7 @@ _ALL={
 }
 SOURCES={k:v for k,v in _ALL.items() if W and os.path.exists(W+{'sheep':'sheep_comps.pkl','camel':'camelT_comps.pkl','cat':'catorig_comps.pkl'}[k])}
 # Parts that are not in any scan: reconstructed on purpose, always need a human eye
-RECONSTRUCTED={'sheep':{'costal_cartilage_L','costal_cartilage_R'}}
+RECONSTRUCTED={'sheep':{'costal_cartilage_L','costal_cartilage_R'},'camel':{'costal_cartilage_L','costal_cartilage_R'}}
 # Source known to be unreliable (no clean original to compare against)
 SOURCE_NOTES={'dog':'AI-generated source (Tripo) with fused bones; split by geometric cuts. No clean original exists.',
               'horse':'Original split before this QC existed; source comparison not available.'}

@@ -1,11 +1,13 @@
 # Mesh QC: camel
 
 
-## Camel — 76 pass, 1 warning, 0 fail
+## Camel — 76 pass, 3 warning, 0 fail
 
 | Bone | Side | Region | Status | Defects | Suggested correction | Manual check |
 |---|---|---|---|---|---|---|
 | carpus | Left | Forelimb | **WARNING** | 4 edges with inconsistent winding (inverted normals); 35 folded edges (spikes/torn sheets) vs 16 in source | Re-orient faces consistently; Re-export with topology-preserving simplification | Yes |
+| costal_cartilage | Left | Trunk | **WARNING** | 18 folded edges (spikes/torn sheets); reconstructed part, not in the original scan | Inspect; Confirm position against a textbook | Yes |
+| costal_cartilage | Right | Trunk | **WARNING** | 17 folded edges (spikes/torn sheets); reconstructed part, not in the original scan | Inspect; Confirm position against a textbook | Yes |
 | carpus | Right | Forelimb | **PASS** | — | — | No |
 | humerus | Left | Forelimb | **PASS** | — | — | No |
 | humerus | Right | Forelimb | **PASS** | — | — | No |
