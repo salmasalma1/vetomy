@@ -987,8 +987,29 @@
       "nav": "Skeleton"
     },
     "type": "Single piece",
-    "description": "This skeleton is shown as one piece. Its bones are not separated in the source model, so individual bones cannot be selected here. Use the horse, sheep, camel or cat to study individual bones.",
-    "landmarks": [],
+    "description": "This skeleton is shown as one piece, because its bones are not separated in the source model. The numbers mark where each bone lies; select a number or a name in the list to read about that bone. Positions are approximate. Use the horse, sheep, camel or cat to select individual bones.",
+    "landmarks": [
+      "Skull",
+      "Mandible",
+      "Cervical vertebrae",
+      "Thoracic vertebrae",
+      "Lumbar vertebrae",
+      "Sacrum",
+      "Caudal vertebrae",
+      "Ribs",
+      "Scapula",
+      "Humerus",
+      "Radius and ulna",
+      "Carpal bones",
+      "Metacarpal bones",
+      "Phalanges of the forelimb",
+      "Hip bone",
+      "Femur",
+      "Tibia and fibula",
+      "Tarsal bones",
+      "Metatarsal bones",
+      "Phalanges of the hindlimb"
+    ],
     "articulations": [],
     "species": {}
   }

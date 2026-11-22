@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261122b';
-import { translateEs, partLabel } from './translate-es.js?v=20261122b';
+import { buildPlaceholder } from './placeholder.js?v=20261122c';
+import { translateEs, partLabel } from './translate-es.js?v=20261122c';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261122b';
+const ASSET_V = '20261122c';
 
 // ------------------------------------------------------------------
 // Config
@@ -273,9 +273,12 @@ async function loadSpecies(id) {
   $('explode-val').textContent = '0%';
   setView('three', false);
   renderAll();
+  // A skeleton shown as one piece opens with its numbered bone list
+  if (!isPlaceholder && state.bones.length === 1) select(state.bones[0], false);
 
   const s = species();
-  toast(`${s.en} loaded, ${uniqueBones().length} bones`);
+  const n = uniqueBones().length;
+  toast(n === 1 ? `${s.en} loaded, shown as one piece` : `${s.en} loaded, ${n} bones`);
 }
 
 function renderModelCredit(extras) {
@@ -400,17 +403,19 @@ function moveCamera(pos, target, animate) {
 // Visual state
 // ------------------------------------------------------------------
 function applyMaterials() {
+  // A skeleton shown as one piece is never tinted: its numbered markers do the pointing
+  const onePiece = state.bones.length === 1;
   for (const b of state.bones) {
     const m = b.mesh.material;
-    const isSel = state.selected === b;
-    const isHover = state.hovered === b && !isSel;
+    const isSel = state.selected === b && !onePiece;
+    const isHover = state.hovered === b && !isSel && !onePiece;
 
     b.mesh.visible = !state.hiddenRegions.has(b.region);
 
     m.emissive.setHex(isSel ? COLORS.selected : isHover ? COLORS.hover : 0x000000);
     m.emissiveIntensity = isSel ? COLORS.glow : isHover ? 0.3 : 0;
 
-    const ghosted = !!(state.ghost && state.selected && !isSel);
+    const ghosted = !!(state.ghost && state.selected && !isSel && !onePiece);
     m.opacity = ghosted ? 0.1 : 1;
     if (m.transparent !== ghosted) {
       m.transparent = ghosted;
@@ -523,7 +528,7 @@ function renderTabs() {
     btn.className = active ? 'active' : '';
     btn.setAttribute('aria-pressed', active);
     btn.innerHTML = active
-      ? `${esc(s.en)}<span class="latin">${esc(s.latin)}<span class="count">${uniqueBones().length || ''} ${uniqueBones().length ? 'bones' : ''}</span></span>`
+      ? `${esc(s.en)}<span class="latin">${esc(s.latin)}<span class="count">${uniqueBones().length === 1 ? 'one piece' : uniqueBones().length ? `${uniqueBones().length} bones` : ''}</span></span>`
       : esc(s.en);
     btn.onclick = () => !active && loadSpecies(s.id);
     nav.appendChild(btn);
@@ -661,7 +666,7 @@ function renderInfo() {
       <h3>Description</h3>
       <p>${esc(d.description || '—')}</p>
       ${functionsSection(d)}
-      <h3>Landmarks</h3>
+      <h3>${b.key === 'skeleton' ? 'Bones' : 'Landmarks'}</h3>
       ${landmarkList(b, d.landmarks)}
       <h3>Articulates with</h3>
       ${list(d.articulations)}

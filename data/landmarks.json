@@ -294,8 +294,354 @@
         "nav": "Incisura vasorum facialium",
         "description": "Notch on the ventral border where the facial artery, facial vein and parotid duct cross onto the face; the facial pulse is taken here."
       }
+    },
+    "skeleton": {
+      "skull": {
+        "nav": "Cranium",
+        "description": "The bones of the head. They are divided into cranial bones, which enclose the brain, meninges and ear, and facial bones, which form the skeleton of the oral and nasal cavities. Most are joined by immovable sutures. In the dog: Shape varies with breed: dolichocephalic, mesaticephalic or brachycephalic. The orbit is incomplete and closed laterally by the orbital ligament. The sagittal crest is often prominent."
+      },
+      "mandible": {
+        "nav": "Mandibula",
+        "description": "The only movable bone of the skull; it carries the lower teeth. Each half has a horizontal body and a vertical ramus. In the dog: Fibrous symphysis. Large coronoid process and deep masseteric fossa."
+      },
+      "cervical vertebrae": {
+        "nav": "Vertebrae cervicales",
+        "description": "Seven cervical vertebrae in all domestic mammals. The first (atlas) and second (axis) are specialised for movements of the head. In the dog: 7. The axis has a long, blade-like spinous process."
+      },
+      "thoracic vertebrae": {
+        "nav": "Vertebrae thoracicae",
+        "description": "They articulate with the ribs. In large animals their tall cranial spinous processes form the withers. In the dog: 13. The anticlinal vertebra is usually T11."
+      },
+      "lumbar vertebrae": {
+        "nav": "Vertebrae lumbales",
+        "description": "Vertebrae of the loin, with long, flat transverse processes. In the dog: 7."
+      },
+      "sacrum": {
+        "nav": "Os sacrum",
+        "description": "Fused sacral vertebrae. It articulates with the ilium at the sacroiliac joint and transmits the hindlimb's thrust to the spine. In the dog: 3 fused vertebrae."
+      },
+      "caudal vertebrae": {
+        "nav": "Vertebrae caudales",
+        "description": "Tail vertebrae. Distally they become simple rods as the processes disappear. In the dog: About 20–23."
+      },
+      "ribs": {
+        "nav": "Costae",
+        "description": "Paired bones forming the lateral walls of the thorax. Sternal ribs reach the sternum directly; asternal ribs join the costal arch. In the dog: 13 pairs: 9 sternal, 4 asternal. The last pair is usually floating."
+      },
+      "scapula": {
+        "nav": "Scapula",
+        "description": "Flat bone of the shoulder. It is attached to the trunk by muscles only (synsarcosis); the clavicle is absent or vestigial in domestic mammals. In the dog: Acromion present. The spine divides the bone into two nearly equal fossae."
+      },
+      "humerus": {
+        "nav": "Humerus",
+        "description": "Long bone of the arm, between the shoulder and the elbow. In the dog: A supratrochlear foramen above the trochlea connects the olecranon and radial fossae."
+      },
+      "radius and ulna": {
+        "nav": "Radius et Ulna",
+        "description": "The main weight-bearing bone of the forearm. Provides the olecranon (point of the elbow), which is the lever for the triceps. In the dog: Separate from the ulna, which allows limited pronation and supination. Complete and separate. Carries the anconeal process (ununited anconeal process is a clinical condition)."
+      },
+      "carpal bones": {
+        "nav": "Ossa carpi",
+        "description": "Two rows of short bones between the radius and ulna and the metacarpus, forming the carpus (the 'knee' of large animals). In the dog: 7 bones; the radial and intermediate carpal bones are fused into the intermedioradial carpal bone."
+      },
+      "metacarpal bones": {
+        "nav": "Ossa metacarpalia",
+        "description": "Bones between the carpus and the digits. Their number depends on how many digits the species has. In the dog: Five metacarpals. Mc I (dewclaw) is small; III and IV are the longest."
+      },
+      "phalanges of the forelimb": {
+        "nav": "Ossa digitorum manus",
+        "description": "Bones of the digits: proximal, middle and distal phalanges, with associated sesamoid bones. In the dog: Five digits; digit I (dewclaw) has two phalanges, digits II–V have three. The distal phalanx carries the claw."
+      },
+      "hip bone": {
+        "nav": "Os coxae",
+        "description": "Formed by the fusion of the ilium, ischium and pubis, which meet at the acetabulum. The two hip bones, the sacrum and the first caudal vertebrae form the pelvis. In the dog: The iliac wing is almost vertical (sagittal)."
+      },
+      "femur": {
+        "nav": "Os femoris",
+        "description": "The bone of the thigh, between the hip and the stifle. In the dog: No third trochanter; slender shaft. Sesamoid bones (fabellae) lie behind the condyles."
+      },
+      "tibia and fibula": {
+        "nav": "Tibia et Fibula",
+        "description": "The main bone of the leg (crus), between the stifle and the hock. Slender lateral bone of the leg (crus), alongside the tibia. In the dog: The fibula is complete, slender and separate. Complete, slender and separate."
+      },
+      "tarsal bones": {
+        "nav": "Ossa tarsi",
+        "description": "Short bones of the hock, between the tibia and the metatarsus. The calcaneal tuber forms the point of the hock. In the dog: 7 bones."
+      },
+      "metatarsal bones": {
+        "nav": "Ossa metatarsalia",
+        "description": "Bones between the tarsus and the digits of the hindlimb. In the dog: Usually four (Mt II–V). Mt I is often absent or vestigial (the hind dewclaw varies)."
+      },
+      "phalanges of the hindlimb": {
+        "nav": "Ossa digitorum pedis",
+        "description": "Bones of the digits of the hindlimb, arranged like those of the forelimb. In the dog: Usually four digits (II–V); a hind dewclaw is variable."
+      }
     }
   },
   "horse": {},
-  "scans": {}
+  "scans": {},
+  "dog": {
+    "skeleton": [
+      {
+        "name": "Skull",
+        "p": [
+          0.34984,
+          0.67932,
+          0.00464
+        ],
+        "n": [
+          0.0,
+          0.371,
+          0.928
+        ]
+      },
+      {
+        "name": "Mandible",
+        "p": [
+          0.40746,
+          0.62308,
+          0.01206
+        ],
+        "n": [
+          0.0,
+          -0.287,
+          0.958
+        ]
+      },
+      {
+        "name": "Cervical vertebrae",
+        "p": [
+          0.25291,
+          0.61041,
+          -0.00148
+        ],
+        "n": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      },
+      {
+        "name": "Thoracic vertebrae",
+        "p": [
+          0.06876,
+          0.5303,
+          0.00038
+        ],
+        "n": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      },
+      {
+        "name": "Lumbar vertebrae",
+        "p": [
+          -0.15915,
+          0.54292,
+          -0.00084
+        ],
+        "n": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      },
+      {
+        "name": "Sacrum",
+        "p": [
+          -0.25089,
+          0.53156,
+          0.00358
+        ],
+        "n": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      },
+      {
+        "name": "Caudal vertebrae",
+        "p": [
+          -0.37279,
+          0.34959,
+          0.00095
+        ],
+        "n": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      },
+      {
+        "name": "Ribs",
+        "p": [
+          0.10707,
+          0.44787,
+          0.08494
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "name": "Scapula",
+        "p": [
+          0.21374,
+          0.48254,
+          0.06912
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "name": "Humerus",
+        "p": [
+          0.22779,
+          0.37126,
+          0.07541
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "name": "Radius and ulna",
+        "p": [
+          0.22796,
+          0.19599,
+          0.08528
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "name": "Carpal bones",
+        "p": [
+          0.26403,
+          0.06131,
+          0.07955
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "name": "Metacarpal bones",
+        "p": [
+          0.27778,
+          0.03516,
+          0.07662
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "name": "Phalanges of the forelimb",
+        "p": [
+          0.30864,
+          0.02696,
+          0.08437
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "name": "Hip bone",
+        "p": [
+          -0.26425,
+          0.48317,
+          0.03006
+        ],
+        "n": [
+          0.0,
+          0.371,
+          0.928
+        ]
+      },
+      {
+        "name": "Femur",
+        "p": [
+          -0.22647,
+          0.33882,
+          0.09039
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "name": "Tibia and fibula",
+        "p": [
+          -0.25793,
+          0.2182,
+          0.0862
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "name": "Tarsal bones",
+        "p": [
+          -0.28707,
+          0.08114,
+          0.08877
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "name": "Metatarsal bones",
+        "p": [
+          -0.27342,
+          0.03505,
+          0.09313
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "name": "Phalanges of the hindlimb",
+        "p": [
+          -0.23735,
+          0.0207,
+          0.09338
+        ],
+        "n": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    ]
+  }
 }
