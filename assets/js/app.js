@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { buildPlaceholder } from './placeholder.js?v=20261122c';
-import { translateEs, partLabel } from './translate-es.js?v=20261122c';
+import { buildPlaceholder } from './placeholder.js?v=20261122d';
+import { translateEs, partLabel } from './translate-es.js?v=20261122d';
 
 // Bump with every release so browsers never mix old and new files
-const ASSET_V = '20261122c';
+const ASSET_V = '20261122d';
 
 // ------------------------------------------------------------------
 // Config
@@ -671,7 +671,7 @@ function renderInfo() {
       <h3>Articulates with</h3>
       ${list(d.articulations)}
       ${specimenSection(b.key)}
-      ${comparisonSection(b)}
+      ${otherSpecimenSections(b.key)}
       <h3>Across species</h3>
       <div class="compare">${compare}</div>
       <p class="disclaimer">${esc(state.data._meta?.disclaimer || '')}</p>`;
@@ -680,11 +680,10 @@ function renderInfo() {
       li.onclick = () => openLm(+li.dataset.lm);
     });
 
-    infoPanel.querySelectorAll('.specimen-btn').forEach((btn) => {
-      btn.onclick = () => openSpecimen(specimensFor(b.key)[+btn.dataset.index], +btn.dataset.index);
+    infoPanel.querySelectorAll('.specimen-btn[data-species]').forEach((btn) => {
+      const id = btn.dataset.species;
+      btn.onclick = () => openSpecimen(specimensFor(b.key, id)[+btn.dataset.index], +btn.dataset.index, id);
     });
-
-    infoPanel.querySelector('.compare-btn')?.addEventListener('click', () => openComparison(b, infoPanel.querySelector('.compare-target').value));
 
     // Jump to the same bone in another species
     infoPanel.querySelectorAll('.compare .row[data-species]').forEach((row) => {
@@ -704,20 +703,28 @@ function functionsSection(d) {
 // ------------------------------------------------------------------
 // Real specimens (Sketchfab embeds)
 // ------------------------------------------------------------------
-function specimensFor(key) {
-  const sp = state.specimens?.[state.species] || {};
+function specimensFor(key, id = state.species) {
+  const sp = state.specimens?.[id] || {};
   return sp[key] || sp[baseKey(key)] || sp[groupKey(key)] || [];
 }
 
-function specimenSection(key) {
-  const list = specimensFor(key);
+function specimenSection(key, id = state.species, heading = 'Real specimen') {
+  const list = specimensFor(key, id);
   if (!list.length) return '';
   const btns = list.map((sp, i) => `
-    <button class="specimen-btn" data-index="${i}">
+    <button class="specimen-btn" data-species="${id}" data-index="${i}">
       <svg viewBox="0 0 24 24"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>
       <span>${esc(sp.title)}</span>
     </button>`).join('');
-  return `<h3>Real specimen</h3><div class="specimens">${btns}</div>`;
+  return `<h3>${esc(heading)}</h3><div class="specimens">${btns}</div>`;
+}
+
+// On the horse, real specimens of the same bone from the other species, one section per species
+function otherSpecimenSections(key) {
+  if (state.species !== 'horse') return '';
+  return SPECIES.filter((sp) => sp.id !== 'horse')
+    .map((sp) => specimenSection(key, sp.id, `Real specimen, ${sp.en.toLowerCase()}`))
+    .join('');
 }
 
 let activeSpecimen = null;
@@ -813,10 +820,10 @@ function clearSpecimenModel() {
   spec.model = null;
 }
 
-function openSpecimen(sp, index) {
+function openSpecimen(sp, index, id = state.species) {
   if (!sp) return;
   if (activeSpecimen === COMPARE_MARK) stopComparison();
-  const s = species();
+  const s = SPECIES.find((x) => x.id === id) || species();
   activeSpecimen = sp;
   $('specimen-title').textContent = `${s.en} ${sp.title.toLowerCase()}`;
   const credit = $('specimen-credit');
@@ -1211,14 +1218,6 @@ function findBoneMeshes(root, key, side) {
     if (same.length) found = same;
   }
   return { meshes: found, exact };
-}
-
-function comparisonSection(b) {
-  if (state.species !== 'horse') return '';
-  const options = SPECIES.filter(sp => sp.id !== 'horse' && COMPARE_SPECIES.includes(sp.id));
-  return `<h3>Comparison</h3><div class="specimens"><label>Compare this horse bone with
-    <select class="compare-target">${options.map(sp => `<option value="${sp.id}">${esc(sp.en)}</option>`).join('')}</select></label>
-    <button class="specimen-btn compare-btn">Compare ${esc(displayName(b.key))}</button></div>`;
 }
 
 function ensureCompareUi() {
